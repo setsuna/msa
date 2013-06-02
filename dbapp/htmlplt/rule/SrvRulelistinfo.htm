@@ -1,0 +1,893 @@
+﻿<HTML>
+<HEAD>
+<TITLE>网络7层管理和过滤的领导者</TITLE>
+<META content="text/html; charset=utf-8" http-equiv=Content-Type>
+<LINK rel=stylesheet type=text/css href="/msa/publiccss/pubcss.css">
+<LINK rel=stylesheet type=text/css href="/msa/extjs/resources/css/ext-all.css">
+<link rel="stylesheet" type="text/css" href="/msa/extjs/resources/css/feed-viewer.css" />
+<LINK rel=stylesheet type=text/css href="/msa/extjs/resources/css/xtheme-default.css" id="xthemecss" >
+<script type="text/javascript" src="/msa/extjs/adapter/ext/ext-base.js"></script>
+<SCRIPT type=text/javascript  src="/msa/extjs/ext-all.js"></SCRIPT>
+<script type=text/javascript  src="/msa/publicjs/exportexcel.js"></script>
+<SCRIPT type=text/javascript>
+		var CheckedIsFinished=false;
+		var CheckedID;
+		function insert(selNodes){
+			Ext.each(selNodes, function(node){
+              Ext.Ajax.request({
+			          method : 'POST',
+			          url:'/msa/main.xp',
+			          success: function(response, options){
+			          },
+			          failure : function(){
+			          },
+			        	params:{Fun:'addruleuser',ruleid:[$ruleid$],userid:node.id}
+							});
+			});
+		}
+		function saveService(rootNode,selNodes){
+							rulesrv=document.getElementById('rulesrv').value;
+							if(CheckedIsFinished){
+									clearInterval(CheckedID);
+									rootNode.eachChild(function (child) {
+		                	if(child.id=='0'){
+		                    rulesrv = '0' + rulesrv.substring(Number(child.id)+1);
+		                  }else if(child.id=='499'){
+		                    rulesrv = rulesrv.substring(0,Number(child.id)) +  '0';
+		                  }else{
+		                    rulesrv = rulesrv.substring(0,Number(child.id)) +  '0' + rulesrv.substring(Number(child.id)+1,500);
+		                  }
+			                if(rootNode.lastChild.id==child.id){
+							            Ext.each(selNodes, function(node){
+							                if(node.leaf){
+							                    if(node.id=='0'){
+							                      rulesrv = '1' + rulesrv.substring(Number(node.id)+1);
+							                    }else if(node.id=='499'){
+							                      rulesrv = rulesrv.substring(0,Number(node.id)) +  '1';
+							                    }else{
+							                      rulesrv = rulesrv.substring(0,Number(node.id)) +  '1' + rulesrv.substring(Number(node.id)+1,500);
+							                    }
+									            }
+							            });
+													document.getElementById('rulesrv').value=rulesrv;
+													alert(document.getElementById('rulesrv').value);
+		          				}
+									});
+							}
+		}
+    Ext.BLANK_IMAGE_URL = '/msa/extjs/resources/images/default/s.gif';
+    Ext.onReady(function(){
+	  		Ext.QuickTips.init();
+				var detailEl;
+				var xlen=600;
+				var ylen=500;
+				var topsrv=0;
+				var groupid=0;
+				var twoServiceTree;
+				var myMask = new Ext.LoadMask(Ext.getBody(),{
+				        	msg:"Please wait..."
+				});
+				myMask.show();
+//		Ext.override(Ext.tree.TreeNodeUI,{toggleCheck:function (value) {
+//				var cb = this.checkbox;
+//				if (cb) {
+//					cb.checked = (value === undefined ? !cb.checked : value);
+//					this.node.attributes.checked = cb.checked;this.fireEvent("checkchange", this.node, cb.checked);
+//				}
+//		}});
+		var servicebutton= Ext.get('updateService');
+		servicebutton.on('click', function(){
+			  if(userform.rulename.value==""){
+					Ext.MessageBox.alert("提示","规则名称不能为空!");
+					userform.rulename.focus();
+					return;
+				}
+				Ext.Ajax.request({
+          method : 'POST',
+          url:'/msa/main.xp',
+          success: function(response, options){
+          	Ext.MessageBox.alert("提示","修改成功!");
+						parent.xtzystore.load();
+          },
+          failure : function(){
+          	Ext.MessageBox.alert("提示","修改失败!");
+						parent.xtzystore.load();
+          },
+        	params:{Fun:'msaEditSrvRule',ruleid:[$ruleid$],ruleflag:userform.ruleflag.value,ruleaction:userform.ruleaction.value,logaction:userform.logaction.value,conaction:userform.conaction.value,qosid:document.getElementById('qosid').value,ruleschedule:userform.ruleschedule.value,rulejjr:document.getElementById('rulejjr').value,rulename:userform.rulename.value,ruleurl:userform.ruleurl.value,policy:userform.policy.value,group:userform.group.value,rulesrv:document.getElementById('rulesrv').value,contenttype:document.getElementById('contenttype').value,urlsort:document.getElementById('urlsort').value}
+				});
+		});
+		//用户
+		var usertree;
+		usertree= new Ext.tree.TreePanel({
+				id:'usertree',
+        layout:'fit',
+        height:400,
+        useArrows:true,
+        autoScroll:true,
+        animate:true,
+        rootVisible: false,
+        root: {
+            nodeType: 'async'
+        },
+				tbar : [{
+		             	xtype : 'button',
+		            	tooltip:{text:'选择所有服务'},
+		            	text:'全选',
+		            	//iconCls:'connect',
+		            	handler:function(){
+		            		var rootNode = Ext.getCmp('usertree').getRootNode();
+		            		treeCheckTrue(rootNode);
+		            }},'-',{
+		             	xtype : 'button',
+		            	tooltip:{text:'取消选择'},
+		            	text:'清空',
+		            	//iconCls:'connect',
+		            	handler:function(){
+		            		var nodes = Ext.getCmp('usertree').getChecked();
+						        if (nodes && nodes.length) {
+						            for (var i = 0; i < nodes.length; i++) {
+						                //设置UI状态为未选中状态
+						                nodes[i].getUI().toggleCheck(false);
+						                //设置节点属性为未选中状态
+						                nodes[i].attributes.checked = false;
+						            }
+						        }
+		            }},'->',{
+		             	xtype : 'button',
+		            	tooltip:{text:'配置已选用户'},
+		            	text:'保存',
+		            	iconCls:'load-icon',
+		            	handler:function(){
+		            			var rootNode = Ext.getCmp('usertree').getRootNode();
+			            		rootNode.eachChild(function (child) {
+									        Ext.Ajax.request({
+									          method : 'POST',
+									          url:'/msa/main.xp',
+									          success: function(response, options){
+									          },
+									          failure : function(){
+									          },
+									        	params:{Fun:'addruleuser',ruleid:[$ruleid$],delflag:'delflag',userid:child.id}
+													});
+			            				if(rootNode.lastChild.id==child.id){
+			            						var selNodes = usertree.getChecked();
+			            						insert(selNodes);
+			            				}
+									    });
+		            }}
+				],
+        loader: new Ext.tree.TreeLoader({
+						dataUrl:'/msa/main.xp',
+						baseParams:{Fun:'ruleGroupUserlist'}
+				})
+		});
+		usertree.loader.on("beforeload", function(loader, node) {
+	              loader.baseParams.ruleid =[$ruleid$];
+	              loader.baseParams.groupid =groupid;
+	  });
+		//部门
+		var grouptree = new Ext.tree.TreePanel({
+				id:'grouptree',
+        layout:'fit',
+        height:400,
+        useArrows:true,
+        autoScroll:true,
+        animate:true,
+        rootVisible: false,
+        root: {
+            nodeType: 'async'
+        },
+        tbar:[new Ext.form.TextField({ width: 200,
+   					emptyText:'search',
+				    listeners:{
+				       render: function(f){
+				         f.el.on('keydown', filterTree, f, {buffer: 350});
+      				 }
+            }
+      	}),'->',{
+		             	xtype : 'button',
+		            	tooltip:{text:'保存已选部门'},
+		            	text:'保存选择部门',
+		            	iconCls:'load-icon',
+		            	handler:function(){
+		            		 groupmanager ="0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000";
+                     groupmanager =groupmanager + "0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000";
+                     groupmanager =groupmanager + "0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000";
+                     groupmanager =groupmanager + "0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000";
+                     groupmanager =groupmanager + "0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000";
+                     groupmanager =groupmanager + "0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000";
+                     groupmanager =groupmanager + "0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000";
+                     groupmanager =groupmanager + "0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000";
+                     groupmanager =groupmanager + "0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000";
+                     groupmanager =groupmanager + "0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000";
+                     var selNodes = grouptree.getChecked();
+			               Ext.each(selNodes, function(node){
+			                    if(node.id=='0'){
+			                      groupmanager = '1' + groupmanager.substring(Number(node.id)+1);
+			                    }else if(node.id=='999'){
+			                      groupmanager = groupmanager.substring(0,Number(node.id)) +  '1';
+			                    }else{
+			                      groupmanager = groupmanager.substring(0,Number(node.id)) +  '1' + groupmanager.substring(Number(node.id)+1,1000);
+			                    }
+			                });
+			                document.getElementById('group').value=groupmanager;
+		            }},{
+		             	xtype : 'button',
+		            	tooltip:{text:'保存全部部门'},
+		            	text:'保存全部部门',
+		            	iconCls:'load-icon',
+		            	handler:function(){
+		            				var grouprootNodes = Ext.getCmp('grouptree').getRootNode();
+		            				treeCheckTrue(grouprootNodes);
+		                		if (grouprootNodes.childNodes && grouprootNodes.childNodes.length>0){
+														groupmanager ="1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111";
+		                        groupmanager =groupmanager + "1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111";
+		                        groupmanager =groupmanager + "1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111";
+		                        groupmanager =groupmanager + "1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111";
+		                        groupmanager =groupmanager + "1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111";
+		                        groupmanager =groupmanager + "1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111";
+		                        groupmanager =groupmanager + "1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111";
+		                        groupmanager =groupmanager + "1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111";
+		                        groupmanager =groupmanager + "1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111";
+		                        groupmanager =groupmanager + "1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111";
+
+		                    }
+                        document.getElementById('group').value=groupmanager;
+		            }}],
+        loader: new Ext.tree.TreeLoader({
+						dataUrl:'/msa/main.xp',
+						baseParams:{Fun:'msaGroupToPageTreeView'}
+				}),
+				listeners: {
+					    click: function(node, e) {
+					    					groupid=node.id;
+								 		    usertree.getLoader().load(usertree.root);
+					    }
+				}
+    	});
+    grouptree.loader.on("beforeload", function(loader, node) {
+	              loader.baseParams.mygid = document.getElementById('group').value;
+	  });
+
+	  var hiddenPkgs = [];
+	  function filterTree(e){
+	   			var text = e.target.value;
+	        Ext.each(hiddenPkgs, function(n){
+	             n.ui.show();
+	        });
+
+	         if(!text){
+	             filter.clear();
+	             return;
+	         }
+	         grouptree.expandAll();
+	         var re = new RegExp(Ext.escapeRe(text), 'i');
+	         filter.filterBy(function(n){
+	         		var textval = n.text;
+	            return !n.isLeaf() || re.test(n.text);
+	         });
+	        // hide empty packages that weren't filtered
+	         hiddenPkgs = [];
+	         grouptree.root.cascade(function(n) {
+	             if(!n.isLeaf()&& n.ui.ctNode.offsetHeight<3){
+	                 n.ui.hide();
+	                 hiddenPkgs.push(n);
+	             }
+	         });
+
+	  }
+	  var filter = new Ext.tree.TreeFilter(grouptree, {
+			   clearBlank: true,
+			   autoClear: true
+	  });
+//		var groupwin;
+//		var grouptree=new Ext.tree.TreePanel({
+//									    	  id: 'gtree-panel',
+//									        region:'center',
+//									        split: true,
+//									        useArrows:true,
+//									        autoScroll: true,
+//									        rootVisible: false,
+//									        lines: false,
+//									        useArrows: true,
+//									        loader: new Ext.tree.TreeLoader({
+//									        	  dataUrl:'/msa/main.xp?Fun=msaGroupToPageTreeView',
+//															baseParams:{Fun:'msaGroupToPageTreeView'}
+//									        }),
+//									        root: new Ext.tree.AsyncTreeNode(),
+//									        listeners:{
+//							            "checkchange": function(node, state) {
+//							                if (node.parentNode != null) {
+//							                    //子节点选中
+//							                    node.cascade(function(node){
+//							                        node.attributes.checked = state;
+//							                        node.ui.checkbox.checked = state;
+//							                        return true;
+//							                    });
+//							                    //父节点选中
+//							                    var pNode = node.parentNode;
+//							                    if (state || grouptree.getChecked(id, pNode) == "") {
+//							                        pNode.ui.toggleCheck(state);
+//							                        pNode.attributes.checked = state;
+//							                    }
+//							                }
+//							            }
+//        								}
+//		});
+//	  grouptree.loader.on("beforeload", function(loader, node) {
+//	              loader.baseParams.mygid = document.getElementById('group').value;
+//	  });
+//		var groupbutton= Ext.get('applygroup');
+//		groupbutton.on('click', function(){
+//		if(!groupwin){
+//								groupwin = new Ext.Window({
+//								layout      : 'fit',
+//                title: '设置管理部门',
+//                width       : xlen,
+//                height      : ylen,
+//                closeAction :'hide',
+//                plain       : true,
+//                items       : grouptree,
+//								buttons: [{
+//                    text     : '保存选择的部门',
+//                    handler  : function(){
+//                       groupmanager ="0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000";
+//                       groupmanager =groupmanager + "0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000";
+//                       groupmanager =groupmanager + "0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000";
+//                       groupmanager =groupmanager + "0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000";
+//                       groupmanager =groupmanager + "0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000";
+//                       groupmanager =groupmanager + "0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000";
+//                       groupmanager =groupmanager + "0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000";
+//                       groupmanager =groupmanager + "0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000";
+//                       groupmanager =groupmanager + "0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000";
+//                       groupmanager =groupmanager + "0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000";
+//                       var selNodes = grouptree.getChecked();
+//				               Ext.each(selNodes, function(node){
+//				                    if(node.id=='0'){
+//				                      groupmanager = '1' + groupmanager.substring(Number(node.id)+1);
+//				                    }else if(node.id=='999'){
+//				                      groupmanager = groupmanager.substring(0,Number(node.id)) +  '1';
+//				                    }else{
+//				                      groupmanager = groupmanager.substring(0,Number(node.id)) +  '1' + groupmanager.substring(Number(node.id)+1,1000);
+//				                    }
+//				                });
+//				                document.getElementById('group').value=groupmanager;
+//				                groupwin.hide();
+//                    }
+//		                },{
+//		                    text     : '选择全部部门',
+//		                    handler  : function(){
+//		                        var rootNodes = grouptree.getRootNode();
+//				                		if (rootNodes.childNodes && rootNodes.childNodes.length>0){
+//																var child;
+//																groupmanager ="1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111";
+//				                        groupmanager =groupmanager + "1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111";
+//				                        groupmanager =groupmanager + "1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111";
+//				                        groupmanager =groupmanager + "1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111";
+//				                        groupmanager =groupmanager + "1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111";
+//				                        groupmanager =groupmanager + "1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111";
+//				                        groupmanager =groupmanager + "1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111";
+//				                        groupmanager =groupmanager + "1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111";
+//				                        groupmanager =groupmanager + "1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111";
+//				                        groupmanager =groupmanager + "1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111";
+//				                        for (var i=0;i<rootNodes.childNodes.length;i++){
+//				                            child = rootNodes.childNodes[i];
+//				                            child.getUI().toggleCheck(true);
+//				                        }
+//				                    }
+//		                        document.getElementById('group').value=groupmanager;
+//		                        groupwin.hide();
+//		                    }
+//		                }]
+//							});
+//		}
+//		grouptree.collapseAll();
+//		groupwin.show();
+//		});
+    //策略
+//		var plicybutton= Ext.get('applypolicy');
+//		plicybutton.on('click', function(){
+//			if(!policywin){
+//				policywin = new Ext.Window({
+//					title: '选择所属策略',
+//					closeAction: 'hide',
+//					width: xlen,
+//					height:ylen,
+//					plain:true,
+//					items:policytree,
+//					bodyStyle:'padding:5px;',
+//					buttons:[{
+//			                text     : '保存选择的策略',
+//			                handler  : function(){
+//			                seled="00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000";
+//			                var selNodes = policytree.getChecked();
+//					                Ext.each(selNodes, function(node){
+//					                    if(node.id=='0'){
+//					                      seled = '1' + seled.substring(node.id);
+//					                    }else if(node.id=='127'){
+//					                      seled = seled.substring(0,node.id) +  '1';
+//					                    }else{
+//					                      seled = seled.substring(0,node.id) +  '1' + seled.substring(node.id,127);
+//					                    }
+//					                });
+//													document.getElementById('policy').value=seled;
+//						    					policywin.hide();
+//	                    }
+//	                },{
+//	                    text     : '选择全部',
+//	                    handler  : function(){
+//	                    var rootNodes = policytree.getRootNode();
+//	                		if (rootNodes.childNodes && rootNodes.childNodes.length>0)
+//	                        {
+//													var child;
+//													seled="11111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111";
+//	                        for (var i=0;i<rootNodes.childNodes.length;i++){
+//	                            child = rootNodes.childNodes[i];
+//	                            child.getUI().toggleCheck(true);
+//	                        }}
+//	                        document.getElementById('policy').value=seled;
+//	                        policywin.hide();
+//	                    }
+//	                }]
+//				});
+//			}
+//		policywin.show();
+//		});
+		//针对的用户
+		var userbutton= Ext.get('user');
+		userbutton.on('click', function(){
+				var userwin =new  Ext.Window(
+	          {
+            id: 'east-panel',
+            title: '选择针对的用户',
+            height: 500,
+            width: 780,
+            closeAction: 'close',
+            modal: 'true',
+            maximizable:'true',
+            margins:'0 5 0 0',
+            html: "<IFRAME  name='menufrm' width=100% height=100% SRC = '/msa/main.xp?Fun=ShowSelectUserTree&ruleid=[$ruleid$]&name=selectUserTree'></iframe>"
+	          });
+	          userwin.show();
+		});
+//		//服务
+//		var ltServiceTree=new Ext.tree.TreePanel({
+//        split: true,
+//        height: ylen-80,
+//        width: xlen-30,
+//        useArrows:true,
+//        autoScroll: true,
+//        rootVisible: false,
+//        lines: false,
+//        useArrows: true,
+//        loader: new Ext.tree.TreeLoader({
+//        	  dataUrl:'/msa/main.xp',
+//						baseParams:{Fun:'msaltServiceTree'}
+//        }),
+//        root: new Ext.tree.AsyncTreeNode(),
+//        listeners:{
+//        "checkchange": function(node, state) {
+//            if (node.parentNode != null) {
+//                //子节点选中
+//                node.cascade(function(node){
+//                    node.attributes.checked = state;
+//                    node.ui.checkbox.checked = state;
+//                    return true;
+//                });
+//                //父节点选中
+//                var pNode = node.parentNode;
+//                if (state || grouptree.getChecked(id, pNode) == "") {
+//                    pNode.ui.toggleCheck(state);
+//                    pNode.attributes.checked = state;
+//                }
+//            }
+//        }
+//			  }
+//		});
+//		ltServiceTree.loader.on("beforeload", function(loader, node) {
+//	              loader.baseParams.topsrv = document.getElementById('rulesrv').value;
+//	  });
+//		var addressbutton= Ext.get('rulesrvbut');
+//		addressbutton.on('click', function(){
+//		//ltServiceTree.expandAll();
+//		//ltServiceTree.collapseAll();
+//				if(!ltServiceWin){
+//					ltServiceWin = new Ext.Window({
+//						title: '选择服务',
+//						closeAction: 'hide',
+//            height: ylen,
+//            width: xlen,
+//						plain:true,
+//						items:ltServiceTree,
+//						bodyStyle:'padding:5px;',
+//						buttons:[{
+//			                text     : '保存选择的服务',
+//			                handler  : function(){
+//			                		rulesrv="0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000";
+//		                      rulesrv =rulesrv + "0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000";
+//		                      rulesrv =rulesrv + "0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000";
+//		                      rulesrv =rulesrv + "0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000";
+//		                      rulesrv =rulesrv + "0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000";
+//					                var selNodes = ltServiceTree.getChecked();
+//					                Ext.each(selNodes, function(node){
+//							                if(node.leaf){
+//							                    if(node.id=='0'){
+//							                      rulesrv = '1' + rulesrv.substring(Number(node.id)+1);
+//							                    }else if(node.id=='499'){
+//							                      rulesrv = rulesrv.substring(0,Number(node.id)) +  '1';
+//							                    }else{
+//							                      rulesrv = rulesrv.substring(0,Number(node.id)) +  '1' + rulesrv.substring(Number(node.id)+1,500);
+//							                    }
+//									            }
+//					                });
+//													document.getElementById('rulesrv').value=rulesrv;
+//						    					ltServiceWin.hide();
+//	                    }
+//	                   },{
+//			                    text     : '选择全部',
+//			                    handler  : function(){
+//															var rootNodes = ltServiceTree.getRootNode();
+//					                		if (rootNodes.childNodes && rootNodes.childNodes.length>0){
+//																	var child;
+//																	for (var i=0;i<rootNodes.childNodes.length;i++){
+//					                            child = rootNodes.childNodes[i];
+//					                            child.getUI().toggleCheck(true);
+//					                        }
+//					                    }
+//															seled="11111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111";
+//			                        document.getElementById('rulesrv').value=seled;
+//			                        ltServiceTree.getRootNode().reload();
+//			                        ltServiceWin.hide();
+//			                    }
+//			                }]
+//					});
+//				}
+//				ltServiceTree.collapseAll();
+//				ltServiceWin.show();
+//		});
+		/**
+		 *checkTree全选
+		 */
+		var treeCheckTrue = function(node)
+		{		
+		    node.eachChild(function (child) {
+		        child.getUI().toggleCheck(true);
+		        child.attributes.checked = true;
+		        treeCheckTrue(child);
+		    });
+		}
+		var serviceCheckTrue = function(node,selNodes)
+				{		
+				    node.eachChild(function (child) {
+				        child.getUI().toggleCheck(true);
+				        child.attributes.checked = true;
+				        treeCheckTrue(child);
+				    });
+				}
+		/**
+		 *checkTree清空
+		 */
+		var treeCheckfalse = function(tree)
+		{
+		    var nodes = tree.getChecked();
+		    if(nodes && nodes.length){
+		     for(var i=0;i<nodes.length;i++){
+		      //设置UI状态为未选中状态
+		      nodes[i].getUI().toggleCheck(false);
+		      //设置节点属性为未选中状态
+		      nodes[i].attributes.checked=false;
+		     }
+		    }
+		}
+		var oneServiceTree=new Ext.tree.TreePanel({
+        split: true,
+        height: 400,
+        title:'一级服务',
+        useArrows:true,
+        autoScroll: true,
+        rootVisible: false,
+        lines: false,
+        useArrows: true,
+        checkModel:false,
+        tbar : [new Ext.form.Label({
+										text : "一级服务"
+										})
+				],
+        loader: new Ext.tree.TreeLoader({
+        	  dataUrl:'/msa/main.xp',
+						baseParams:{Fun:'msaOneServiceTree'}
+        }),
+        root: new Ext.tree.AsyncTreeNode(),
+        listeners: {
+							    click: function(node, e) {
+							    	    topsrv=node.id;
+								 		    twoServiceTree.getLoader().load(twoServiceTree.root);
+							   }
+				}
+		});
+	  twoServiceTree=new Ext.tree.TreePanel({
+        split: true,
+        height: 400,
+        id:'servicetree',
+        title:'二级服务',
+        useArrows:true,
+        autoScroll: true,
+        rootVisible: false,
+        lines: false,
+        useArrows: true,
+        checkModel:false,
+        tbar : [{
+             	xtype : 'button',
+            	tooltip:{text:'<b>选择所有服务</b>'},
+            	text:'全选',
+            	//iconCls:'connect',
+            	handler:function(){
+            		var rootNode = Ext.getCmp('servicetree').getRootNode();
+								var selNodes = twoServiceTree.getChecked();
+            		serviceCheckTrue(rootNode,selNodes);
+            }},'-',{
+             	xtype : 'button',
+            	tooltip:{text:'<b>取消选择</b>'},
+            	text:'清空',
+            	//iconCls:'connect',
+            	handler:function(){
+            		var nodes = Ext.getCmp('servicetree').getChecked();
+				        if (nodes && nodes.length) {
+				            for (var i = 0; i < nodes.length; i++) {
+				                //设置UI状态为未选中状态
+				                nodes[i].getUI().toggleCheck(false);
+				                //设置节点属性为未选中状态
+				                nodes[i].attributes.checked = false;
+				            }
+				        }
+								saveService();
+            }}
+				],
+        loader: new Ext.tree.TreeLoader({
+        	  dataUrl:'/msa/main.xp',
+						baseParams:{Fun:'msaltServiceTree'}
+        }),
+        root: new Ext.tree.AsyncTreeNode()
+		});
+		twoServiceTree.on('checkchange',function(node,checked){
+				rulesrv=document.getElementById('rulesrv').value;
+				if(checked){
+                if(node.leaf){
+                    if(node.id=='0'){
+                      rulesrv = '1' + rulesrv.substring(Number(node.id)+1);
+                    }else if(node.id=='499'){
+                      rulesrv = rulesrv.substring(0,Number(node.id)) +  '1';
+                    }else{
+                      rulesrv = rulesrv.substring(0,Number(node.id)) +  '1' + rulesrv.substring(Number(node.id)+1,500);
+                    }
+		            }
+								document.getElementById('rulesrv').value=rulesrv;
+				}else {
+								if(node.leaf){
+                    if(node.id=='0'){
+                      rulesrv = '0' + rulesrv.substring(Number(node.id)+1);
+                    }else if(node.id=='499'){
+                      rulesrv = rulesrv.substring(0,Number(node.id)) +  '0';
+                    }else{
+                      rulesrv = rulesrv.substring(0,Number(node.id)) +  '0' + rulesrv.substring(Number(node.id)+1,500);
+                    }
+		            }
+								document.getElementById('rulesrv').value=rulesrv;
+				}
+		});
+		twoServiceTree.loader.on("beforeload", function(loader, node) {
+	        loader.baseParams.topsrv=topsrv;
+	        loader.baseParams.rulesrv=document.getElementById('rulesrv').value;
+	  });
+	  var policytree=new Ext.tree.TreePanel({
+				height:420,
+				id:'policytree',
+				split: true,
+				useArrows:true,
+				tbar : [{
+	             	xtype : 'button',
+	            	tooltip:{text:'<b>选择所有服务</b>'},
+	            	text:'全选',
+	            	//iconCls:'connect',
+	            	handler:function(){
+	            		var rootNode = Ext.getCmp('policytree').getRootNode();
+	            		treeCheckTrue(rootNode);
+	            	}},'-',{
+	             	xtype : 'button',
+	            	tooltip:{text:'<b>取消选择</b>'},
+	            	text:'清空',
+	            	//iconCls:'connect',
+	            	handler:function(){
+	            		var nodes = Ext.getCmp('policytree').getChecked();
+					        if (nodes && nodes.length) {
+					            for (var i = 0; i < nodes.length; i++) {
+					                //设置UI状态为未选中状态
+					                nodes[i].getUI().toggleCheck(false);
+					                //设置节点属性为未选中状态
+					                nodes[i].attributes.checked = false;
+					            }
+					        }
+	            }}
+				],
+				autoScroll: true,
+				rootVisible: false,
+				lines: false,
+				useArrows: true,
+				root: {
+		            nodeType: 'async'
+		    },
+		    loader: new Ext.tree.TreeLoader({
+						dataUrl:'/msa/main.xp',
+						baseParams:{Fun:'msaPolicyToPageTree',policyid:document.getElementById('policy').value}
+				})
+		});
+    var actionPanel = new Ext.Panel({
+        region:'north',
+        split:true,
+        collapsible: true,
+        collapseMode: 'mini',
+        layout:'fit',
+        height:180,
+        frame:true,
+        minWidth: 150,
+        border: false,
+        //baseCls:'x-plain',
+        contentEl:'mainviewdiv'
+    });
+    var tabPanel = new Ext.TabPanel({
+        region:'center',
+        deferredRender:false,
+        autoScroll: true,
+        margins:'0 4 4 0',
+        activeTab:0,
+        items:[{
+            id:'tab1',
+            title: '对应以下服务',
+            closable:false,
+            autoScroll:false,
+        		layout:'column',
+						plain:true,
+						items:[
+									{	columnWidth:.5,
+										items: [oneServiceTree]
+									},
+									{	columnWidth:.5,
+				   					items: [twoServiceTree]
+				   				}
+				    ]
+        },{
+            id:'tab2',
+            title: 'ip地址设定',
+            closable:false,
+            autoScroll:true,
+            html: "<IFRAME  name='menufrm' width=100% height=100% SRC = '/msa/main.xp?Fun=msaEditip&ruleid=[$ruleid$]&table=nassrvruledip'></iframe>"
+        },{
+            id:'tab3',
+            title: '对应以下URL',
+            closable:false,
+            autoScroll:true,
+            html: "<IFRAME  name='menufrm' width=100% height=100% SRC = '/msa/main.xp?Fun=msaEditWebpost&ruleid=[$ruleid$]'></iframe>"
+        },{
+            id:'tab4',
+            title: '用户IP地址',
+            closable:false,
+            autoScroll:true,
+            html: "<IFRAME  name='menufrm' width=100% height=100% SRC = '/msa/main.xp?Fun=msaEditip&ruleid=[$ruleid$]&table=nasruleip'></iframe>"
+        },{
+            id:'tab5',
+            title: '对应以下策略',
+            closable:false,
+            autoScroll:true,
+        		items:[policytree]
+        },{
+            id:'tab6',
+            title: '对应以下用户部门',
+            closable:false,
+            autoScroll:false,
+            layout: 'column',
+						items:[{columnWidth:.5,
+										items: [grouptree]},
+						{columnWidth:.5,
+					   items: [usertree]}
+					  ]
+        }]
+    });
+    viewport = new Ext.Viewport({
+           layout:'border',
+           items:[actionPanel,tabPanel]});
+		myMask.hide();
+});
+	</SCRIPT>
+</HEAD>
+<body oncontextmenu="return true" topmargin=0 leftmargin=0 style="SCROLLBAR-FACE-COLOR: #f0f0f0;  overflow-x:hidden;  OVERFLOW: scroll; SCROLLBAR-SHADOW-COLOR: #f0f0f0; SCROLLBAR-3DLIGHT-COLOR: #f0f0f0; SCROLLBAR-ARROW-COLOR: #f0f0f0; SCROLLBAR-DARKSHADOW-COLOR: #cccccc;" >
+	<div id="mainviewdiv" valign="top" align="center" STYLE="position:absolute; left=30; z-index:1; top: 20;">
+	<table width="100%" height=70% cellpadding=0 cellspacing=0 Border=0>
+		<form name="userform" method="POST" action="/main/main.xp">
+			<input type="hidden" id="group" name="group" value="[$group$]">
+			<input type="hidden" id="policy" name="policy" value="[$policy$]">
+			<input type="hidden" id="rulesrv" name="rulesrv" value="[$rulesrv$]">
+			<!-- generic wizard buttons -->
+			<tr>
+				<td colspan=4 align="left">
+					<TABLE CELLPADDING = 3 CELLSPACING=0 >
+						<tr>
+							<td><span class="STYLE1">编辑访问规则</span></td>
+						</tr>
+						<TR>
+							<TD width="238" VALIGN='middle'><FONT FACE='宋体' >名称： </font></TD>
+							<TD width="272" VALIGN='middle'>
+								<INPUT TYPE='text'  class="x-form-text"   NAME="rulename" VALUE="[$rulename$]">
+							</TD>
+							<TD width="171"><font face='宋体' >启用： </font></TD>
+							<TD width="482">
+								<select name="ruleflag" class="inputself0" id="ruleflag">
+									<option value="0">不启用</option>
+									<option value="1" [$ruleflag1$]>启用</option>
+								</select>
+							</TD>
+						</TR>
+						<TR>
+							<TD VALIGN='middle'><font face='宋体' >动作： </font></TD>
+							<TD VALIGN='middle'>
+								<select name="ruleaction" class="inputself0" id="ruleaction">
+									<option value="0">拒绝访问</option>
+									<option value="1" [$ruleaction1$]>允许访问</option>
+								</select>
+							</TD>
+							<TD><font face='宋体' >记录连接：</font></TD>
+							<TD>
+								<select name="logaction" class="inputself0" id="logaction">
+									<option value="0">不记录</option>
+									<option value="1" [$logaction1$]>记录</option>
+								</select>
+							</TD>
+						</TR>
+						<TR>
+							<TD VALIGN='middle'><font face='宋体' >记录内容：</font></TD>
+							<TD VALIGN='middle'>
+								<select name="conaction" class="inputself0" id="conaction">
+									<option value="0">不记录</option>
+									<option value="1" [$conaction1$]>记录</option>
+								</select>
+							</TD>
+							<TD>规则应用的时间：</TD>
+							<TD>
+								<select name="ruleschedule" class="inputself0" id="ruleschedule">
+									[$begintable schlist$]
+									<option value="[$schid$]" [$schsel$]>[$schname$]</option>
+									[$endtable$]
+								</select>
+							</TD>
+						</TR>
+						<TR>
+							<TD VALIGN='middle'><FONT FACE='宋体' >提示信息: </font></TD>
+							<TD VALIGN='middle'>
+								<input type='text'  class="x-form-text"   name="ruleurl" value="[$ruleurl$]" >
+							</TD>
+								<TD>节假日：</TD>
+								<TD>
+									<select name="rulejjr" class="inputself0" id="rulejjr">
+									[$begintable jjrlist$]
+										<option value="[$jjrid$]" [$jjrsel$]>[$jjrname$]</option>
+									[$endtable$]
+									</select>
+								</TD>
+						</TR>
+				<td colspan ="4">
+						<hr/>
+					</td>
+				</tr>
+				<tr>
+					<td colspan ="4" align="left">
+						<INPUT TYPE='Button' NAME="updateService" class=input value="保存/修改">
+					</td>
+				</tr>
+</form></table>
+</div>
+<div id="tab4" valign="top" align="center" STYLE="position:absolute; left=30; z-index:1; top: 20;">
+								<INPUT TYPE='Button' NAME="applygroup" class=input value="选择部门元素">
+								<INPUT TYPE='Button' NAME="applypolicy" class=input value="选择策略元素">
+								<INPUT TYPE='Button' NAME="user" class=input value="用户元素">
+</div>
+</BODY>
+</HTML>

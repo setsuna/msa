@@ -1,0 +1,17 @@
+关闭Linux服务器ping响应
+
+如果你想让你的Linux 服务器不响应ping：
+echo 1 > /proc/sys/net/ipv4/icmp_echo_ignore_all
+这样就可以了。同样：
+echo 0 > /proc/sys/net/ipv4/icmp_echo_ignore_all
+就响应ping 包。
+
+但如果你重起机器，设置就会失效，所以你必须把 
+echo 1 > /proc/sys/net/ipv4/icmp_echo_ignore_all 这句话添加到/etc/rc.local 里，以便启动时自动生效。
+
+
+linux 关闭ssh服务
+killall sshd -9
+或
+service sshd stop
+

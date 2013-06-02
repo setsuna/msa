@@ -1,0 +1,115 @@
+﻿<HTML><HEAD><TITLE>网络7层管理和过滤的领导者</TITLE>
+<META content="text/html; charset=utf-8" http-equiv=Content-Type>
+<LINK rel=stylesheet type=text/css href="/msa/publiccss/pubcss.css">
+<LINK rel=stylesheet type=text/css href="/msa/extjs/resources/css/ext-all.css">
+<link rel="stylesheet" type="text/css" href="/msa/extjs/resources/css/feed-viewer.css" />
+<LINK rel=stylesheet type=text/css href="/msa/extjs/resources/css/xtheme-default.css" id="xthemecss" >
+<script type="text/javascript" src="/msa/extjs/adapter/ext/ext-base.js"></script>
+<SCRIPT type=text/javascript  src="/msa/extjs/ext-all.js"></SCRIPT>
+<STYLE type=text/css>
+HTML {
+	BORDER-BOTTOM: 0px; BORDER-LEFT: 0px; PADDING-BOTTOM: 0px; MARGIN: 0px; PADDING-LEFT: 0px; PADDING-RIGHT: 0px; FONT: 12px verdana; HEIGHT: 100%; OVERFLOW: hidden; BORDER-TOP: 0px; BORDER-RIGHT: 0px; PADDING-TOP: 0px
+}
+BODY {
+	MARGIN: 0px; BORDER-BOTTOM: 0px; BORDER-LEFT: 0px; PADDING-BOTTOM: 0px; MARGIN: 0px; PADDING-LEFT: 0px; PADDING-RIGHT: 0px; FONT: 12px verdana; HEIGHT: 100%; OVERFLOW: hidden; BORDER-TOP: 0px; BORDER-RIGHT: 0px; PADDING-TOP: 0px
+}
+P {
+	MARGIN: 0px
+}
+</STYLE>
+<SCRIPT type=text/javascript>
+Ext.BLANK_IMAGE_URL = '/msa/extjs/resources/images/default/s.gif';
+Ext.onReady(function(){
+		var gid,level,uid;
+	  gid=0;
+	  level=0;
+    var groupPanel = new Ext.tree.TreePanel({
+        region:'north',
+        height: (screen.height-300)/2,
+        width: 280,
+        useArrows:true,
+        autoScroll:true,
+        animate:true,
+        rootVisible: false,
+        root: {
+            nodeType: 'async'
+        },  
+        loader: new Ext.tree.TreeLoader({
+						dataUrl:'/msa/main.xp?Fun=msaGroupTreeView',
+						baseParams:{Fun:'msaGroupTreeView'} 
+				}),
+				listeners: {
+				    click: function(node, e){
+				      gid=node.id;
+				      level=node.getDepth()-1;
+				      Ext.getDom('gid').value=gid;
+				      Ext.getDom('level').value=level;
+			        if(gid=="-1" || gid==""){
+									return;
+							}else{	
+								  peoplePanel.getLoader().load(peoplePanel.root);
+								  var myurl="/msa/main.xp?Fun=msaShowPeopleRecord&gid=" + node.id + "&uid=-1";
+								  parent.mainviewfrm.location.href=myurl;
+				      }
+				    }
+			  }	
+    });
+		var loader=new Ext.tree.TreeLoader({
+		    			dataUrl:'/msa/main.xp',
+							baseParams:{Fun:'msaUserTree'}
+		});
+    loader.on("beforeload", function(loader, node) {
+            loader.baseParams.gid = Ext.getDom('gid').value;
+            loader.baseParams.level = Ext.getDom('level').value;
+    });
+    var peoplePanel = new Ext.tree.TreePanel({
+        region:'center',
+        height: (screen.height-300)/2,
+        width: 280,
+        useArrows:true,
+        autoScroll:true,
+        animate:true,
+        rootVisible: false,
+        root: {
+            nodeType: 'async'
+        },
+        loader:loader,
+				listeners: {
+				    click: function(node, e){
+				      uid=node.id;
+			        if(uid=="-1" || uid==""){
+									return;
+							}else{
+								var myurl="/msa/main.xp?Fun=msaShowPeopleRecord&gid="+gid + "&uid="+node.id;
+								parent.mainviewfrm.location.href=myurl;
+				      }
+				    }
+			  }	
+    });
+    new Ext.Viewport({
+									layout: 'border',
+									bbar: new Ext.StatusBar({
+								      id: 'centerstatus',
+                      defaultText: 'Ready',
+                      defaultIconCls: 'default-icon',
+                      iconCls: 'ready-icon'
+                  }),
+									items: [groupPanel,peoplePanel],
+					        renderTo: Ext.getBody()
+		});
+});
+</SCRIPT>
+<style>
+    .complete .x-tree-node-anchor span {
+        text-decoration: line-through;
+        color: #777;
+    }
+</style>
+</head>
+<BODY >
+	<input type="hidden" id="gid" name="gid" value="0">
+	<input type="hidden" id="level" name="level" value="0">
+<DIV id=north>
+</DIV>
+</body>
+</html>

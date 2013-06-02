@@ -1,0 +1,551 @@
+<HTML><HEAD><TITLE>网络7层管理和过滤的领导者</TITLE>
+<META content="text/html; charset=utf-8" http-equiv=Content-Type>
+<LINK rel=stylesheet type=text/css href="/msa/publiccss/pubcss.css">
+<LINK rel=stylesheet type=text/css href="/msa/extjs/resources/css/ext-all.css">
+<link rel="stylesheet" type="text/css" href="/msa/extjs/resources/css/feed-viewer.css" />
+<LINK rel=stylesheet type=text/css href="/msa/extjs/resources/css/xtheme-default.css" id="xthemecss" >
+<script type="text/javascript" src="/msa/extjs/adapter/ext/ext-base.js"></script>
+<SCRIPT type=text/javascript  src="/msa/extjs/ext-all.js"></SCRIPT>
+<script type=text/javascript  src="/msa/publicjs/select_time_st_1.js"></script>
+<script type="text/javascript">
+	
+function allChecked(id){  
+	  var  dfd=eval("document.all.dfd" + id);
+	  var  DataTable=eval("document.all.DataTable" + id);
+	  
+    if(dfd.value=="1"){
+        dfd.value="0";
+    }
+    else {
+         dfd.value="1";
+    }
+    
+	for(var i=0;i<DataTable.rows.length;i++)
+	{
+		if(typeof(DataTable.rows[i].cells[0].childNodes[1])=="object"&&DataTable.rows[i].cells[0].childNodes[1].tagName=="INPUT"&&DataTable.rows[i].cells[0].childNodes[1].type=="checkbox") {
+			if(dfd.value=="1"){
+  			    DataTable.rows[i].cells[0].childNodes[1].checked="true";
+            }
+			else{
+             DataTable.rows[i].cells[0].childNodes[1].checked="";
+            }
+        }
+ 	}
+}
+
+function disReport(){
+	if(bb1.style.display=="none"){
+		bb1.style.display="";
+		return false;
+		}
+	if(bb1.style.display==""){
+		bb1.style.display="none";
+		return false;
+		}
+} 
+function disManager(){
+	if(bb2.style.display=="none"){
+		bb2.style.display="";
+		return false;
+		}
+	if(bb2.style.display==""){
+		bb2.style.display="none";
+		return false;
+		}
+} 
+
+function syscleanfun(){
+	var mychr1,mychr2,mychr3,mychr4,mychr5;
+	var mychr6,mychr7,mychr8,mychr9,mychr10;
+	var mychr11,mychr12,mychr13,mychr14,mychr15;
+	var mychr16,mychr17,mychr18,mychr19,mychr20;
+	var mychr21,mychr22,mychr23,mychr24,mychr25,mychr26;
+	var mysdate;
+	
+	if(form1.chr1.checked){
+		mychr1=1;
+	}else{
+		mychr1=0;
+	}
+	
+	if(form1.chr2.checked){
+		mychr2=1;
+	}else{
+		mychr2=0;
+	}
+	
+	if(form1.chr3.checked){
+		mychr3=1;
+	}else{
+		mychr3=0;
+	}
+	
+	if(form1.chr4.checked){
+		mychr4=1;
+	}else{
+		mychr4=0;
+	}
+	
+	if(form1.chr5.checked){
+		mychr5=1;
+	}else{
+		mychr5=0;
+	}
+
+	if(form1.chr6.checked){
+		mychr6=1;
+	}else{
+	  mychr6=0;
+	}
+	
+	if(form1.chr7.checked){
+		mychr7=1;
+	}else{
+		mychr7=0;
+	}
+	
+	if(form1.chr8.checked){
+		mychr8=1;
+	}else{
+		mychr8=0;
+	}
+	
+	if(form1.chr9.checked){
+		mychr9=1;
+	}else{
+		mychr9=0;
+	}
+	
+	if(form1.chr10.checked){
+		mychr10=1;
+	}else{
+		mychr10=0;
+	}
+	
+	if(form1.chr11.checked){
+		mychr11=1;
+	}else{
+		mychr11=0;
+	}
+	
+	if(form1.chr12.checked){
+		mychr12=1;
+	}else{
+		mychr12=0;
+	}
+	
+	if(form1.chr13.checked){
+		mychr13=1;
+	}else{
+		mychr13=0;
+	}
+	
+	if(form1.chr14.checked){
+		mychr14=1;
+	}else{
+		mychr14=0;
+	}
+   
+  if(form1.chr15.checked){
+		mychr15=1;
+	}else{
+		mychr15=0;
+	}
+	
+	if(form1.chr16.checked){
+		mychr16=1;
+	}else{
+		mychr16=0;
+	}
+	
+
+	if(form1.chr17.checked){
+		mychr17=1;
+	}else{
+		mychr17=0;
+	}
+	
+  if(form1.chr18.checked){
+		mychr18=1;
+	}else{
+		mychr18=0;
+	}
+	
+	if(form1.chr19.checked){
+		mychr19=1;
+	}else{
+		mychr19=0;
+	}
+	
+  if(form1.chr20.checked){
+		mychr20=1;
+	}else{
+		mychr20=0;
+	}
+	
+	if(form1.chr21.checked){
+		mychr21=1;
+	}else{
+		mychr21=0;
+	}
+	
+	
+	if(form1.chr22.checked){
+		mychr22=1;
+	}else{
+		mychr22=0;
+	}
+	
+	if(form1.chr23.checked){
+		mychr23=1;
+	}else{
+		mychr23=0;
+	}
+	
+	if(form1.chr24.checked){
+		mychr24=1;
+	}else{
+		mychr24=0;
+	}
+	
+	if(form1.chr25.checked){
+		mychr25=1;
+	}else{
+		mychr25=0;
+	}
+	
+	if(form1.chr26.checked){
+		mychr26=1;
+	}else{
+		mychr26=0;
+	}
+	
+	
+  mysdate=form1.sdate.value;
+
+
+	Ext.MessageBox.confirm('提示','你确定清空系统数据吗？这些数据一旦清空，将无法恢复。',function(button,text){
+		   if (button == 'yes'){
+		       Ext.Ajax.request({
+				   method: 'POST',
+				   url: '/msa/main.xp',
+				   success: function(response, options) {
+   			     Ext.MessageBox.show({
+               msg: '清空系统数据',
+               progressText: '正在清空系统数据....',
+               width: 450,
+               wait: true,
+               progress: true,
+               waitConfig: {
+                 interval: 1000
+               },
+               icon: 'ext-mb-download'
+             });
+                             
+             
+             var task = {
+					       run: function(){
+				            Ext.Ajax.request({
+                        method: 'POST',
+                        url: '/msa/main.xp',
+                        success: function(response, options) {                      	  
+                        	   var retxt=response.responseText;	  
+													   if(retxt==0) {							             	                                
+	                               runner.stop(task);
+	                               Ext.MessageBox.hide();  
+	                               Ext.MessageBox.alert('提示', '数据清除成功!<br\>有一些内容不能删除，你可以手工删除它们。'); 
+										         }else{
+										         	   var f=function(v){
+										                return function(){
+										                 if(v!=12){						                 	
+				                                 var i=v/11; 
+										                     Ext.MessageBox.updateProgress(i,retxt+"清空成功!","数据正在清空中,请耐心等待...");		                  
+		  								               }else{
+		  								               	   Ext.MessageBox.hide();
+		  								               }
+										                }
+								                 }                          
+															   for(var i=1;i<13;i++){
+															    setTimeout(f(i),i*1000);
+															   } 
+										         } 							
+												                        							                                   	                                 								                						             							              							              					                							               
+                        },
+                        failure: function() {
+                            runner.stopAll();
+                            Ext.MessageBox.hide();
+                            Ext.MessageBox.alert('提示', '数据清空失败!');
+                        },
+                        params:{
+                            Fun: 'msaStatusAction'
+                        }
+				            });
+					       },
+					       interval:1000
+						 };
+						 
+						 runner = new Ext.util.TaskRunner();
+						 runner.start(task);  					 
+						  
+						       
+		       },
+		       failure: function(){
+		           Ext.MessageBox.hide();
+		           Ext.MessageBox.alert('提示', '数据清空失败!');
+		       },
+		       params: {
+		           Fun: 'msaCleanAction',
+		             chr1:mychr1,
+			           chr2:mychr2,
+			           chr3:mychr3,
+			           chr4:mychr4,
+			           chr5:mychr5,
+			           chr6:mychr6,
+			           chr7:mychr7,
+			           chr8:mychr8,
+			           chr9:mychr9,
+			           chr10:mychr10,
+			           chr11:mychr11,
+			           chr12:mychr12,
+			           chr13:mychr13,
+			           chr14:mychr14,
+			           chr15:mychr15,
+			           chr16:mychr16,
+			           chr17:mychr17,
+			           chr18:mychr18,
+			           chr19:mychr19,
+			           chr20:mychr20,
+			           chr21:mychr21,
+			           chr22:mychr22,
+			           chr23:mychr23,
+			           chr24:mychr24,
+			           chr25:mychr25,
+			           chr26:mychr26,
+			           sdate:mysdate
+		       }
+		     });
+		    }												  	
+		})
+}
+
+</SCRIPT>
+<style type="text/css">
+<!--
+body {font-size: 12pt}
+table {font-size: 9pt}
+form {margin: 0px;}
+-->
+</style>
+</head>
+<body bgcolor="#F0F0F0"  topmargin="0" text="#000000" leftmargin="0"  style="SCROLLBAR-FACE-COLOR: #f0f0f0;  overflow-x:hidden;  OVERFLOW: scroll; SCROLLBAR-SHADOW-COLOR: #f0f0f0; SCROLLBAR-3DLIGHT-COLOR: #f0f0f0; SCROLLBAR-ARROW-COLOR: #f0f0f0; SCROLLBAR-DARKSHADOW-COLOR: #cccccc;">
+<table width="100%" border="0" cellspacing="0" cellpadding="0" >
+  <tr> 
+    <td> 
+    <form name="form1" id="form1" method="post"  action="/msa/main.xp" >  
+		<input type="hidden" name="dfd1" value="0">	
+		<input type="hidden" name="dfd2" value="0">		  
+		<table width="100%" border="0" cellspacing="0" cellpadding="0">
+    <tr> 
+      <td height="27" background="./images/nn2.gif" width="180"> 
+        <div align="center"><font color="#FFFFFF">清空系统资料</font></div>
+      </td>
+      <td height="27" background="./images/nn1.gif">&nbsp; </td>
+    </tr>
+  </table>	
+        <table width="100%" border="0" cellspacing="0" cellpadding="0" >
+          <div id="plabel">
+		      <tr> 
+              <td  height="35">
+                 <input type="checkbox" name="chr1" value="1" class="inputchk" >清空数据中心
+              </td> 
+                         
+           </tr> 
+		      <tr> 
+              <td  height="35">
+                 <input type="checkbox" name="chr2" value="2" class="inputchk" >清空账户中心
+              </td> 
+              <td  height="35"> &nbsp;</td><td  height="35"> &nbsp;</td><td  height="35"> &nbsp;</td><td  height="35"> &nbsp;</td>             
+           </tr> 
+		      <tr> 
+              <td  height="35">
+                 <input type="checkbox" name="chr3" value="3" class="inputchk" >清空服务策略
+              </td> 
+              <td  height="35"> &nbsp;</td><td  height="35"> &nbsp;</td><td  height="35"> &nbsp;</td><td  height="35"> &nbsp;</td>             
+           </tr> 
+		      <tr>
+		      
+		      <tr>
+		        <div>
+		        	<table>
+		        		<tr>
+		        		<td  height="35" width="50%">
+							   <input type="checkbox" name="b1" value="0" class="inputchk" onClick="allChecked(1)">清空报表中心<img src="./images/tt1.gif" width="40" height="40" align="absmiddle" onclick="disReport()">
+							  </td>
+							  <td  height="35" width="50%">
+							   <input type="checkbox" name="b2" value="0" class="inputchk" onClick="allChecked(2)">清空管理中心<img src="./images/tt1.gif" width="40" height="40" align="absmiddle" onclick="disManager()">
+							  </td>
+		        		</tr>
+		        		
+		        		<tr>
+		        		 <td height="35" width="50%">
+		        		 	<div align="left" id="bb1" style="DISPLAY:''"> 
+									  <TABLE id="DataTable1" CELLPADDING = 0 CELLSPACING=0 >
+										<TR>
+										<TD>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+										<input type="checkbox" name="chr4" value="4" >自动生成的报告
+					          </TD></TR>
+										<TR>
+					          <TD>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+									  <input type="checkbox" name="chr5" value="5" >手动生成的报告
+									  </TD></TR>
+										<TR>
+									  <TD>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+										<input type="checkbox" name="chr6" value="6" >每天汇总的报告
+									  </TD></TR>
+										<TR>
+									  <TD>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+										<input type="checkbox" name="chr7" value="7" >出口流量分析报告
+									  </TD></TR>
+										<TR>
+									  <TD>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+										<input type="checkbox" name="chr8" value="8">服务协议分析报告
+									  </TD>
+									  </TR>
+									  
+									  <TR>
+									  <TD>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+										<input type="checkbox" name="chr9" value="9">用户时间分析报告
+									  </TD>
+									  </TR>
+									  
+									  <TR>
+									  <TD>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+										<input type="checkbox" name="chr10" value="10">网络流量分析报告
+									  </TD>
+									  </TR>
+									  
+									  <TR>
+									  <TD>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+										<input type="checkbox" name="chr11" value="11">网络次数分析报告
+									  </TD>
+									  </TR>
+									  
+									  <TR>
+									  <TD>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+										<input type="checkbox" name="chr12" value="12">网站分析报告
+									  </TD>
+									  </TR>
+									  
+									  <TR>
+									  <TD>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+										<input type="checkbox" name="chr13" value="13">用户计费报告
+									  </TD>
+									  </TR>
+									  
+									  <TR>
+									  <TD>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+										<input type="checkbox" name="chr14" value="14">自定义报告模板
+									  </TD>
+									  </TR>
+									  
+									  
+									  
+									 </TABLE>
+	         			</div>
+		        	</td>	 
+		        		        		 
+		        	<td height="35" width="50%">
+		        		 	<div align="left" id="bb2" style="DISPLAY:''"> 
+									  <TABLE id="DataTable2" CELLPADDING = 0 CELLSPACING=0 >
+										<TR>
+					          <TD>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+									  <input type="checkbox" name="chr15" value="15" >操作日志
+									  </TD></TR>
+										<TR>
+									  <TD>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+										<input type="checkbox" name="chr16" value="16" >网络对象
+									  </TD></TR>
+										<TR>
+									  <TD>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+										<input type="checkbox" name="chr17" value="17" >端口属性
+									  </TD></TR>
+										<TR>
+									  <TD>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+										<input type="checkbox" name="chr18" value="18">系统参数
+									  </TD>
+									  </TR>
+										<TR>
+									  <TD>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+										<input type="checkbox" name="chr19" value="19">邮件分类
+									  </TD>
+									  </TR>
+									  
+									  <TR>
+									  <TD>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+										<input type="checkbox" name="chr20" value="20">表单分类
+									  </TD>
+									  </TR>
+									  
+									  <TR>
+									  <TD>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+										<input type="checkbox" name="chr21" value="21">URL分类
+									  </TD>
+									  </TR>
+									  
+										<TR>
+									  <TD>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+										<input type="checkbox" name="chr22" value="22">时间策略
+									  </TD>
+									  </TR>
+									  
+										<TR>
+									  <TD>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+										<input type="checkbox" name="chr23" value="23">法定假日
+									  </TD>
+									  </TR>
+									  
+										<TR>
+									  <TD>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+										<input type="checkbox" name="chr24" value="24">服务类型
+									  </TD>
+									  </TR>
+									  
+									  <TR>
+									  <TD>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+										<input type="checkbox" name="chr25" value="25">时间服务
+									  </TD>
+									  </TR>
+										
+										
+									  </TABLE>
+	          			</div>
+		        		 	</td>
+		        		</tr>
+		        	</table>
+		        </div>	
+		      </tr> 
+		      
+		      <tr> 
+              <td  height="35">
+                 <input type="checkbox" name="chr26" value="3" class="inputchk" >清空设备部署
+              </td> 
+              <td  height="35"> &nbsp;</td><td  height="35"> &nbsp;</td><td  height="35"> &nbsp;</td><td  height="35"> &nbsp;</td>             
+           </tr> 
+		      <tr>
+		      			      
+          <tr> 
+           	 <td>&nbsp;</td>
+             <td>           
+               <div>
+              	选择清空时间范围:&nbsp;&nbsp;&nbsp;&nbsp;<input type="text" id="sdate" class=inputf0 name="sdate" size="10" maxlength="12" readonly="true" value="[$date$]" onfocus=setday(sdate)>&nbsp;前数据                  
+                 &nbsp;&nbsp;<input type="button"  border="0"  class=inputf0 value="确认清空" onClick="syscleanfun()" > 
+                </div>    
+             </td> 
+          </tr>
+        </form>
+		  </td>
+		  </tr>
+		</div>
+</table>
+</body>
+</html>

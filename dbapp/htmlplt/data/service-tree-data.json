@@ -1,0 +1,92 @@
+﻿[{
+    text:'设备部署',
+    expanded: true,
+    cls:'feeds-node',
+    children:[
+    {
+        text:'设备部署',
+        iconCls: 'feed-icon',
+        cls:'feed',
+        id:'msaEquipment',
+        leaf:true
+		},{
+        text:'网络参数',
+        iconCls: 'feed-icon',
+        cls:'feed',
+        id:'msaroutsetinglink',
+        leaf:true
+		},{
+        text:'虚拟服务器',
+        iconCls: 'feed-icon',
+        cls:'feed',
+        id:'vserver',
+        leaf:true
+		},{
+        text:'DDNS服务',
+        iconCls: 'feed-icon',
+        cls:'feed',
+        id:'ddnsset',
+        leaf:true
+		}]
+},{
+    text:'网络服务',
+    expanded: true,
+    cls:'feeds-node',
+    children:[
+    {
+        text:'SSLVPN服务',
+        iconCls: 'feed-icon',
+        cls:'feed',
+        id:'tovpnsetting',
+        leaf:true
+    },{
+        text:'IPSECVPN服务',
+        iconCls: 'feed-icon',
+        cls:'feed',
+        id:'tovpnsetting',
+        leaf:true
+    },{
+        text:'DHCP服务',
+        iconCls: 'feed-icon',
+        cls:'feed',
+        id:'dhcpsetting',
+        leaf:true
+    },{
+        text:'DNS代理服务',
+        iconCls: 'feed-icon',
+        cls:'feed',
+        id:'dnssetting',
+        leaf:true
+    },{
+        text:'局域网接入控制',
+        iconCls: 'feed-icon',
+        cls:'feed',
+        id:'dnssetting',
+        leaf:true
+    }]
+},{
+    text:'应用安全网关',
+    expanded: true,
+    cls:'feeds-node',
+    children:[{
+        text:'HTTP缓存与代理',
+        iconCls: 'feed-icon',
+        cls:'feed',
+        id:'onlinecheck',
+        leaf:true
+    },
+    {
+        text:'SMTP发件过滤与审核',
+        iconCls: 'feed-icon',
+        cls:'feed',
+        id:'updatereportlist',
+        leaf:true
+    },
+    {
+        text:'POP3收件过滤与审核',
+        iconCls: 'feed-icon',
+        cls:'feed',
+        id:'updatereportlist',
+        leaf:true
+    }]
+}]

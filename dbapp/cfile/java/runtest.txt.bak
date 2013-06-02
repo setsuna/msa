@@ -1,0 +1,10 @@
+/app/ns/java/jdk1.6.0_01/bin/java -Duser.language=zh -Dfile.encoding=GBK -cp /app/ns/java/poi/poi-3.7-20101029.jar:/app/ns/java/poi/javacsv.jar:./ Toexcel
+/app/ns/java/jdk1.6.0_01/bin/javac -cp /app/ns/java/poi/poi-3.7-20101029.jar Toexcel.java
+
+/app/ns/java/jdk1.6.0_01/bin/java -Duser.language=zh -Dfile.encoding=GBK -cp /app/ns/java/poi/poi-3.7-20101029.jar:/app/ns/java/poi/javacsv.jar:./ HttpToexcel
+/app/ns/java/jdk1.6.0_01/bin/javac -cp /app/ns/java/poi/poi-3.7-20101029.jar:/app/ns/java/poi/javacsv.jar HttpToexcel.java
+
+/datacenter/msa/report/weblinereport/248860000
+/app/ns/java/jdk1.6.0_01/jre/bin/java 
+
+/app/ns/java/jdk1.6.0_01/bin/java -Duser.language=zh_CN.UTF-8  -Dfile.encoding=UTF-8 -cp /app/ns/java/poi/poi-3.7-20101029.jar:./

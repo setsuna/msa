@@ -1,0 +1,139 @@
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>修改密码</title>
+<LINK href="/msa/publiccss/pubcss.css" type=text/css rel=stylesheet>
+<style type="text/css">
+<!--
+body {
+	margin-left: 0px;
+	margin-top: 0px;
+	margin-right: 0px;
+	margin-bottom: 0px;
+	font-size:12px;
+	line-height:18px;
+	color:#000000;
+}
+.hui {font-size:12px; color:#555555; line-height:14px;}
+.hei {font-size:12px; color:#000000; line-height:18px;}
+.STYLE2 {color: #FF0000}
+-->
+</style></head>
+<script language="JavaScript">
+function gotoFun()
+{
+	 if(authlogin.username.value=="" ){
+		alert("用户名不能为空!");
+		authlogin.username.focus();
+		authlogin.username.select();
+		return;
+	 }
+	if(authlogin.password.value=="" ){
+		alert("密码不能为空!");
+		authlogin.password.focus();
+		authlogin.password.select();
+		return;
+	}
+	if(authlogin.pass.value!=authlogin.repass.value ){
+		alert("密码不一致!");
+		authlogin.pass.value="";
+		authlogin.repass.value="";
+		authlogin.pass.focus();
+		return;
+	}
+	
+	var mypass=authlogin.pass.value;
+	for(var i=0;i<mypass.length;i++)
+     {
+       var myChar= mypass.toLowerCase().charAt(i);
+       var myLenth=mypass.replace(/[^\x00-\xff]/g,'**').length;	
+       if((!(myChar>='0' && myChar<='9')) && (!(myChar>='a' && myChar<='z')))
+       { 
+			  alert("对不起，密码不安全！");
+				authlogin.pass.focus();
+				authlogin.pass.select();
+      	return;
+       }
+       else if((myLenth>=0)&&(myLenth<8))
+       { 
+			  alert("对不起，密码不安全！");
+				authlogin.pass.focus();
+				authlogin.pass.select();
+      	return;
+       }
+     }
+	var Pass_flag=false;
+	var reg=/^(?=.*[0-9].*)(?=.*[a-zA-Z].*).{8,}$/;//必须包含数字和字母
+	if(reg.test(mypass)){
+		Pass_flag = true;
+		}else{
+		Pass_flag = false;
+		}
+		if (!Pass_flag){
+		  alert("对不起，密码不安全！");
+			authlogin.pass.focus();
+			authlogin.pass.select();
+		  return false;
+		}
+		
+	
+  authlogin.submit();
+}
+</script>
+<body><div style="width:776px; margin-top:100px; margin-left:auto; margin-right:auto;">
+  <table width="776" border="1" cellpadding="0" cellspacing="0" bordercolor="#cccccc" class="table" style="border-collapse:collapse; margin-top:3px; margin-bottom:3px;">
+    <tr>
+      <td bgcolor="#cccccc">&nbsp;</td>
+    </tr>
+    <tr>
+      <td>
+        <form name="authlogin" id="authlogin" method="post" action="/msa/main.xp"  >
+         <input type="hidden" name="Fun" value="msauserchpass">
+         
+      <table width="57%" border="0" align="center" cellpadding="0" cellspacing="0">
+        <tr>
+          <td width="42%" align="right"><img src="/msa/images/b01.gif" width="25" height="29" /></td>
+          <td width="58%"><font style="font-size:18px; color:#cccccc; line-height:24px; font-weight:bold;">修改密码</font></td>
+        </tr>
+        <tr>
+          <td colspan="2"><div style="margin-top:15px;"><font style="font-size:12px; color:#333333; line-height:24px; font-weight:bold;">Change Password,请输入原口令/密码以及新密码进行密码修改. </font></div></td>
+        </tr>
+        <tr>
+          <td colspan="2"><table width="100%" border="0" cellspacing="4" cellpadding="0">
+            <tr>
+              <td width="37%" align="right">用户[User]&nbsp;</td>
+              <td width="63%"><input name="username" type="text" class="input" id="username" style=" border:1px; border-color:#000000; font-size:12px; line-height:17px; width:150px; height:16px; margin-left:5px;" />
+                <span class="STYLE2">*</span></td>
+            </tr>
+            <tr>
+              <td align="right">密码[Password]&nbsp;</td>
+              <td><input name="password" type="password" class="input" id="password" style=" border:1px; border-color:#000000; font-size:12px; line-height:17px; width:150px; height:16px; margin-left:5px;" />
+                <span class="STYLE2">*</span></td>
+            </tr>
+            <tr>
+              <td align="right">新密码[new Password]&nbsp;</td>
+              <td><input name="pass" type="password" class="input" id="pass" style=" border:1px; border-color:#000000; font-size:12px; line-height:17px; width:150px; height:16px; margin-left:5px;" />
+                <span class="STYLE2">*</span></td>
+            </tr>
+            <tr>
+              <td align="right">确认新密码[new Password]&nbsp;</td>
+              <td><input name="repass" type="password" class="input" id="repass" style=" border:1px; border-color:#000000; font-size:12px; line-height:17px; width:150px; height:16px; margin-left:5px;" />
+                <span class="STYLE2">*</span></td>
+            </tr>
+            <tr>
+              <td>&nbsp;</td>
+              <td align="center">
+              	<input name="modpass"  type="button" class="input" id="modpass" value="确定修改密码" onClick="gotoFun();"></td>
+            </tr>
+          </table>
+           </form>
+          </td>
+        </tr>
+      </table></td>
+    </tr>
+    <tr>
+      <td bgcolor="#cccccc">&nbsp;</td>
+    </tr>
+  </table>
+</div>
+</body>
+</html>

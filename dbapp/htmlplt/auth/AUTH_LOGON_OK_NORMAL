@@ -1,0 +1,33 @@
+<html> 
+<head> 
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312"> 
+<LINK href="/publiccss/pubcss.css" type=text/css rel=stylesheet>
+<SCRIPT language=JavaScript>
+	function logoff(){
+			a=1;
+			b=1;
+			window.open("http://[$authadd$]:[$authport$]/msa/main.xp?Fun=msauserlogoff+username=[$uname$]+password=[$passwd$]+xclientip=[$xclientip$]");
+			window.close();
+			
+	}
+
+	function chp(){
+			open("/msa/auth/AUTH_CH_PASSWD","mainviewfrm");
+	}
+</SCRIPT>
+
+<title>用户在线</title> 
+</head> 
+
+<body  oncontextmenu="return false" > 
+<p style="font-size: 9pt;"> 
+                <br>
+                欢迎您([$dispname$])使用金盾MSA网络管理系统!&nbsp;&nbsp;
+                <br><br><br>
+                <img src="/msa/images/hus.gif" width="15" height="14">如果您想修改登陆密码,请单击<span onClick="chp();" style="cursor: hand"> &nbsp;[修改密码] </span> 
+                <br><br>
+                <img src="/msa/images/hus.gif" width="15" height="14">如果您想断开互联网连接,请单击<span onClick="logoff();" style="cursor: hand" >&nbsp;[断开连接]</span>  
+</p>
+<iframe id="mainviewfrm" name="mainviewfrm" src="[$homeurl$]" valign=top width="100%"  height="100%"  border="0" frameborder="0" scrolling="no"></iframe>
+</body> 
+</html>   

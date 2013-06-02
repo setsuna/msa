@@ -1,0 +1,92 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<title>用户验证</title>
+<LINK href="http://[$myadd1$]/publiccss/pubcss.css" type=text/css rel=stylesheet>
+<style type="text/css">
+<!--
+body {
+	margin-left: 0px;
+	margin-top: 0px;
+	margin-right: 0px;
+	margin-bottom: 0px;
+	font-size:12px;
+	line-height:18px;
+	color:#000000;
+}
+.hui {font-size:12px; color:#555555; line-height:14px;}
+.hei {font-size:12px; color:#000000; line-height:18px;}
+.STYLE1 {color: #2d5da2}
+-->
+
+</style></head>
+
+<body>
+<div style="width:776px; margin-top:100px; margin-left:auto; margin-right:auto;">
+ 
+  <table width="776" border="1" cellpadding="0" cellspacing="0" bordercolor="#073f90" class="table" style="border-collapse:collapse; margin-top:3px; margin-bottom:3px;">
+    <tr>
+      <td bgcolor="#073f90">&nbsp;</td>
+    </tr>
+    <tr>
+      <td><table width="100%" border="0" cellspacing="0" cellpadding="0">
+        <tr>
+          <td>
+          
+          <form name="authlogin" id="authlogin" method="post" action="http://[$myadd1$]/main/main.xp"  >
+              <input type="hidden" name="Fun" value="nasuserlogin">
+              <input type="hidden" name="nurl" value="http://[$url$]">
+              <input type="hidden" name="xclientip" value="[$xclientip$]">
+              <input type="hidden" name="nmac" value="[$mac$]">
+          
+          <table width="100%" border="0" cellspacing="0" cellpadding="0">
+            <tr>
+             
+              <td width="40%"><div style="margin:10px; text-align:center;"><img src="http://[$myadd1$]/images/123.jpg" width="268" height="125" /></div></td>
+              <td width="60%" align="left" valign="top"><div class="hui" style="margin-top:10px;">·当尝试读取以下网址（URL）时[When try]: </div>
+                                                        <div class="hui" style="margin-top:10px;" >·Access Denied And Verify Password,拒绝访问.请先输入口令/密码进行验证.  </div>
+                                                        <div style="margin-top:25px;"><table width="100%" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td width="24%" align="right">用户[User]&nbsp; </td>
+    <td width="39%"><input name="username" type="text" class="input" id="username" style=" border:1px; border-color:#000000; font-size:12px; line-height:17px; width:150px; height:16px; margin-left:5px;" /></td>
+    <td width="37%">&nbsp; </td>
+  </tr>
+  <tr>
+    <td align="right">密码[Password]&nbsp; </td>
+    <td><input name="password" type="password" class="input" id="password" style=" border:1px; border-color:#000000; font-size:12px; line-height:17px; width:150px; height:16px; margin-left:5px;" /></td>
+    <td><input type="submit" class="input" name="authuser" value="开始上网[Check In]"></td>
+  </tr>
+</table>
+</form>
+</div>
+              </td>
+            </tr>
+          </table></td>
+        </tr>
+        <tr>
+          <td><table style="margin-top:15px;" width="96%" border="0" align="center" cellpadding="0" cellspacing="0">
+  <tr>
+    <td height="4" bgcolor="#a2a2a2"></td>
+  </tr>
+</table>
+</td>
+        </tr>
+        <tr>
+          <td><div class="STYLE1" style=" margin:15px;">Access control configuration prevents your request from being allowed at this time.Please contact your service provider if you feel this is incorrect. <br />
+            当前的存取控制设定禁止您的请求被接受， 如果您觉得这是错误的，请与您网络管理员联系。 </div></td>
+        </tr>
+         <tr>
+          <td><div class="STYLE1" style=" margin:15px;">[$sysnote$]</div></td>
+        </tr>
+        
+      </table></td>
+    </tr>
+    <tr>
+      <td bgcolor="#073f90">&nbsp;</td>
+    </tr>
+  </table>
+</div>
+
+</body>
+</html>

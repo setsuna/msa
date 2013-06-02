@@ -1,0 +1,113 @@
+﻿[{
+    text:'权限管理',
+    expanded: false,
+    cls:'feeds-node',
+    children:[
+    {
+        text:'管理员操作',
+        iconCls: 'feed-icon',
+        cls:'feed',
+        id:'msaAdminUserList',
+        leaf:true
+    },{
+        text:'在线管理员',
+        iconCls: 'feed-icon',
+        cls:'feed',
+        id:'onlineadmuser',
+        leaf:true
+    },{
+        text:'管理员操作日志',
+        iconCls: 'feed-icon',
+        cls:'feed',
+        id:'msaAdmlog',
+        leaf:true
+    }]
+},{
+    text:'参数配置',
+    expanded: true,
+    cls:'feeds-node',
+    children:[{
+        text:'网络对象',
+        iconCls: 'feed-icon',
+        cls:'feed',
+        id:'ltnetarealist',
+        leaf:true
+    },{
+        text:'端口属性',
+        iconCls: 'feed-icon',
+        cls:'feed',
+        id:'ltportinfolist',
+        leaf:true
+    },{
+        text:'系统参数',
+        iconCls: 'feed-icon',
+        cls:'feed',
+        id:'ltappFunction',
+        leaf:true
+    },{
+        text:'邮件分类',
+        iconCls: 'feed-icon',
+        cls:'feed',
+        id:'msamailGroup',
+        leaf:true
+    },{
+        text:'表单分类',
+        iconCls: 'feed-icon',
+        cls:'feed',
+        id:'msaformGroup',
+        leaf:true
+    },{
+        text:'URL分类',
+        iconCls: 'feed-icon',
+        cls:'feed',
+        id:'lturlsortlist',
+        leaf:true
+    },{
+        text:'时间服务',
+        iconCls: 'feed-icon',
+        cls:'feed',
+        id:'lttimesetting',
+        leaf:true
+    }]
+},{
+    text:'系统操作',
+    expanded: true,
+    cls:'feeds-node',
+    children:[{
+        text:'资料重置',
+        iconCls: 'feed-icon',
+        cls:'feed',
+        id:'sysclean',
+        leaf:true
+    },{
+        text:'重新重启',
+        iconCls: 'feed-icon',
+        cls:'feed',
+        id:'sysreboot',
+        leaf:true
+    },{
+        text:'设备关机',
+        iconCls: 'feed-icon',
+        cls:'feed',
+        id:'sysshutdown',
+        leaf:true
+    }]
+},{
+    text:'在线云',
+    expanded: true,
+    cls:'feeds-node',
+    children:[{
+        text:'在线验证',
+        iconCls: 'feed-icon',
+        cls:'feed',
+        id:'onlinecheck',
+        leaf:true
+    },
+    {
+        text:'升级记录',
+        iconCls: 'feed-icon',
+        cls:'feed',
+        id:'updatereportlist',
+        leaf:true
+    }]
+}]

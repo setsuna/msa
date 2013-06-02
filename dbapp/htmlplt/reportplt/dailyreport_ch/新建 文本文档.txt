@@ -1,0 +1,199 @@
+daily report part9 ok
+
+Property "background" not found!!!
+Value bg.gif Tag BODY
+
+The property "html-FilePos" can't be created under ""!
+Tag "SPAN" not found in internal database!!!
+Pos 1350
+TagString: "SPAN class=SizeExtraLargei"
+
+The property "html-FilePos" can't be created under ""!
+Tag "/SPAN" incorrect closed!!!
+Pos 1391
+Tag "/B" incorrect closed!!!
+Pos 1398
+The property "html-FilePos" can't be created under ""!
+The property "html-FilePos" can't be created under ""!
+The property "html-FilePos" can't be created under ""!
+The property "html-FilePos" can't be created under ""!
+
+Property "VALIGN" not found!!!
+Value top Tag TABLE
+
+The property "html-FilePos" can't be created under ""!
+Processing tag "TH" like tag The property "html-FilePos" can't be created under ""!
+Processing tag "TH" like tag Tag "/TD" incorrect closed!!!
+Pos 3089
+Tag "TD" incorrect closed!!!
+Pos 3126
+Tag "/TR" incorrect closed!!!
+Pos 3193
+Tag "/TABLE" incorrect closed!!!
+Pos 3224
+Tag "TR" incorrect closed!!!
+Pos 3419
+Tag "TABLE" incorrect closed!!!
+Pos 3419
+Tag "td" is not allowed as child of "TD"!!!
+Pos 3425
+The property "html-FilePos" can't be created under ""!
+Tag "CENTER" not or incorrect closed!!!
+Pos 5600
+Tag "/H3" incorrect closed!!!
+Pos 5609
+Tag "H3" not or incorrect closed!!!
+Pos 11817
+Tag "H3" incorrect closed!!!
+Pos 11866
+Tag "/H3" incorrect closed!!!
+Pos 11876
+Tag "H3" incorrect closed!!!
+Pos 14871
+Tag "/H3" incorrect closed!!!
+Pos 14881
+Tag "p" not or incorrect closed!!!
+Pos 20796
+Tag "H3" incorrect closed!!!
+Pos 20984
+Tag "/H3" incorrect closed!!!
+Pos 20994
+Tag "H3" incorrect closed!!!
+Pos 22941
+Tag "/H3" incorrect closed!!!
+Pos 22951
+Tag "H3" incorrect closed!!!
+Pos 23860
+Tag "/H3" incorrect closed!!!
+Pos 23870
+Tag "H3" incorrect closed!!!
+Pos 50475
+Tag "/H3" incorrect closed!!!
+Pos 50485
+Tag "p" not or incorrect closed!!!
+Pos 51497
+Tag "p" not or incorrect closed!!!
+Pos 52026
+Tag "p" not or incorrect closed!!!
+Pos 52550
+Tag "p" not or incorrect closed!!!
+Pos 53079
+Tag "/CENTER" incorrect closed!!!
+Pos 53136
+Tag "/CENTER" incorrect closed!!!
+Pos 53145
+Tag "/CENTER" incorrect closed!!!
+Pos 53154
+Tag "/CENTER" incorrect closed!!!
+Pos 53163
+Tag "/CENTER" incorrect closed!!!
+Pos 53172
+Tag "/CENTER" incorrect closed!!!
+Pos 53181
+Tag "/CENTER" incorrect closed!!!
+Pos 53190
+Tag "/CENTER" incorrect closed!!!
+Pos 53199
+Tag "/CENTER" incorrect closed!!!
+Pos 53208
+Tag "TD" is not allowed as child of "TD"!!!
+Pos 53248
+The property "html-FilePos" can't be created under ""!
+The property "html-FilePos" can't be created under ""!
+Tag "B" incorrect closed!!!
+Pos 53619
+Tag "/B" incorrect closed!!!
+Pos 53623
+
+Property "height" not found!!!
+Value 1 Tag HR
+
+The property "html-FilePos" can't be created under ""!
+The property "html-FilePos" can't be created under ""!
+starting table processing step 1 of 2 for table 1 depth 1
+ retrieving table columns from non-col-spanned cells...
+ xxxxx
+ table columns retrieved
+ recalculating table column width...
+  cutting columns:
+   1 (0.58cm -> 0.54cm)
+   2 (4.66cm -> 4.30cm)
+   3 (8.54cm -> 7.88cm)
+   4 (3.30cm -> 3.05cm)
+   5 (0.58cm -> 0.54cm)
+   3! (7.88cm -> 7.87cm)
+  adding values for columns:
+   none
+ done
+ processing table cells...
+done step 1 of table processing
+starting table processing step 2 of 2 - depth 1
+ processing table cells...
+[ERROR] Logger not set
+[WARNING] Screen logger not set - Using ConsoleLogger.
+[INFO] Using org.apache.xerces.jaxp.SAXParserImpl$JAXPSAXParser as SAX2 Parser
+[INFO] Using org.apache.xerces.jaxp.SAXParserImpl$JAXPSAXParser as SAX2 Parser
+[INFO] Using org.apache.xerces.jaxp.SAXParserImpl$JAXPSAXParser as SAX2 Parser
+org.apache.fop.apps.FOPException: /app/ns/conlog/report/dailyreport/06-03-16/index.fo (No such file or directory)
+        at org.apache.fop.apps.Driver.render(Driver.java:507)
+        at org.apache.fop.apps.Driver.run(Driver.java:565)
+        at myfop.main(myfop.java:15)
+
+---------
+
+java.io.FileNotFoundException: /app/ns/conlog/report/dailyreport/06-03-16/index.fo (No such file or directory)
+        at java.io.FileInputStream.open(Native Method)
+        at java.io.FileInputStream.<init>(FileInputStream.java:137)
+        at java.io.FileInputStream.<init>(FileInputStream.java:97)
+        at sun.net.www.protocol.file.FileURLConnection.connect(FileURLConnection.java:85)
+        at sun.net.www.protocol.file.FileURLConnection.getInputStream(FileURLConnection.java:176)
+        at org.apache.xerces.impl.XMLEntityManager.setupCurrentEntity(Unknown Source)
+        at org.apache.xerces.impl.XMLEntityManager.startEntity(Unknown Source)
+        at org.apache.xerces.impl.XMLEntityManager.startDocumentEntity(Unknown Source)
+        at org.apache.xerces.impl.XMLDocumentScannerImpl.setInputSource(Unknown Source)
+        at org.apache.xerces.parsers.DTDConfiguration.parse(Unknown Source)
+        at org.apache.xerces.parsers.DTDConfiguration.parse(Unknown Source)
+        at org.apache.xerces.parsers.XMLParser.parse(Unknown Source)
+        at org.apache.xerces.parsers.AbstractSAXParser.parse(Unknown Source)
+        at org.apache.fop.apps.Driver.render(Driver.java:498)
+        at org.apache.fop.apps.Driver.run(Driver.java:565)
+        at myfop.main(myfop.java:15)
+
+---------
+
+java.io.FileNotFoundException: /app/ns/conlog/report/dailyreport/06-03-16/index.fo (No such file or directory)
+        at java.io.FileInputStream.open(Native Method)
+        at java.io.FileInputStream.<init>(FileInputStream.java:137)
+        at java.io.FileInputStream.<init>(FileInputStream.java:97)
+        at sun.net.www.protocol.file.FileURLConnection.connect(FileURLConnection.java:85)
+        at sun.net.www.protocol.file.FileURLConnection.getInputStream(FileURLConnection.java:176)
+        at org.apache.xerces.impl.XMLEntityManager.setupCurrentEntity(Unknown Source)
+        at org.apache.xerces.impl.XMLEntityManager.startEntity(Unknown Source)
+        at org.apache.xerces.impl.XMLEntityManager.startDocumentEntity(Unknown Source)
+        at org.apache.xerces.impl.XMLDocumentScannerImpl.setInputSource(Unknown Source)
+        at org.apache.xerces.parsers.DTDConfiguration.parse(Unknown Source)
+        at org.apache.xerces.parsers.DTDConfiguration.parse(Unknown Source)
+        at org.apache.xerces.parsers.XMLParser.parse(Unknown Source)
+        at org.apache.xerces.parsers.AbstractSAXParser.parse(Unknown Source)
+        at org.apache.fop.apps.Driver.render(Driver.java:498)
+        at org.apache.fop.apps.Driver.run(Driver.java:565)
+        at myfop.main(myfop.java:15)
+bg.gif
+blockreport1.jpg
+blockreport2.jpg
+blockreport3.jpg
+blockreport4.jpg
+blockreport5.jpg
+data.ini
+errmsg.ini
+flowreport1.jpg
+flowreport2.jpg
+flowreport.gif
+index.htm
+index.pdf
+info.ini
+outflow1.jpg
+outflow2.jpg
+p_01.gif
+p_02.gif
+p_03.gif

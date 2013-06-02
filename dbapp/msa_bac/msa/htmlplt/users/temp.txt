@@ -1,0 +1,117 @@
+﻿	
+	//设置附加参数
+	var panel_4 =new Ext.Panel({
+		layout:'fit',
+		height:100,
+		autoScroll: true,
+		el:'additive'
+	});	
+	var button_4 = Ext.get('Service_4');
+	button_4.on('click', function(){
+		if(!wing4){
+		wing4 = new Ext.Window({
+				title: '设置附加参数',
+				closeAction: 'hide',
+				width: 700,
+				height:300,
+				plain:true,
+				autoScroll:true,
+				items:panel_4,
+				bodyStyle:'padding:5px;',
+				buttons: [{
+                text     : '确定',
+				handler  : function(){
+					wing4.hide();
+				}}]
+			});
+		}
+		wing4.show();
+	});
+
+		<div style='DISPLAY:none'><div id="additive" >
+		
+			<table width="800" height="164" border="0" align="center">
+				  <tr>
+					<td width="184">每天最大的上网流量</td>
+					<td width="252"><input name="lLimitBytes" type="text" id="lLimitBytes" class="inputf0" value="0" />
+					  <font color="#999999">(Byte)</font></td>
+					<td width="214">最多<span lang="EN-US" xml:lang="EN-US">udp</span>连接</td>
+					<td width="222"><input name="maxudp" type="text" class="inputf0" value="0" id="maxudp" />
+					<font color="#999999">(条)</td>
+				  </tr>
+				  <tr>
+					<td>每天最大的上网时间</td>
+					<td><input name="lLimitTimes" type="text" class="inputf0" value="0" id="lLimitTimes" />
+					<font color="#999999">(秒)</font></td>
+					<td>最多<span lang="EN-US" xml:lang="EN-US">tcp</span>连接</td>
+					<td><input name="maxtcp" type="text" value="0" id="maxtcp" class="inputf0"/>
+					<font color="#999999">(条)</td>
+				  </tr>
+				  <tr>
+					<td>每月最大的上网流量</td>
+					<td><input name="lLimitBytesw" type="text" value="0" id="lLimitBytesw" class="inputf0"/>
+					  <font color="#999999">(Byte)</font></td>
+					<td>每分最多<span lang="EN-US" xml:lang="EN-US">udp</span>包速率</td>
+					<td><input name="maxudpp" type="text" value="0" id="maxudpp" class="inputf0"/>
+					<font color="#999999">(Byte)</font></td>
+				  </tr>
+				  <tr>
+					<td>每月最大的上网时间</td>
+					<td><input name="lLimitTimesw" type="text" value="0" id="lLimitTimesw" class="inputf0"/>
+					<font color="#999999">(秒)</font></td>
+					<td>每分最多<span lang="EN-US" xml:lang="EN-US">tcp</span>包速率</td>
+					<td><input name="maxtcpp" type="text" value="0" id="maxtcpp" class="inputf0"/>
+					<font color="#999999">(Byte)</font></td>
+				  </tr>
+				  <tr>
+					<td>每月最大的上网流量</td>
+					<td><input name="lLimitBytesm" type="text" value="0" id="lLimitBytesm" class="inputf0"/>
+					<font color="#999999">(Byte)</td>
+					<td>每分<span lang="EN-US" xml:lang="EN-US">up</span>包速率</td>
+					<td><input name="maxupp" type="text" value="0" id="maxupp" class="inputf0"/>
+					<font color="#999999">(Byte)</td>
+				  </tr>
+				  <tr>
+					<td>每月最大的上网时间</td>
+					<td><input name="lLimitTimesm" type="text" value="0" id="lLimitTimesm" class="inputf0"/>
+					<font color="#999999">(秒)</td>
+					<td>每分<span lang="EN-US" xml:lang="EN-US">down</span>包速率</td>
+					<td><input name="maxdownp" type="text" value="0" id="maxdownp" class="inputf0"/>
+					<font color="#999999">(Byte)</td>
+				  </tr>
+				  <tr>
+					<td>每分上传数据包上限</td>
+					<td><input name="maxpackage" type="text" value="0" id="maxpackage" class="inputf0"/>
+					<font color="#999999">(个)</td>
+					<td>每分<span lang="EN-US" xml:lang="EN-US">128</span>字节小包速率</td>
+					<td><input name="maxsp" type="text" value="0" id="maxsp" class="inputf0"/>
+					<font color="#999999">(Byte)</td>
+				  </tr>
+				  <tr>
+					<td>每分总流量上限</td>
+					<td><input name="maxBytes" type="text" value="0" id="maxBytes" class="inputf0"/>
+					<font color="#999999">(Byte)</td>
+					<td>每分最多新建连接数目</td>
+					<td><input name="maxnc" type="text" value="0" id="maxnc" class="inputf0"/>
+					  <font color="#999999">(条)</td>
+				  </tr>
+				</table>
+			
+		</div></div>  
+	</form>
+	<table width="90%" border="0" cellspacing="0" cellpadding="2" align="center">
+    <tr> 
+      <td>
+        <div align="left">
+			<input type="button" onClick="addlistfun();"  value="添加用户"  class=inputf0 size=10>
+			<input type="hidden" name="groupmanager" id="groupmanager" value="[$id$]">
+			<input type="hidden" name="attribute" id="attribute" value="">
+			<input type="hidden" name="grouppolicy" id="grouppolicy" value="">
+			<input type="hidden" name="actiontype" value="1" >
+        </div>
+      </td>
+    </tr>
+  </table>
+	
+
+</div>

@@ -1,0 +1,61 @@
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>身份验证</title>
+<style type="text/css">
+body { margin: 0px; font-size: 12px; background: #F8F8F8; }
+.logindiv_bj { height: 265px; width: 800px;; top: 50%; left: 50%; position:absolute; z-index:100; margin-top: -150px; margin-left: -400px; }
+.logindiv { height: 265px; width: 500px; margin: 0px auto; }
+.logindiv ul { margin: 0px; padding: 0px; list-style: url(none) none; }
+.logindiv ul li { border-top: 1px solid #333; border-right: 1px solid #333; border-left: 1px solid #333; margin: 0px; padding: 0px; }
+</style>
+<SCRIPT language=JavaScript>
+	function chp(){
+			open("/ACCESS_LOGON_CHP.htm","_bcmain");
+	}
+</SCRIPT>
+</head>
+<body style="overflow:scroll;overflow:hidden;">
+<form name="authlogin" id="authlogin" method="post" action="http://[$authadd$]:[$authport$]/msa/main.xp"  >
+              <input type="hidden" name="Fun" value="msauserlogin">
+              <input type="hidden" name="nurl" value="http://[$url$]">
+              <input type="hidden" name="xclientip" value="[$xclientip$]">
+              <input type="hidden" name="nmac" value="[$mac$]">
+  <div class="logindiv_bj">
+    <div class="logindiv">
+      <ul>
+        <li style="background-color:#F0F0F0;"><img src="/msa/images/toplock.bmp" /></li>
+        <li style=" padding:30px;">
+          <table width="100%" border="0" align="center" cellpadding="5" cellspacing="0">
+            <tr>
+              <td width="94" align="right">用户名：</td>
+              <td width="386" align="left">
+                <input name="username" id="username" type="text" size="20" style="width:200px ">
+              </td>
+            </tr>
+            <tr>
+              <td align="right" nowrap="nowrap" class="formtxt">密码：</td>
+              <td align="left" nowrap="nowrap" class="formtxt">
+                <input id="password" name="password" type="password" size="22" style="width:200px ">
+    
+                <input id="pwd" type="hidden" name="pwd" value="">
+                <span onClick="chp();" style="cursor: hand"> &nbsp;[修改密码] </span>
+              </td>
+            </tr>
+            <tr>
+              <td colspan="2" align="center">
+                <div style="padding:10px 150px 10px 10px;">
+                  <input name="authuser" style="CURSOR: hand; height:26px; width:50px;" type="submit"  value="登录" >
+                  <input style="CURSOR: hand;height:26px; width:50px;"  type="reset"  value="清空">
+                </div>
+              </td>
+            </tr>
+          </table>
+        </li>
+        <li style="border-bottom:1px solid #333; padding:10px;" ><span style="color:#F30; ">提示信息：</span> [$sysnote$] </li>
+      </ul>
+    </div>
+  </div>
+  </div>
+</form>
+</body>
+</html>

@@ -1,0 +1,155 @@
+<html>   
+<head>
+<title>报告管理</title>
+<META 	content="text/html; charset=utf-8" http-equiv=Content-Type>
+<LINK 	rel=stylesheet type=text/css href="/ext/resources/css/ext-all.css">
+<LINK 	rel=stylesheet type=text/css href="/ext/resources/css/xtheme-default.css">
+<link 	href="/Content/IconCls.css" rel="stylesheet" type="text/css" />
+<link 	rel="stylesheet" type="text/css" href="/msa/publiccss/css.css" type="text/css">
+<link 	rel="stylesheet" type="text/css" href="/msa/publiccss/pubcss.css">
+<SCRIPT type=text/javascript  src="/ext/adapter/ext/ext-base.js"></SCRIPT>
+<SCRIPT type=text/javascript  src="/ext/ext-all.js"></SCRIPT>
+<SCRIPT type=text/javascript  src="/msa/publicjs/pubstyle.js"></SCRIPT>
+<script type=text/javascript  src="/msa/publicjs/select_time.js"></script>
+<script type=text/javascript  src="/msa/publicjs/exportexcel.js"></script>
+
+<SCRIPT type=text/javascript>
+    Ext.BLANK_IMAGE_URL = '/msa/extjs/resources/images/default/s.gif';
+     	var reportstore;
+       Ext.onReady(function(){
+				var hgt=(screen.height)-220;
+	  		Ext.QuickTips.init();
+				var detailEl;	
+				var myMask = new Ext.LoadMask(Ext.getBody(), 
+				    {
+				        	msg:"Please wait..."
+				    });
+				myMask.show();	
+		 	
+			var cm=new Ext.grid.ColumnModel([
+				{header:'报告名称',dataIndex:'reportname',sortable:true,width:350},
+				{header:'报告状态',dataIndex:'reportstate',sortable:true,width:280},
+			 	{header:'报告生成日期 ',dataIndex:'dates',sortable:true,width:280}
+			]);
+					 
+	 		 reportstore=new Ext.data.SimpleStore({
+			 url:'/msa/main.xp?Fun=templatereportlist+reportdir=[$reportdirs$]',
+             fields: [
+              {name: 'reportname'},
+              {name: 'dates'},
+              {name: 'reportdir'},
+		          {name: 'bfile'},
+		          {name: 'reportstate'}
+              ]
+			});   
+		 	reportstore.load();
+		
+			var reportgrid=new Ext.grid.GridPanel({
+	        store           :reportstore,
+	        viewConfig:{forceFit: true, scrollOffset: 0},
+	        cm							:cm,
+	        stripeRows      :true,
+	        autoExpandColumn:'reportname',
+	        frame           :false,
+			    collapsible     :false,
+			    loadMask        :{msg:'正在加载数据，请稍侯……'},
+			    draggable       :false
+		  });
+	       
+			  function showsysdelrule(btn){
+					        if(btn=='yes'){
+	                  var record = reportgrid.getStore().getAt(detailEl);
+	                  var files=record.get("bfile");
+	                  var reportdirs=record.get("reportdir"); 
+					   	      reportstore.load({params:{Fun:'templatereportlist',file:files,reportdir:reportdirs}}); 
+					        }
+					        
+					};
+			
+	 		 var rightClick  = new Ext.menu.Menu({
+                id:'feeds-ctx',
+                items: [{
+                    id:'shanchubaogao',
+                    iconCls:'load-icon',
+                    text:'删除报告',
+                    scope: this,
+                    handler:function(){
+                         Ext.MessageBox.confirm('Confirm', '您确认要删除吗?', showsysdelrule);
+                    }
+                },{
+                    id:'liulanbaogao',
+                    iconCls:'load-icon',
+                    text:'浏览报告',
+                    scope: this,
+                    handler:function(){
+                        var record = reportgrid.getStore().getAt(detailEl);
+                        var files=record.get("bfile");
+                        var reportdirs=record.get("reportdir"); 
+                        var usrl="/msadata/report/"+reportdirs+"/"+files+"/index.htm";
+                        var mywin =new  Ext.Window(
+							                {
+							                    id: 'east-panel',
+							                    title: '结果浏览',
+							                    height: 700,
+							                    width: 1024,  
+							                    closeAction: 'close',
+							                    modal: 'true',
+							                    maximizable:'true',
+							                    margins:'0 5 0 0',
+							                    html: "<IFRAME  name='menufrm' width=100%  height='"+(hgt-80)+"' SRC = '"+usrl+"'  border='0' frameborder='0' scrolling='yes'  ></iframe>" 
+							          }); 
+							          mywin.show(); 
+							          mywin.maximize();
+					   						} 
+
+                    },{
+                    id:'xiazaibaogao',
+                    iconCls:'load-icon',
+                    text:'下载报告',
+                    scope: this,
+                    handler:function(){				
+                        var record = reportgrid.getStore().getAt(detailEl);
+	                      var files=record.get("bfile");
+	                      var reportdirs=record.get("reportdir");
+	                      var usrl="/msa/main.xp?Fun=msaDataCenetrDownLoad+downLoadFileName=report.tgz+downLoadFile=report/"+reportdirs+"/"+files+"/report.tar";
+	                      downloadFile(usrl);										 
+                    } 
+                }]});
+                
+					reportgrid.addListener('rowclick', rightClickFn);
+					function rightClickFn(client, rowIndex, e) {
+					                rightClick.showAt(e.getXY()); 
+					                detailEl=  rowIndex;
+					}   
+
+			  var mainPanel= {
+						id: 'main-panel',
+						region:'center',
+	        	title :'报告列表',
+	          collapsible: false,
+	          split:true,
+	          minSize: 125,
+	          maxSize: 400,
+	          layout:'fit',
+	          margins:'0 5 0 0',
+	          items:[reportgrid]
+    		}
+		    new Ext.Viewport({
+							layout: 'border',
+							items: [
+							 mainPanel
+							],
+			        renderTo: Ext.getBody()
+			  });
+            
+      	 myMask.hide();
+       
+});
+</SCRIPT>
+</head>
+
+<body bgcolor="#F0F0F0"  oncontextmenu="return false"  topmargin="0" text="#000000" leftmargin="0"  style="SCROLLBAR-FACE-COLOR: #f0f0f0;  overflow-x:hidden;  OVERFLOW: scroll; SCROLLBAR-SHADOW-COLOR: #f0f0f0; SCROLLBAR-3DLIGHT-COLOR: #f0f0f0; SCROLLBAR-ARROW-COLOR: #f0f0f0; SCROLLBAR-DARKSHADOW-COLOR: #cccccc;">
+<div id="reportgrid"></div>
+</body>
+</html>
+

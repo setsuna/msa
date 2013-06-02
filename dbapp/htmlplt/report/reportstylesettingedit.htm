@@ -1,0 +1,490 @@
+<html>
+<head>
+<title>自定义报告模板</title>
+<META 	content="text/html; charset=utf-8" http-equiv=Content-Type>
+<LINK 	rel=stylesheet type=text/css href="/ext/resources/css/ext-all.css">
+<LINK 	rel=stylesheet type=text/css href="/ext/resources/css/xtheme-default.css">
+<link 	href="/Content/IconCls.css" rel="stylesheet" type="text/css" />
+<link 	rel="stylesheet" type="text/css" href="/msa/publiccss/css.css" type="text/css">
+<link 	rel="stylesheet" type="text/css" href="/msa/publiccss/pubcss.css">
+<SCRIPT type=text/javascript  src="/ext/adapter/ext/ext-base.js"></SCRIPT>
+<SCRIPT type=text/javascript  src="/ext/ext-all.js"></SCRIPT>
+<SCRIPT type=text/javascript  src="/msa/publicjs/pubstyle.js"></SCRIPT>
+<script type=text/javascript  src="/msa/publicjs/select_time.js"></script>
+<script type=text/javascript  src="/msa/publicjs/exportexcel.js"></script>
+
+<style type="text/css">
+<!--
+body {  font-size: 12pt}
+table {  font-size: 9pt}
+form {margin: 0px;}
+-->
+</style>
+
+<script LANGUAGE="JavaScript"> 
+function allChecked(id){	  
+	var  dfd=eval("document.all.dfd" + id);
+	var  DataTable=eval("document.all.DataTable" + id);
+    if(dfd.value=="1"){
+				dfd.value="0";
+    }else {
+				dfd.value="1";
+    }
+    
+	for(var i=0;i<DataTable.rows.length;i++)
+	{ 
+		if(typeof(DataTable.rows[i].cells[0].childNodes[1])=="object"
+			&&DataTable.rows[i].cells[0].childNodes[1].tagName=="INPUT"
+			&&DataTable.rows[i].cells[0].childNodes[1].type=="checkbox"){
+			if(dfd.value=="1"){
+  			    DataTable.rows[i].cells[0].childNodes[1].checked="true";
+      }else{
+            DataTable.rows[i].cells[0].childNodes[1].checked="";
+      }
+    }
+ 	}
+}
+</script>
+
+
+<script LANGUAGE="JavaScript"> 
+Ext.BLANK_IMAGE_URL = '/msa/extjs/resources/images/default/s.gif';  
+Ext.onReady(function(){		
+		var mainPanel = new Ext.Panel({
+		  			id: 'main-panel',
+		  			title:'',
+						layout:'fit',
+						region:'center',
+	          split:false,
+	          frame:true,
+	          collapsible:false,
+	          autoScroll: true,
+	          margins:'0 0 0 0',
+	          contentEl:'htmlcontent'
+    });
+		
+    new Ext.Viewport({
+		layout: 'border',
+		items: [
+			mainPanel
+		],
+		renderTo: Ext.getBody()
+		});
+
+});  
+</script>
+
+<script charset="utf-8" >
+      
+function sub(){
+    var templnames=document.form1.templname.value;
+    var emails=document.form1.email.value; 
+		var tempid=document.form1.tempid.value; 
+    var checkb="",element="";
+		var language=document.form1.language.value;
+		var topusernum=document.form1.topusernum.value;
+		var scopevalue0;
+		var scopevalue1;
+		if(form1.deployscope0.checked==true){
+		  scopevalue0=1;
+		}else{
+		  scopevalue0=0;
+		}
+  
+		if(form1.deployscope1.checked==true){
+		  scopevalue1=1;
+		}else{
+		  scopevalue1=0;
+		}
+	  
+
+    if(form1.templname.value==""){
+    	Ext.MessageBox.alert("提示","请填写模板报告的名称以便区分！");return ;
+    }  
+    if (form1.email.value!=""){
+			var email_Flag = false;
+			var reg = /^\w+((-\w+)|(\.\w+))*\@[A-Za-z0-9]+((\.|-)[A-Za-z0-9]+)*\.[A-Za-z0-9]+$/;
+			email_Flag = reg.test(form1.email.value);
+			if(!email_Flag){
+					Ext.MessageBox.alert("提示消息","对不起，您输入的邮箱地址格式错误。");
+					form1.email.focus();
+					form1.email.select();
+					return false;
+			} 
+    }
+ 
+		for(var i=0;i<5;i++){
+				var bb=eval("document.all.b" + (i+1));
+				if(bb.checked==true){
+					bb.value="1"; 
+				}else{
+					bb.value="0";
+				}
+				checkb+=bb.value;
+		}
+
+		for(var i=0;i<33;i++){
+				var bb=eval("document.all.chr" + (i+1));
+				if(bb.checked==true){
+					bb.value="1"; 
+				}else{
+					bb.value="0";
+				}
+				element+=bb.value;
+	 }
+	 
+		Ext.MessageBox.show({
+         msg: '模板更新中。。。',
+         progressText: 'apply...',
+         width:300,
+         wait:true,
+         waitConfig: {interval:300},
+         icon:'ext-mb-download'
+		});
+		setTimeout(function(){
+	        Ext.MessageBox.hide();
+		}, 1000); 
+	 
+	 Ext.Ajax.request({
+					method : 'POST', 
+					url:'/msa/main.xp', 
+					success: function(response, options) {  
+		      	var txt=response.responseText;
+		      	if(txt.substring(0,1)=="1"){
+		      		 Ext.MessageBox.hide();
+		      		 Ext.MessageBox.alert("提示","更新成功！");
+						}else{
+							 Ext.MessageBox.alert('提示','更新失败！'); 
+						}
+					},
+	        failure : function() {      
+	       	     Ext.MessageBox.alert('提示','更新失败！'); 
+	        }, 
+	        params:{Fun:'reporttemplateupdate',
+						deployscope0:scopevalue0,
+						deployscope1:scopevalue1,
+						templname:templnames,
+						email:emails,
+						checkb:checkb,
+						tempid:tempid,
+						element:element,
+						language:language,
+						topusernum:topusernum
+	        } 
+	 });   
+}
+</script>
+
+</head> 
+<body oncontextmenu="return false" bgcolor="#F0f0f0" topmargin=0 leftmargin=0 style="SCROLLBAR-FACE-COLOR: #f0f0f0;  overflow-x:hidden;  OVERFLOW: scroll; SCROLLBAR-SHADOW-COLOR: #f0f0f0; SCROLLBAR-3DLIGHT-COLOR: #f0f0f0; SCROLLBAR-ARROW-COLOR: #f0f0f0; SCROLLBAR-DARKSHADOW-COLOR: #cccccc;">
+<div id="htmlcontent">
+<table width="100%" border="0" cellspacing="0" cellpadding="0" >
+  <tr> 
+    <td> 
+     <form name="form1" id="form1" method="post"  action="/msa/main.xp" >  
+			<input type="hidden" name="dfd1" value="0">	
+			<input type="hidden" name="dfd2" value="0">	
+			<input type="hidden" name="dfd3" value="0">	
+			<input type="hidden" name="dfd4" value="0">	
+			<input type="hidden" name="dfd5" value="0">	
+			<input type="hidden" name="dfd6" value="0">	
+			<input type="hidden" name="dfd7" value="0">	
+			<input type="hidden" id="tempid" name="tempid" value="[$tempid$]">
+					
+	 		<TABLE WIDTH = 100% CELLPADDING=0 CELLSPACING=0 border=0>
+				<TR>
+						<TD WIDTH = 100% ALIGN=left VALIGN=top bgcolor='#D9E7F7'>
+						<TABLE CELLPADDING=0 CELLSPACING=0 border=0>
+						<TR>
+								<TD COLSPAN = 2 bgcolor='#D9E7F7'><BR>
+									<FONT FACE='宋体' ><B>自定义报告模板选项</B></FONT>
+								</TD>
+						</TR>
+							<TR>
+								<TD width = 10 bgcolor='#D9E7F7'>&nbsp;</TD>
+								<TD bgcolor='#D9E7F7'><FONT FACE='宋体' >--选择报告模板包含的元素--</FONT></TD>
+							</TR>
+						</TABLE>
+						</TD>
+						<TD WIDTH = 5 bgcolor='#D9E7F7'>&nbsp;</TD>
+	          <TD width = 74 ALIGN=right bgcolor='#D9E7F7'></TD>
+	        </TR>
+      </TABLE>
+
+        <table width="100%" border="0" cellspacing="0" cellpadding="0" bgcolor="#D9E7F7">
+                          
+				<tr> 
+					<td width="50" > 
+						<div align="center">&nbsp;</div>
+					</td>
+					<td height="25"> 
+						<div align="left">模板类型: 
+							<input type="checkbox"  value="0"  name="deployscope0"  [$se0$]> 每天自动生成报告
+							<input type="checkbox"   value="1" name="deployscope1"  [$se1$]> 每周自动生成报告 
+						</div>
+					</td>
+				</tr> 
+             
+                                
+		      
+				<tr> 
+					<td width="50" height="25"> 
+						<div align="center">&nbsp;</div>
+					</td>
+					<td  height="25"> 
+						<div align="left"> 
+							模板名称: <input type="text"  class=inputf0 name="templname" size="20" maxlength="32" value="[$templname$]" >  
+						</div>
+					</td>
+				</tr> 
+			   
+				<tr> 
+					<td width="50" height="25"> 
+						<div align="center">&nbsp;</div>
+					</td>
+					<td  height="25"> 
+						<div align="left"> 
+							邮件地址: <input type="text"  class=inputf0 name="email" size="32" maxlength="64" value="[$email$]" >  
+							(填写邮件地址后生成的报告可自动发送到您的邮箱中！)	
+						</div>
+					</td>
+				</tr>  
+
+		    <tr> 
+              <td width="50" height="25"> 
+                <div align="center">&nbsp;</div>
+              </td>
+              <td  height="25"> 
+                <div align="left"> 
+                 报告语言: <select name="language" class=inputself0 > 
+					<option value="0" [$san1$]>中文</option>
+					<option value="1" [$san2$]>英文</option> 
+				</select> 
+				</div>
+
+              </td>
+           </tr>
+      
+        
+			<tr> 
+				  <td width="50" height="25"> 
+				   <div align="center">&nbsp;</div>
+				  </td>
+				  <td  height="25"> 
+					<div align="left"> 
+					 报告显示前N名用户: <input type="text"  class=inputf0 name="topusernum" size="12" maxlength="12" value="[$topusernum$]"  >  
+							</div>
+				  </td>
+       </tr> 
+
+
+		   <tr>
+				<td colspan="2"><div align="left"> <hr width="100%"></div></td>
+		   </tr>
+
+			<tr> 
+				  <td width="50" height="25"> 
+					<div align="center">&nbsp;</div>
+				  </td>
+				  <td  height="25"> 
+					<div align="left"> 
+					  <b>  报告包含的内容：</b>
+					 
+					</div>
+				  </td>
+			</tr> 
+			
+		    <tr> 
+				  <td width="50" height="35"> 
+					<div align="center">&nbsp;</div>
+				  </td>
+				  <td  height="35"> 
+					<div align="left"> 
+						 <input type="checkbox" name="chr1" value="1" class="inputchk" [$chr1$]>
+							设备状态
+					</div>
+				  </td>              
+			</tr> 
+		 
+			<tr> 
+              <td width="50" height="35"> 
+                <div align="center">&nbsp;</div>
+              </td>
+              <td  height="35"> 
+                <div align="left"> 
+										 <TABLE id="DataTable1" CELLPADDING = 0 CELLSPACING=0 ><TR><TD>
+										    <input type="checkbox" name="b1" value="0" class="inputchk" onClick="allChecked(1)" [$b1$]>
+						                    网络基本概况
+											</TD></TR>
+											<TR><TD>
+											&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+											<input type="checkbox" name="chr2" value="2" [$chr2$] >统计表 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+						                   </TD></TR>
+											<TR><TD>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+										    <input type="checkbox" name="chr3" value="3" [$chr3$] >直方图  
+											</TD></TR>
+											<TR><TD>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+											<input type="checkbox" name="chr4" value="4" [$chr4$] >趋势图 
+						
+										 </TD></TR></TABLE>
+                </div>
+              </td>
+			</tr> 
+		 
+		  </td></tr>
+
+		 <tr> 
+              <td width="50" height="35"> 
+                <div align="center">&nbsp;</div>
+              </td>
+              <td  height="35"> 
+                <div align="left"> 
+									<TABLE id="DataTable2" CELLPADDING = 0 CELLSPACING=0 ><TR><TD>
+									    <input type="checkbox" name="b2" value="0" class="inputchk" onClick="allChecked(2)" [$b2$]>
+					                    服务汇总
+										</TD></TR>
+										<TR><TD> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+										 <input type="checkbox" name="chr5" value="5" [$chr5$]>统计表 
+					                    </TD></TR>
+										<TR><TD>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+										相关报告：&nbsp;
+									      <input type="checkbox" name="chr6" value="6" [$chr6$]>全部汇总 
+										</TD></TR>
+										<TR><TD>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+										  <input type="checkbox" name="chr7" value="7"  [$chr7$]>按部门汇总 
+										</TD></TR>
+										<TR><TD>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+										  <input type="checkbox" name="chr8" value="8"  [$chr8$]>按用户流量汇总 
+										</TD></TR>
+										<TR><TD>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+										  <input type="checkbox" name="chr9" value="9" [$chr9$]>按用户连接汇总
+										</TD></TR>
+										<TR><TD>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+									     <input type="checkbox" name="chr10" value="10" [$chr10$]>按日期汇总 
+										</TD></TR>
+										<TR><TD>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  
+										 <input type="checkbox" name="chr11" value="11" [$chr11$] >按部门日期流量汇总
+										 </TD></TR>
+										<TR><TD>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+										 <input type="checkbox" name="chr12" value="12" [$chr12$] >按部门日期连接汇总 
+									 </TD></TR></TABLE>
+                </div>
+              </td>
+           </tr> 
+
+		   <tr> 
+              <td width="50" height="35"> 
+                <div align="center">&nbsp;</div>
+              </td>
+              
+              <td  height="35"> 
+                <div align="left"> 
+											 <TABLE id="DataTable3" CELLPADDING = 0 CELLSPACING=0 ><TR><TD>
+											  <input type="checkbox" name="b3" value="0" class="inputchk" onClick="allChecked(3)" [$b3$]>
+							                    网络访问总计
+												</TD></TR>
+												<TR><TD>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+												<input type="checkbox" name="chr13" value="13" [$chr13$]>统计表
+												</TD></TR>
+												<TR><TD>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+							                    <input type="checkbox" name="chr14" value="14" [$chr14$]>直方图  
+												</TD></TR>
+												<TR><TD>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+												<input type="checkbox" name="chr15" value="15" [$chr15$] >趋势图
+												</TD></TR>
+												<TR><TD>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;相关报告：
+												1.网络流量分析	</TD></TR>
+												<TR><TD>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+											     <input type="checkbox" name="chr16" value="16" [$chr16$]>按天汇总 	</TD></TR>
+												<TR><TD>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+													<input type="checkbox" name="chr17" value="17" [$chr17$] >按用户总流量排序(前[$topusernum$]名) 	</TD></TR><TR><TD>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+													<input type="checkbox" name="chr18" value="18" [$chr18$]>按用户上流量排序(前[$topusernum$]名)	</TD></TR><TR><TD>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+													<input type="checkbox" name="chr19" value="19" [$chr19$]>按用户下流量排序(前[$topusernum$]名)  </TD></TR><TR><TD>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+													<input type="checkbox" name="chr20" value="20" [$chr20$] >按部门汇总 </TD></TR><TR><TD>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+													<input type="checkbox" name="chr21" value="21" [$chr21$] >按部门人员汇总 </TD></TR><TR><TD>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+													<input type="checkbox" name="chr22" value="22" [$chr22$] >按部门日期汇总
+												</TD></TR>	
+																  
+											</TABLE>
+
+                </div>
+              </td>
+           </tr> 
+
+		   <tr> 
+              <td width="50" height="35"> 
+                <div align="center">&nbsp;</div>
+              </td>
+              
+              <td  height="35"> 
+                <div align="left"> 
+													  <TABLE id="DataTable4" CELLPADDING = 0 CELLSPACING=0 ><TR><TD>
+													  <input type="checkbox" name="b4" value="0" class="inputchk" onClick="allChecked(4)" [$b4$]>
+									                    部门与人员报告
+														 </TD></TR>	<TR><TD>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+														<input type="checkbox" name="chr23" value="23" [$chr23$]>部门访问排序
+														 </TD></TR>	<TR><TD>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+									                    <input type="checkbox" name="chr24" value="24" [$chr24$]>用户访问排序 
+														 </TD></TR>	<TR><TD>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+									                    <input type="checkbox" name="chr25" value="25" [$chr25$]>直方图 
+														 </TD></TR>	<TR><TD>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+														<input type="checkbox" name="chr26" value="26"  [$chr26$]>饼状图
+														</TD></TR>	<TR><TD>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+														相关报告：
+														 <input type="checkbox" name="chr27" value="27" [$chr27$]>部门网络时间汇总 
+														</TD></TR> 
+													  </TABLE>	 
+                </div>
+              </td>
+           </tr> 
+
+		    <tr> 
+              <td width="50" height="35"> 
+                <div align="center">&nbsp;</div>
+              </td>
+              <td  height="35"> 
+                <div align="left"> 
+									 <TABLE id="DataTable5" CELLPADDING = 0 CELLSPACING=0 ><TR><TD>
+									    <input type="checkbox" name="b5" value="0" class="inputchk" onClick="allChecked(5)" [$b5$]>
+					                     web报告
+										</TD></TR>	
+										<TR><TD>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+										<input type="checkbox" name="chr28" value="28" [$chr28$]> 前20/30/50名访问次数最多站点
+										</TD></TR>	
+										<TR><TD>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;       
+									    <input type="checkbox" name="chr29" value="29" [$chr29$]> 前20/30/50名访问流量最多站点  
+									   </TD></TR> 
+										<TR><TD>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;相关报告：&nbsp;  
+									      <input type="checkbox" name="chr30" value="30" [$chr30$]>全部汇总 
+										</TD></TR>
+										<TR><TD>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+										  <input type="checkbox" name="chr31" value="31" [$chr31$] >按部门汇总 
+										</TD></TR>
+										<TR><TD>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+										  <input type="checkbox" name="chr32" value="32" [$chr32$] >按用户汇总 
+										</TD></TR>
+										<TR><TD>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+										  <input type="checkbox" name="chr33" value="33" [$chr33$]>按日期汇总
+										</TD></TR>
+									   
+									   </TABLE>
+									   </div>
+              </td>
+           </tr> 
+           
+             <tr> 
+              <td height="50">&nbsp; </td>
+              <td height="35">
+                <input type="button"  border="0"  class=inputf0 value="确定修改" onClick="sub();" style="CURSOR: hand"> &nbsp;&nbsp;&nbsp;
+              </td>
+            </tr>
+            
+
+        </table>
+      </form>
+    </td>
+  </tr>
+</table>
+</div>
+</body>
+</html>

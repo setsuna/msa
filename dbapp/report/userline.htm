@@ -1,0 +1,960 @@
+﻿<html><head><title>网络7层管理和过滤的领导者</title>
+<META 	content="text/html; charset=utf-8" http-equiv=Content-Type>
+<LINK 	rel=stylesheet type=text/css href="/ext/resources/css/ext-all.css">
+<LINK 	rel=stylesheet type=text/css href="/ext/resources/css/xtheme-default.css">
+<link 	href="/Content/IconCls.css" rel="stylesheet" type="text/css" />
+<link 	rel="stylesheet" type="text/css" href="/msa/publiccss/css.css" type="text/css">
+<link 	rel="stylesheet" type="text/css" href="/msa/publiccss/pubcss.css">
+<SCRIPT type=text/javascript  src="/ext/adapter/ext/ext-base.js"></SCRIPT>
+<SCRIPT type=text/javascript  src="/ext/ext-all.js"></SCRIPT>
+<SCRIPT type=text/javascript  src="/msa/publicjs/pubstyle.js"></SCRIPT>
+<script type=text/javascript  src="/msa/publicjs/select_time.js"></script>
+<script type=text/javascript  src="/msa/publicjs/exportexcel.js"></script>
+<script type="text/javascript">
+Ext.BLANK_IMAGE_URL = '/msa/extjs/resources/images/default/s.gif';
+
+Ext.onReady(function(){
+		var detailEl;
+		var urlValue;
+		var responseDir;
+		var xtzystore;
+    var pagesize;  
+    var grouptext;	  
+		var wingtree; 
+		var hgt=(screen.height)-220;
+		var groupmanager ="1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111";
+		groupmanager =groupmanager + "1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111";
+		groupmanager =groupmanager + "1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111";
+		groupmanager =groupmanager + "1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111";
+		groupmanager =groupmanager + "1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111";
+		groupmanager =groupmanager + "1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111";
+		groupmanager =groupmanager + "1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111";
+		groupmanager =groupmanager + "1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111";
+		groupmanager =groupmanager + "1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111";
+		groupmanager =groupmanager + "1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111";
+    pagesize=100;
+    
+		Ext.QuickTips.init();
+		var myMask = new Ext.LoadMask(Ext.getBody(),
+		{
+			msg:"Please wait..."
+		});
+		myMask.show();
+	
+		var treepangroup=new Ext.tree.TreePanel({
+				height: 400,
+				split: true,
+				useArrows:true,
+				autoScroll: true,
+				rootVisible: false,
+				lines: false,
+				useArrows: true,
+				renderTo:Ext.getBody(),
+				tbar:[new Ext.form.TextField({ width: 200,
+	   					emptyText:'Find Group',
+					    listeners:{
+					       render: function(f){
+					         f.el.on('keydown', filterTree, f, {buffer: 350});
+	      				 }
+	            }
+	      })],
+				root: new Ext.tree.AsyncTreeNode(),
+		    loader: new Ext.tree.TreeLoader({
+	      	  dataUrl:'/msa/main.xp?Fun=msaGroupTree',
+						baseParams:{Fun:'msaGroupTree',type:'1'}
+	      })	
+	  });			
+	  var hiddenPkgs = [];
+	  function filterTree(e){
+	   			var text = e.target.value;
+	        Ext.each(hiddenPkgs, function(n){
+	             n.ui.show();
+	        });
+	   
+	         if(!text){
+	             filter.clear();           
+	             return;
+	         }   
+	         treepangroup.expandAll();
+	         var re = new RegExp(Ext.escapeRe(text), 'i');         
+	         filter.filterBy(function(n){           
+	         		var textval = n.text;
+	            return !n.isLeaf() || re.test(n.text);
+	         });
+	 
+	         hiddenPkgs = [];
+	         treepangroup.root.cascade(function(n) {
+	             if(!n.isLeaf()&& n.ui.ctNode.offsetHeight<3){
+	                 n.ui.hide();
+	                 hiddenPkgs.push(n);
+	             }
+	         });
+	 
+	  }
+	  var filter = new Ext.tree.TreeFilter(treepangroup, {
+			   clearBlank: true,
+			   autoClear: true
+	  });
+	  var btn_Manager=Ext.get('group');
+		btn_Manager.on('click', function(){
+							if(!wingtree){
+							 wingtree = new Ext.Window({
+									title: '部门选择',
+									closeAction: 'hide',
+									width: 300,
+								  height:400,
+									plain:true,
+									items:[
+											treepangroup
+							    ],
+									bodyStyle:'padding:5px;',
+									buttons: [{
+				            text: '保存选择的部门',
+										handler  : function(){		
+															 groupmanager ="0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000";
+				                       groupmanager =groupmanager + "0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000";
+				                       groupmanager =groupmanager + "0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000";
+				                       groupmanager =groupmanager + "0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000";
+				                       groupmanager =groupmanager + "0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000";
+				                       groupmanager =groupmanager + "0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000";
+				                       groupmanager =groupmanager + "0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000";
+				                       groupmanager =groupmanager + "0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000";
+				                       groupmanager =groupmanager + "0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000";
+				                       groupmanager =groupmanager + "0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000";
+				                       var selNodes = treepangroup.getChecked();
+				                       var k=0;
+				                       grouptext="";
+								               Ext.each(selNodes, function(node){																							               	
+								                    if(node.id=='0'){																					                    	
+								                      groupmanager = '1' + groupmanager.substring(Number(node.id)+1);
+								                    }else if(node.id=='999'){
+								                      groupmanager = groupmanager.substring(0,Number(node.id)) +  '1';
+								                    }else{																						                    	
+								                      groupmanager = groupmanager.substring(0,Number(node.id)) +  '1' + groupmanager.substring(Number(node.id)+1,1000);
+								                    }																							                      
+								               	    if(k==0){
+								               	    	grouptext=node.text+"......";
+								               	    }
+								                    k++;
+								                });
+															document.getElementById("group").value=grouptext;
+															wingtree.hide();
+								  	}
+								  	},
+								  	{
+				            text: '选择全部部门',
+										handler  : function(){		
+															 	groupmanager ="1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111";
+				                        groupmanager =groupmanager + "1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111";
+				                        groupmanager =groupmanager + "1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111";
+				                        groupmanager =groupmanager + "1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111";
+				                        groupmanager =groupmanager + "1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111";
+				                        groupmanager =groupmanager + "1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111";
+				                        groupmanager =groupmanager + "1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111";
+				                        groupmanager =groupmanager + "1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111";
+				                        groupmanager =groupmanager + "1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111";
+				                        groupmanager =groupmanager + "1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111";															
+															  document.getElementById("group").value="all group";
+															 wingtree.hide();
+								  	}
+								  	}]
+								
+							 });
+						  }
+						wingtree.show();		
+	  });	
+   
+
+		xtzystore=new Ext.data.GroupingStore({
+	      url:'/msa/main.xp',
+	      baseParams:{Fun:'msaReportJsonStore',reportdir:"userlinereport"},
+	      reader: new Ext.data.JsonReader({
+	           root:'Results',
+	           totalProperty:'totalCount',
+	           remoteSort:true,
+	           fields: [
+		           			{name: 'reportname'},
+										{name: 'dates'},
+										{name: 'bydate'},
+										{name: 'reportdir'},
+										{name: 'bfile'},  
+										{name: 'reportstate'}
+					   ]
+	      }),
+	      sortInfo:{field: 'reportname', direction: 'ASC'},
+	      groupField:['bydate']
+		});
+		xtzystore.load();
+	
+		HlPagingToolbar = Ext.extend(Ext.PagingToolbar, { 
+	  displayInfo: true, 
+	  displayMsg: '显示第 {0} 条到 {1} 条记录，共 {2} 条', 
+	  emptyMsg: "无记录", 
+	  initComponent : function(){ 
+	  							var pageSizeItems = [ 
+	                   '-','每页', 
+	                    this.inputItem = new Ext.form.NumberField({ 
+									    cls: 'x-tbar-page-number', 
+									    allowDecimals: false, 
+									    allowNegative: false, 
+									    enableKeyEvents: true, 
+									    maxValue: 500, 
+									    maxText: '每页不允许超过500条', 
+									    selectOnFocus: true, 
+									    value: this.pageSize, 
+									    submitValue: false, 
+									    listeners: { 
+									        scope: this, 
+									        keydown: this.onHlPagingKeyDown, 
+									        blur: this.onHlPagingBlur 
+									    } 
+	                   }),'条','-',{
+						            icon: '/msa/images/grid.png',
+						            enableToggle:true,
+						            text: '导出本页数据到Excel',
+						            cls: 'x-btn-text-icon details',
+						            toggleHandler: function(btn, pressed){
+						                downloadViewDataActive(xtzygrid);
+						            }
+						        },'-',{
+						            icon: '/msa/images/drop-yes.gif',
+						            enableToggle:true,
+						            text: '开始分析',
+						            cls: 'x-btn-text-icon details',
+						            toggleHandler: function(btn, pressed){								          
+															card =new  Ext.Window({
+																id:'wizard',
+																title: '用户分析',
+																resizable:true,
+																layout:'card',
+																closeAction:'hide',
+																maximizable:'true',
+																maximized :'true',
+																height:500,
+																width:750,
+																activeItem: 0,
+																defaults: {
+																	border:false
+																},
+																bbar: ['->',
+																		{
+																			id: 'move-prev',
+																			text: '上一步',
+																			disabled: true,
+																			handler:backTab
+																		},{
+																			id: 'move-next',
+																			text: '下一步',
+																			handler:changeTab
+																		},{
+																			id: 'exit',
+																			text: '完成',
+																			handler:function(){card.hide();}
+																		}
+																],
+																items: [panel0,panel1,panel2,panel3,panel4,panel5,panel6]								
+															});
+															card.show();
+		
+						        }},'-',{
+							            icon: '/msa/images/drop-yes.gif',
+							            enableToggle:true,
+							            text: '删除选中报告',
+							            cls: 'x-btn-text-icon details',
+							            toggleHandler: function(btn, pressed){								          
+																	var record=xtzygrid.getSelectionModel().getSelections();								
+																	for(var i=0;i<record.length;i++){	
+									                    var files=record[i].get("bfile");
+			     														var reportdirs=record[i].get("reportdir");
+									                    xtzystore.load({params:{Fun:'msaReportRecordJson',file:files,reportdir:reportdirs}}); 
+									                    xtzystore.load();		
+									  					    } 	 
+																		
+							        }},'-']; 
+	       var userItems = this.items || []; 
+	       this.items = userItems.concat(pageSizeItems); 
+	       HlPagingToolbar.superclass.initComponent.call(this); 
+	  }, 
+	  onHlPagingKeyDown: function(field, e){ 
+	      if(field.isValid()){ 
+	           var k = e.getKey(); 
+	           if (k == e.RETURN) { 
+	                  e.stopEvent(); 
+	                  this.pageSize = field.getValue(); 
+	                  pagesize=this.pageSize;
+	                  this.doRefresh(); 
+	           } 
+	      } 
+	  }, 
+	  onHlPagingBlur: function(field){ 
+	      if(field.isValid()){ 
+	          this.pageSize = field.getValue(); 
+	          pagesize=this.pageSize;
+	          this.doRefresh(); 
+	      } 
+	  } 
+	 	});
+
+	  var pagingBar= new HlPagingToolbar({
+	      store: xtzystore,
+	      pageSize: pagesize,
+	      displayInfo: true
+	  });
+		
+		var sm = new Ext.grid.CheckboxSelectionModel();	
+		var xtzygrid=new Ext.grid.GridPanel({
+	      store           :xtzystore,
+	      sm: sm,
+	      columns					:[
+	      			new Ext.grid.RowNumberer(),
+        			sm,
+	      			{id:'reportname',header: "报告名称", width: 100, sortable: true, dataIndex: 'reportname'},
+		          {header: "报告状态",   width: 100, sortable: true,  dataIndex: 'reportstate'},
+		          {header: "报告生成日期",   width: 120, sortable: true,  dataIndex: 'dates'},
+		          {header: "报告日期",   width: 120, sortable: true,  dataIndex: 'bydate'}
+	      ],
+	      view: new Ext.grid.GroupingView({
+	      	hideGroupedColumn:true,
+	        forceFit:true,
+	        groupTextTpl: '{text} ({[values.rs.length]} {[values.rs.length > 1 ? "Items" : "Item"]})'
+				}),
+	      tbar: pagingBar,
+	      stripeRows      :true,
+	      autoExpandColumn:'reportname',
+	      frame           :false,
+		    collapsible     :false,
+		    loadMask        :{msg:'正在加载数据，请稍侯……'},
+		    draggable       :false
+		});
+	
+		function showsysdelrule(btn){
+			if(btn=='yes'){
+				var record = xtzygrid.getStore().getAt(detailEl);
+				var files=record.get("bfile");
+				var reportdirs=record.get("reportdir");
+				xtzystore.load({params:{Fun:'msaReportRecordJson',file:files,reportdir:reportdirs}});
+				xtzystore.load();
+			}
+		};
+			
+		var rightClick  = new Ext.menu.Menu({
+			id:'feeds-ctx',
+			items: [{
+								id:'shanchubaogao',
+								iconCls:'load-icon',
+								text:'删除报告',
+								scope: this,
+								handler:function(){
+									  Ext.MessageBox.confirm('Confirm', '您确认要删除吗?', showsysdelrule);
+											}
+							},{
+								id:'liulanbaogao',
+								iconCls:'load-icon',
+								text:'浏览报告',
+								scope: this,
+								handler:function(){
+									var record = xtzygrid.getStore().getAt(detailEl);
+									var files=record.get("bfile");
+									var reportdirs=record.get("reportdir");
+									var usrl="/msadata/report/"+reportdirs+"/"+files+"/index.htm";
+									var mywin =new  Ext.Window(
+														{
+															id: 'east-panel',
+															title: '结果浏览',
+															height: hgt,
+															width: 400,
+															closeAction: 'close',
+															modal: 'true',
+															maximizable:'true',
+															margins:'0 5 0 0',
+															html: "<IFRAME  name='menufrm' width=100% height='"+(hgt-80)+"' SRC = '"+usrl+"'  border='0' frameborder='0' scrolling='yes'></iframe>"
+												  });
+												  mywin.show();
+												  mywin.maximize();
+												}
+							},{
+								id:'xiazaibaogao',
+								iconCls:'load-icon',
+								text:'下载报告',
+								scope: this,
+								handler:function(){
+									var record = xtzygrid.getStore().getAt(detailEl);
+									var files=record.get("bfile");
+									var reportdirs=record.get("reportdir");
+									var usrl="/msa/main.xp?Fun=msaDataCenetrDownLoad+downLoadFileName=report.tgz+downLoadFile=report/"+reportdirs+"/"+files+"/report.tgz";
+									alert(usrl);
+									downloadFile(usrl);
+								}
+							}]
+		});
+		xtzygrid.addListener('rowcontextmenu', rightClickFn);
+		function rightClickFn(client, rowIndex, e) {
+							rightClick.showAt(e.getXY());
+							detailEl=  rowIndex;
+		}
+			
+		var changeTab = function changeTab(){
+		    var id = card.getLayout().activeItem.id;
+		    var prev = Ext.getCmp('move-prev');
+		  	var next = Ext.getCmp('move-next');
+		    var exit = Ext.getCmp('exit');
+				var sdate = Ext.getDom('sdate').value;
+				var edate = Ext.getDom('edate').value;
+				var worktime = Ext.getDom('worktime').value;
+				var reportname = Ext.getDom('reportname').value;
+				var email = Ext.getDom('email').value;   
+				var email_Flag = false;
+				var reg = /^\w+((-\w+)|(\.\w+))*\@[A-Za-z0-9]+((\.|-)[A-Za-z0-9]+)*\.[A-Za-z0-9]+$/;//邮箱格式正则表达式					
+				if(sdate==''||edate==''||reportname==''){
+					Ext.Msg.alert('提示','请填写完整条件');
+					return false;
+				}			
+				if(email!=""){
+					email_Flag = reg.test(email);
+					if(!email_Flag){
+						Ext.MessageBox.alert("提示信息","对不起，您输入的邮箱地址格式错误。");
+						Ext.getDom('email').focus();
+						Ext.getDom('email').select();
+						return false;
+					}		
+				}	
+		
+		    if(id=='card-0'){ 
+					  Ext.MessageBox.show({
+						           msg: '报告生成中，这需要一段时间，您可以继续等待或者稍后察看结果',
+						           progressText: 'apply...',
+						           width:300,
+						           wait:true,
+						           waitConfig: {interval:500},
+						           icon:'ext-mb-download'
+						    });
+				    setTimeout(function(){
+				            Ext.MessageBox.hide();
+				        }, 10000); 
+					
+						Ext.Ajax.request({
+							method : 'POST',
+							url:'/msa/main.xp',
+							success: function(response,options){
+									responseDir=response.responseText;
+									var frm=document.all('step2frm').contentWindow.document;
+									urlValue="/msadata/report/userlinereport/"+responseDir+"/index.htm";	
+									frm.location.href =urlValue;
+									prev.setDisabled(false);
+									next.setDisabled(false);
+									card.getLayout().setActiveItem(1);
+									xtzystore.load();
+							},
+							failure: function(response,options){
+									Ext.MessageBox.alert("提示信息","操作失败");
+							},
+							params:{Fun:'msaReportUserLineAjaxSubmit',
+								sdate:sdate,
+								edate:edate,
+								reportname:reportname,
+								email:email,
+								gid:groupmanager,
+								work:worktime,
+								step:1                                                    
+							}	
+						});
+						xtzystore.load();				
+					
+	  	  }else if(id=='card-1'){	
+	  	  		Ext.MessageBox.show({
+						           msg: '报告生成中，这需要一段时间，您可以继续等待或者稍后察看结果',
+						           progressText: 'apply...',
+						           width:300,
+						           wait:true,
+						           waitConfig: {interval:500},
+						           icon:'ext-mb-download'
+						    });
+				    setTimeout(function(){
+				            Ext.MessageBox.hide();
+				        }, 10000); 
+					
+						Ext.Ajax.request({
+							method : 'POST',
+							url:'/msa/main.xp',
+							success: function(response,options){
+									var frm=document.all('step3frm').contentWindow.document;
+									urlValue="/msadata/report/userlinereport/"+responseDir+"/page2.htm";	
+									frm.location.href =urlValue;
+									prev.setDisabled(false);
+									next.setDisabled(false);
+									card.getLayout().setActiveItem(2);
+									xtzystore.load();
+							},
+							failure: function(response,options){
+									Ext.MessageBox.alert("提示信息","操作失败");
+							},
+							params:{Fun:'msaReportUserLineAjaxSubmit',
+								sdate:sdate,
+								edate:edate,
+								reportname:reportname,
+								email:email,
+								gid:groupmanager,
+								work:worktime,
+								filedir:responseDir,
+								step:2                                                    
+							}	
+						});
+						xtzystore.load();		  			
+	  	  }else if(id=='card-2'){
+							Ext.MessageBox.show({
+						           msg: '报告生成中，这需要一段时间，您可以继续等待或者稍后察看结果',
+						           progressText: 'apply...',
+						           width:300,
+						           wait:true,
+						           waitConfig: {interval:500},
+						           icon:'ext-mb-download'
+						    });
+				    setTimeout(function(){
+				            Ext.MessageBox.hide();
+				        }, 10000); 
+					
+						Ext.Ajax.request({
+							method : 'POST',
+							url:'/msa/main.xp',
+							success: function(response,options){
+									var frm=document.all('step4frm').contentWindow.document;
+									urlValue="/msadata/report/userlinereport/"+responseDir+"/page3.htm";	
+									frm.location.href =urlValue;
+									prev.setDisabled(false);
+									next.setDisabled(false);
+									card.getLayout().setActiveItem(3);
+									xtzystore.load();
+							},
+							failure: function(response,options){
+									Ext.MessageBox.alert("提示信息","操作失败");
+							},
+							params:{Fun:'msaReportUserLineAjaxSubmit',
+								sdate:sdate,
+								edate:edate,
+								reportname:reportname,
+								email:email,
+								gid:groupmanager,
+								work:worktime,
+								filedir:responseDir,
+								step:3                                                   
+							}	
+						});
+						xtzystore.load();		
+	  		}else if(id=='card-3'){
+						 					  Ext.MessageBox.show({
+						           msg: '报告生成中，这需要一段时间，您可以继续等待或者稍后察看结果',
+						           progressText: 'apply...',
+						           width:300,
+						           wait:true,
+						           waitConfig: {interval:500},
+						           icon:'ext-mb-download'
+						    });
+				    setTimeout(function(){
+				            Ext.MessageBox.hide();
+				        }, 10000); 
+					
+						Ext.Ajax.request({
+							method : 'POST',
+							url:'/msa/main.xp',
+							success: function(response,options){
+									var frm=document.all('step5frm').contentWindow.document;
+									urlValue="/msadata/report/userlinereport/"+responseDir+"/page4.htm";	
+									frm.location.href =urlValue;
+									prev.setDisabled(false);
+									next.setDisabled(false);
+									card.getLayout().setActiveItem(4);
+									xtzystore.load();
+							},
+							failure: function(response,options){
+									Ext.MessageBox.alert("提示信息","操作失败");
+							},
+							params:{Fun:'msaReportUserLineAjaxSubmit',
+								sdate:sdate,
+								edate:edate,
+								reportname:reportname,
+								email:email,
+								gid:groupmanager,
+								work:worktime,
+								filedir:responseDir,
+								step:4                                                    
+							}	
+						});
+						xtzystore.load();		
+	  		}else if(id=='card-4'){
+				    Ext.MessageBox.show({
+						           msg: '报告生成中，这需要一段时间，您可以继续等待或者稍后察看结果',
+						           progressText: 'apply...',
+						           width:300,
+						           wait:true,
+						           waitConfig: {interval:500},
+						           icon:'ext-mb-download'
+						    });
+				    setTimeout(function(){
+				            Ext.MessageBox.hide();
+				        }, 10000); 
+					
+						Ext.Ajax.request({
+							method : 'POST',
+							url:'/msa/main.xp',
+							success: function(response,options){
+									var frm=document.all('step6frm').contentWindow.document;
+									urlValue="/msadata/report/userlinereport/"+responseDir+"/page5.htm";	
+									frm.location.href =urlValue;
+									prev.setDisabled(false);
+									next.setDisabled(false);
+									card.getLayout().setActiveItem(5);
+									xtzystore.load();
+							},
+							failure: function(response,options){
+									Ext.MessageBox.alert("提示信息","操作失败");
+							},
+							params:{Fun:'msaReportUserLineAjaxSubmit',
+								sdate:sdate,
+								edate:edate,
+								reportname:reportname,
+								email:email,
+								gid:groupmanager,
+								work:worktime,
+								filedir:responseDir,
+								step:5                                                    
+							}	
+						});
+						xtzystore.load();		
+	  		}else if(id=='card-5'){
+							Ext.MessageBox.show({
+						           msg: '报告生成中，这需要一段时间，您可以继续等待或者稍后察看结果',
+						           progressText: 'apply...',
+						           width:300,
+						           wait:true,
+						           waitConfig: {interval:500},
+						           icon:'ext-mb-download'
+						    });
+				    setTimeout(function(){
+				            Ext.MessageBox.hide();
+				        }, 10000); 
+					
+						Ext.Ajax.request({
+							method : 'POST',
+							url:'/msa/main.xp',
+							success: function(response,options){
+									var frm=document.all('step7frm').contentWindow.document;
+									urlValue="/msadata/report/userlinereport/"+responseDir+"/page6.htm";	
+									frm.location.href =urlValue;
+									prev.setDisabled(false);
+									next.setDisabled(false);
+									card.getLayout().setActiveItem(6);
+									xtzystore.load();
+							},
+							failure: function(response,options){
+									Ext.MessageBox.alert("提示信息","操作失败");
+							},
+							params:{Fun:'msaReportUserLineAjaxSubmit',
+								sdate:sdate,
+								edate:edate,
+								reportname:reportname,
+								email:email,
+								gid:groupmanager,
+								work:worktime,
+								filedir:responseDir,
+								step:6                                                    
+							}	
+						});
+						xtzystore.load();			   
+	  		}else{
+						Ext.MessageBox.alert("提示信息","报告生成完毕");		
+	  		}
+		}
+		
+		var backTab = function backTab(){
+			  var id = card.getLayout().activeItem.id;
+			  var prev = Ext.getCmp('move-prev');
+			  var next = Ext.getCmp('move-next');
+			  if(id=='card-0'){
+			    prev.setDisabled(true);
+			    next.setDisabled(false);
+			  }
+			  if(id=='card-1'){
+			    prev.setDisabled(true);
+			    next.setDisabled(false);
+			    card.getLayout().setActiveItem(0);//返回上级页面
+			  }
+			  if(id=='card-2'){
+			    prev.setDisabled(false);
+			    next.setDisabled(false);
+			    card.getLayout().setActiveItem(1);//返回上级页面
+			  }
+			  if(id=='card-3'){
+			    prev.setDisabled(false);
+			    next.setDisabled(false);
+			    card.getLayout().setActiveItem(2);//返回上级页面
+			  }
+			  if(id=='card-4'){
+			    prev.setDisabled(false);
+			    next.setDisabled(false);
+			    card.getLayout().setActiveItem(3);//返回上级页面
+			  }
+			  if(id=='card-5'){
+			    prev.setDisabled(false);
+			    next.setDisabled(true);
+			    card.getLayout().setActiveItem(4);//返回上级页面
+			  }
+			  
+			  if(id=='card-6'){
+			    prev.setDisabled(false);
+			    next.setDisabled(false);
+			    card.getLayout().setActiveItem(5);//返回上级页面
+			  }
+
+		}
+		
+		
+		var panel0 = new Ext.Panel({
+				id: 'card-0',
+				layout:'fit',
+				split:false,
+				frame:true,
+				collapsible:false,
+				autoScroll: true,
+				margins:'0 0 0 0',
+				contentEl:'north1'
+		});
+
+	 	var panel1 = new Ext.Panel({
+		    id:'card-1',
+		    iconCls: 'tabs',
+		    collapsible:false,
+				html :"<IFRAME  name='step2frm' width=100% height='"+(hgt-90)+"' SRC = ''  border='0' frameborder='0' scrolling='yes'></iframe>"
+		});		
+
+		var panel2 = new Ext.Panel({
+				id: 'card-2',
+				frame:true,
+		    iconCls: 'tabs',
+		    collapsible:false,
+				html :"<IFRAME  name='step3frm' width=100% height='"+(hgt-90)+"' SRC = ''  border='0' frameborder='0' scrolling='yes'></iframe>"
+	 	});
+		var panel3 = new Ext.Panel({
+				id: 'card-3',
+				frame:true,
+				iconCls: 'tabs',
+				collapsible:false,
+				html :"<IFRAME  name='step4frm' width=100% height='"+(hgt-90)+"' SRC = ''  border='0' frameborder='0' scrolling='yes'></iframe>"
+	 	});
+		var panel4 = new Ext.Panel({
+				id: 'card-4',
+				frame:true,
+		    iconCls: 'tabs',
+		    collapsible:false,
+				html :"<IFRAME  name='step5frm' width=100% height='"+(hgt-90)+"' SRC = ''  border='0' frameborder='0' scrolling='yes'></iframe>"
+	 	});
+	 	
+	 	var panel5 = new Ext.Panel({
+				id: 'card-5',
+				frame:true,
+		    iconCls: 'tabs',
+		    collapsible:false,
+				html :"<IFRAME  name='step6frm' width=100% height='"+(hgt-90)+"' SRC = ''  border='0' frameborder='0' scrolling='yes'></iframe>"
+	 	});
+		var panel6 = new Ext.Panel({
+				id: 'card-6',
+				frame:true,
+		    iconCls: 'tabs',
+		    collapsible:false,
+				html :"<IFRAME  name='step7frm' width=100% height='"+(hgt-90)+"' SRC = ''  border='0' frameborder='0' scrolling='yes'></iframe>"
+	 	});
+	 				
+	  var mainPanel= {
+				id: 'main-panel',
+				region:'center',
+				collapsible: false,
+				split:true,
+				minSize: 125,
+				maxSize: 400,
+				layout:'fit',
+				margins:'0 0 0 0',
+				items:[xtzygrid]
+    }
+    
+    new Ext.Viewport({
+			layout: 'border',
+			items: [
+				mainPanel
+			],
+			renderTo: Ext.getBody()
+		});
+
+		myMask.hide();
+
+	
+});
+</script>
+
+<meta name="GENERATOR" content="MSHTML 8.00.6001.18702"></head>
+<body  oncontextmenu="return false" bgcolor="#F0f0f0" topmargin=0 leftmargin=0 style="SCROLLBAR-FACE-COLOR: #f0f0f0;  overflow-x:hidden;  OVERFLOW: scroll; SCROLLBAR-SHADOW-COLOR: #f0f0f0; SCROLLBAR-3DLIGHT-COLOR: #f0f0f0; SCROLLBAR-ARROW-COLOR: #f0f0f0; SCROLLBAR-DARKSHADOW-COLOR: #cccccc;" >
+<div  style="display:none">
+<table id="north1" width="100%" border="0" cellspacing="0" cellpadding="0" >
+  <tr> 
+    <td> 
+        <table width="100%" border="0" cellpadding="0" cellspacing="0">
+				<tr>
+				    <td width="50">&nbsp;</td>
+				    <td>&nbsp;  </td>
+				</tr>
+				<tr>
+				    <td width="50">&nbsp;</td>
+				    <td> 第一步：选择你所需要的时间段，系统将根你的选择生成用户相关报表</td>
+				</tr>
+				</table>  
+        <table width="100%" border="0" cellspacing="0" cellpadding="0" >
+          <div id="plabel"> 
+          	
+          	<tr> 
+	              <td width="50" > 
+	                <div align="center">&nbsp;</div>
+	              </td>
+	              <td> 
+	                <div align="left">
+	                  选择部门:
+	                   <input type="text" class=inputf0  id="group"  name="group" size="25" maxlength="48" value=""  style="cursor:hand;background-image:url(/msa/images/drop-yes2.gif);background-position:right bottom; background-repeat: repeat-y">
+	                </div>
+	              </td>
+            </tr> 
+          	
+            <tr> 
+	              <td width="50" > 
+	                <div align="center">&nbsp;</div>
+	              </td>
+	              <td> 
+	                <div align="left">
+	                  开始日期:
+	                  <input type="text"  class=inputf0 name="sdate" id="sdate" size="10" maxlength="10" value="" onClick=setday(sdate) readonly>
+	                </div>
+	              </td>
+            </tr> 
+
+            <tr> 
+              <td width="50" > 
+                <div align="center">&nbsp;</div>
+              </td>
+              <td> 
+                <div align="left">
+                  结束日期:
+                  <input type="text"  class=inputf0 name="edate" id="edate" size="10" maxlength="10" value="" onClick=setday(edate) readonly>
+              </div>
+              </td>
+            </tr> 
+            
+            <tr> 
+              <td width="50" > 
+                <div align="center">&nbsp;</div>
+              </td>
+              <td> 
+                  <div align="left">
+                  工作时间: <SELECT class=inputsel name=worktime> 
+							                    <OPTION  value=0 selected>全部时间</OPTION> 
+							                    <OPTION  value=1         >工作时间</OPTION> 
+           									</SELECT> 
+              		</div>
+              </td>
+            </tr> 
+            
+            <tr> 
+              <td width="50" height="20"> 
+                <div align="center">&nbsp;</div>
+              </td>
+              <td  height="20"> 
+                <div align="left"> 
+                 报告名称:
+                 <input type="text" class=inputf0  name="reportname" id="reportname" size="20" maxlength="32" value=""  >
+                </div>
+              </td>
+            </tr> 
+
+		        <tr> 
+              <td width="50" height="20"> 
+                <div align="center">&nbsp;</div>
+              </td>
+              <td  height="20"> 
+                <div align="left"> 
+                 邮件地址:
+                <input type="text"  class=inputf0 name="email" size="20" maxlength="32" value="">(填写邮件地址后生成的报告可自动发送到您的邮箱中！)
+                </div>
+              </td>
+            </tr> 
+          </div>
+        </table>       
+    </td>
+  </tr>
+</table>
+</div>
+	
+<div id="north2" style="display:none">
+	<table width="100%" border="0" cellpadding="0" cellspacing="0">
+				<tr>
+				    <td width="50">&nbsp;</td>
+				    <td>&nbsp;</td>
+				  </tr>
+				<tr>
+				   <td width="50">&nbsp;</td>
+				    <td>第三步：系统将以人员流量排序，生成服务协议分析部门汇总报表  </td>
+				</tr>
+	</table>
+</div>
+
+	
+
+<div id="north3" style="display:none">
+	<table width="100%" border="0" cellpadding="0" cellspacing="0">
+				<tr>
+				    <td width="50">&nbsp;</td>
+				    <td>&nbsp;</td>
+				</tr>
+				<tr>
+				   <td width="50">&nbsp;</td>
+				   <td>第四步：系统将以人员时间排序，生成服务协议分析部门汇总报表 </td>
+				</tr>
+	</table>
+</div>
+
+<div id="north4" style="display:none">
+	<table width="100%" border="0" cellpadding="0" cellspacing="0">
+				<tr>
+				    <td width="50">&nbsp;</td>
+				    <td>&nbsp;</td>
+				</tr>
+				<tr>
+				    <td width="50">&nbsp;</td>
+				    <td> 第五步：系统将以服务流量排序，列出流量前30名的的服务访问情况</td>
+				</tr>
+	</table>
+</div>
+
+	
+
+<div id="north5" style="display:none">
+	<table width="100%" border="0" cellpadding="0" cellspacing="0">
+				<tr>
+				     <td width="50">&nbsp;</td>
+				     <td>&nbsp;</td>
+				</tr>
+				<tr>
+				   <td width="50">&nbsp;</td>
+				   <td> 第六步：系统将以网站流量排序，列出流量前30名的网站访问情况</td>
+				</tr>
+	</table>
+</div>
+
+<div id="north6" style="display:none">
+	<table width="100%" border="0" cellpadding="0" cellspacing="0">
+				<tr>
+				    <td width="50">&nbsp;</td>
+				    <td>&nbsp;</td>
+				</tr>
+				<tr>
+				   <td width="50">&nbsp;</td>
+				   <td>最后一步：系统将生成服务部门日期汇总报表</td>
+				</tr>
+	</table>
+</div>
+</body>
+</html>

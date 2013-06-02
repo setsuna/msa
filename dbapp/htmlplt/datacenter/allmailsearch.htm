@@ -1,0 +1,1110 @@
+﻿<html>
+<head>
+<title>全部邮件检索</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" type="text/css" href="/msa/extjs/resources/css/ext-all.css">
+<link rel="stylesheet" type="text/css" href="/msa/extjs/resources/css/feed-viewer.css">
+<link rel="stylesheet" type="text/css" href="/msa/publiccss/pubcss.css">
+<link rel="stylesheet" type="text/css" href="/msa/extjs/resources/css/xtheme-default.css">
+<script type="text/javascript" src="/msa/extjs/adapter/ext/ext-base.js">
+<script language="Javascript" src="/msa/publicjs/select_time.js"></script>
+<script type="text/javascript" src="/msa/extjs/ext-all.js"></script>
+<link rel="stylesheet" href="/msa/publiccss/css.css" type="text/css">
+<script type="text/javascript"  src="/msa/publicjs/select_time_st.js"></script>
+<SCRIPT type="text/javascript" src="/msa/publicjs/exportexcel.js"></SCRIPT>
+<style type="text/css">
+HTML { BORDER-BOTTOM: 0px; BORDER-LEFT: 0px; PADDING-BOTTOM: 0px; MARGIN:
+0px; PADDING-LEFT: 0px; PADDING-RIGHT: 0px; FONT: 12px verdana; HEIGHT:
+100%; OVERFLOW: hidden; BORDER-TOP: 0px; BORDER-RIGHT: 0px; PADDING-TOP:
+0px } BODY { BORDER-BOTTOM: 0px; BORDER-LEFT: 0px; PADDING-BOTTOM: 0px;
+MARGIN: 0px; PADDING-LEFT: 0px; PADDING-RIGHT: 0px; FONT: 12px verdana;
+HEIGHT: 100%; OVERFLOW: hidden; BORDER-TOP: 0px; BORDER-RIGHT: 0px; PADDING-TOP:
+0px } P { MARGIN: 5px } .settings { BACKGROUND-IMAGE: url(/msa/extjs/shared/icons/fam/folder_wrench.png)
+} .nav { BACKGROUND-IMAGE: url(/msa/extjs/shared/icons/fam/folder_go.png)
+}
+</style>
+
+
+<script language="JavaScript">
+  Ext.BLANK_IMAGE_URL = '/msa/extjs/resources/images/default/s.gif';
+    var xtzystore;
+    var pagesize;
+    var uid;
+    var level;
+		var gid;
+		var gname;
+    var wing;
+	pagesize=100;
+
+
+function gg(){//记录查询
+	var mygid;
+  if(typeof(gid)=="undefined"){
+		mygid=-1;
+	}else{
+		mygid=gid;
+	}
+
+	var myuser;
+	if(typeof(uid)=="undefined"){
+		myuser=-1;
+	}else{
+		myuser=uid;
+	}
+	
+	var myflags=flags.value;
+	var mymtype=mtype.value;
+	var mysubject=subject.value;
+	var mydip=dip.value;
+	var myfrom=from.value;
+	var myto=to.value;
+	var mytabname=seldate.value;
+
+	//流量范围
+	var flow=document.getElementsByName("btype"); 
+	for(var i=0;i <flow.length;i++){ 
+	      if(flow[i].checked==true) 
+	      mybtype=flow[i].value; //流量范围
+	} 
+	var mybbyte=bbyte.value;//字节
+
+	//附件
+	var myfbtype;
+	var fj=document.getElementsByName("fbtype");
+	for(var i=0;i <fj.length;i++){ 
+	      if(fj[i].checked==true) 
+	      myfbtype=fj[i].value; //流量范围
+	} 
+	var myfbbyte=fbbyte.value;
+	var mycontent=content.value;//内容
+	var mymaxtime=maxtime.value;//查询最长时间
+	var myattchk;//搜索附件
+	if(document.getElementById("attchk").checked==true){
+		myattchk=1;
+	}else{
+		myattchk=0;
+	}
+	var myosort;//分组方式
+	var   paiX=document.getElementsByName("osort"); 
+	for(var i=0;i <paiX.length;i++){ 
+	      if(paiX[i].checked==true) 
+	      myosort=paiX[i].value; 
+	} 
+	var myorderby=orderby.value;//排序方式
+  var mylevel=level;
+  var mytabtype=tabtype.value;
+  
+  if(mytabname=='-1'){
+  	Ext.MessageBox.alert('提示','请选择查询日期!'); 
+  	return false;
+  }else{
+  	xtzystore.load({params:{Fun:'ltmsamailquery',
+													  user:myuser,
+												    flags:myflags,
+												    mtype:mymtype,
+												    subject:mysubject,
+												    dip:mydip,
+												    from:myfrom,
+												    to:myto,											    
+												    tabname:mytabname,											   
+												    btype:mybtype,//流量范围
+												    bbyte:mybbyte,//字节
+												    fbtype:myfbtype,
+												    fbbyte:myfbbyte,
+												    osort:myosort,
+												    orderby:myorderby,
+												    groupid:mygid,
+												    glevel:mylevel,
+												    tabtype:mytabtype,
+												    action:0,												    
+												    start:0,
+												    limit:pagesize
+												    }
+		});
+  }
+   
+	
+
+   
+}
+
+//记录删除
+function gg1(){
+	var mygid;
+	if(typeof(gid)=="undefined"){
+		mygid=-1;
+	}else{
+		mygid=gid;//部门id
+	}
+
+	var myuser;//用户ID
+	if(typeof(uid)=="undefined"){
+		myuser=-1;
+	}else{
+		myuser=uid;//部门id
+	}
+	var myflags=flags.value;//类型
+	var mymtype=mtype.value;//分类
+	var mysubject=subject.value;//主题
+	var mydip=dip.value;//远端ip地址
+	var myfrom=from.value;//发件人
+	var myto=to.value;//收件人
+	var mytabname=seldate.value;
+
+	//流量范围
+	var flow=document.getElementsByName("btype"); 
+	for(var i=0;i <flow.length;i++){ 
+	      if(flow[i].checked==true) 
+	      mybtype=flow[i].value; //流量范围
+	} 
+	var mybbyte=bbyte.value;//字节
+
+	//附件
+	var myfbtype;
+	var fj=document.getElementsByName("fbtype");
+	for(var i=0;i <fj.length;i++){ 
+	      if(fj[i].checked==true) 
+	      myfbtype=fj[i].value; //流量范围
+	} 
+	var myfbbyte=fbbyte.value;
+	
+	var mycontent=content.value;//内容
+	var mymaxtime=maxtime.value;//查询最长时间
+	var myattchk;//搜索附件
+  if(document.getElementById("attchk").checked==true){
+		myattchk=1;
+	}else{
+		myattchk=0;
+	}
+	var myosort;//分组方式
+	var   paiX=document.getElementsByName("osort"); 
+	for(var i=0;i <paiX.length;i++){ 
+	      if(paiX[i].checked==true) 
+	      myosort=paiX[i].value; 
+	} 
+	var myorderby=orderby.value;//排序方式	
+	var mylevel=level;
+  var mytabtype=tabtype.value;
+
+	Ext.MessageBox.show({
+					msg: '条件删除中，请稍等...',
+					progressText: 'waitting...',
+					width:300,
+					wait:true,
+					waitConfig: {interval:500},
+					icon:'ext-mb-download'
+	});
+
+	Ext.Ajax.request({
+	                  method : 'POST', 
+	                  url:'/msa/main.xp', 
+	                  success: function(response, options) { 
+	                    var retxt=response.responseText;
+											if(retxt==0){
+												Ext.MessageBox.hide();
+												Ext.MessageBox.alert('提示','条件删除成功!'); 
+											}else{
+												Ext.MessageBox.hide();
+												Ext.MessageBox.alert('提示','条件删除失败!'); 
+												}
+	                  },
+	                  failure : function() {
+	                      Ext.MessageBox.hide();      
+	                   	  Ext.MessageBox.alert('提示','条件删除失败!'); 
+	                  },
+	                  params:{
+	                    Fun:'ltmsamailquery',
+	                          user:myuser,
+												    flags:myflags,
+												    mtype:mymtype,
+												    subject:mysubject,
+												    dip:mydip,
+												    from:myfrom,
+												    to:myto,											    
+												    tabname:mytabname,											   
+												    btype:mybtype,//流量范围
+												    bbyte:mybbyte,//字节
+												    fbtype:myfbtype,
+												    fbbyte:myfbbyte,
+												    osort:myosort,
+												    orderby:myorderby,
+												    groupid:mygid,
+												    glevel:mylevel,
+												    tabtype:mytabtype,
+												    action:1,
+												    start:0,
+												    limit:pagesize
+		               } 
+	});  
+	
+
+}
+
+
+/*邮件全文检索*/
+function gg2(){
+	var mygid;
+	if(typeof(gid)=="undefined"){
+		mygid=-1;
+	}else{
+		mygid=gid;//部门id
+	}
+
+	var myuser;//用户ID
+	if(typeof(uid)=="undefined"){
+		myuser=-1;
+	}else{
+		myuser=uid;//部门id
+	}
+	var myflags=flags.value;//类型
+	var mymtype=mtype.value;//分类
+	var mysubject=subject.value;//主题
+	var mydip=dip.value;//远端ip地址
+	var myfrom=from.value;//发件人
+	var myto=to.value;//收件人
+
+	var mytabname=seldate.value;
+
+	//流量范围
+	var flow=document.getElementsByName("btype"); 
+	for(var i=0;i <flow.length;i++){ 
+	      if(flow[i].checked==true) 
+	      mybtype=flow[i].value; //流量范围
+	} 
+	var mybbyte=bbyte.value;//字节
+
+	var myfbtype;//附件
+	var fj=document.getElementsByName("fbtype");
+	for(var i=0;i <fj.length;i++){ 
+	      if(fj[i].checked==true) 
+	      myfbtype=fj[i].value; //流量范围
+	} 
+	var myfbbyte=fbbyte.value;
+
+	var mycontent=content.value;//内容
+	var textValue =mycontent.replace(/(^\s*)|(\s*$)/g, "");     
+	var mymaxtime=maxtime.value;//查询最长时间
+	var myattchk;//搜索附件
+  if(document.getElementById("attchk").checked==true){
+		myattchk=1;
+	}else{
+		myattchk=0;
+	}
+
+	var myosort;//分组方式
+	var   paiX=document.getElementsByName("osort"); 
+	for(var i=0;i <paiX.length;i++){ 
+	      if(paiX[i].checked==true) 
+	      myosort=paiX[i].value; 
+	} 
+	var myorderby=orderby.value;//排序方式	
+	var mylevel=level;
+  var mytabtype=tabtype.value;
+  var mygname=gname;
+
+	if(textValue==""||textValue==null){
+	  Ext.MessageBox.alert('提示','查询条件内容不能空'); 
+	  return false;
+	};
+
+	var stopflag=0;
+	Ext.MessageBox.show({
+					msg:'正在查询中，这需要一段时间，您可以继续等待或者稍后察看结果',
+					progressText: 'apply...',
+					width:300,
+					wait:true,
+					waitConfig: {interval:500},
+					icon:'ext-mb-download'
+	});
+
+	setTimeout(function(){
+					if(stopflag==0){
+						Ext.MessageBox.hide();
+						//xtzystore.load();
+					}
+					stopflag=1;
+		}, 15000); 
+
+	Ext.Ajax.request({
+	                  method : 'POST', 
+	                  url:'/msa/main.xp', 
+	                  success: function(response, options) { 
+	                    var retxt=response.responseText;
+//											if(retxt.substring(0,1)=='1'){
+//												location.href='/msa/main.xp?Fun=ltmsamail+mailtype=6';//当日邮件内容查询列表											
+//											}
+											allContentstore.load();
+
+	                  },
+	                  failure : function() {
+	                      Ext.MessageBox.hide();      
+	                   	  Ext.MessageBox.alert('提示','内容查询失败！'); 
+	                  },
+	                  params:{
+	                    Fun:'ltmsamailcontentquery',
+			                     	user:myuser,
+												    flags:myflags,
+												    mtype:mymtype,
+												    subject:mysubject,
+												    dip:mydip,
+												    from:myfrom,
+												    to:myto,											    
+												    tabname:mytabname,											   
+												    btype:mybtype,//流量范围
+												    bbyte:mybbyte,//字节
+												    fbtype:myfbtype,
+												    fbbyte:myfbbyte,
+												    osort:myosort,
+												    orderby:myorderby,
+												    content:mycontent,
+												    maxtime:mymaxtime,
+												    attchk:myattchk,
+												    groupid:mygid,
+												    glevel:mylevel,
+												    gname:mygname,
+												    tabtype:mytabtype,
+												    start:0,
+												    limit:pagesize                  
+		               } 
+	}); 
+ 
+
+}
+
+
+/*记录导出HTML*/
+function gg3(){
+	var mygid;
+	if(typeof(gid)=="undefined"){
+		mygid=-1;
+	}else{
+		mygid=gid;//部门id
+	}
+
+	var myuser;//用户ID
+	if(typeof(uid)=="undefined"){
+		myuser=-1;
+	}else{
+		myuser=uid;//部门id
+	}
+	var myflags=flags.value;//类型
+	var mymtype=mtype.value;//分类
+	var mysubject=subject.value;//主题
+	var mydip=dip.value;//远端ip地址
+	var myfrom=from.value;//发件人
+	var myto=to.value;//收件人
+	var mytabname=seldate.value;
+
+	//流量范围
+	var flow=document.getElementsByName("btype"); 
+	for(var i=0;i <flow.length;i++){ 
+	      if(flow[i].checked==true) 
+	      mybtype=flow[i].value; //流量范围
+	} 
+	var mybbyte=bbyte.value;//字节
+
+	var myfbtype;//附件
+	var fj=document.getElementsByName("fbtype");
+	for(var i=0;i <fj.length;i++){ 
+	      if(fj[i].checked==true) 
+	      myfbtype=fj[i].value; //流量范围
+	} 
+	var myfbbyte=fbbyte.value;
+
+	var mycontent=content.value;//内容
+	var textValue =mycontent.replace(/(^\s*)|(\s*$)/g, "");     
+	var mymaxtime=maxtime.value;//查询最长时间
+	var myattchk=attchk.value;//搜索附件
+
+	var myosort;//分组方式
+	var paiX=document.getElementsByName("osort"); 
+	for(var i=0;i <paiX.length;i++){ 
+	      if(paiX[i].checked==true) 
+	      myosort=paiX[i].value; 
+	} 
+	var myorderby=orderby.value;//排序方式	
+	var mylevel=level;
+  var mytabtype=tabtype.value;
+
+	var myurl="/msa/main.xp?Fun=ltmsamailquery&action=2&start=0&user="+myuser+"&flags="+myflags+"&mtype="+mymtype+"&subject="+mysubject+"&dip="+mydip+"&from="+myfrom+"&to="+myto+"&tabname="+mytabname+"&btype="+mybtype+"&bbyte="+mybbyte+"&fbtype="+myfbtype+"&fbbyte="+myfbbyte+"&osort="+myosort+"&orderby="+myorderby+"&groupid="+mygid+"&glevel="+mylevel+"&tabtype="+mytabtype+"&limit="+pagesize+"&start=0";
+	downloadFile(myurl);
+
+}
+
+      
+      
+    var treepangroup=new Ext.tree.TreePanel({
+				height:300,
+				split: true,
+				useArrows:true,
+				autoScroll: true,
+				rootVisible: false,
+				lines: false,
+				useArrows: true,
+				root: new Ext.tree.AsyncTreeNode(),
+				loader: new Ext.tree.TreeLoader({
+					dataUrl:'/msa/main.xp?Fun=msaGroupTreeView',
+					baseParams:{Fun:'msaGroupTreeView'} 
+				}),
+				listeners: {
+							    click: function(node, e) {
+							      gid=node.id;
+							      level=node.getDepth()-1;
+							      gname=node.text;
+						        if(gid=="-1" || gid==""){
+												return;
+										}else{				
+											  localStore.load({params:{Fun:'msalocalStore',groupid:gid}});  
+							      }
+							      wing.hide();
+							   }
+						}		
+	  });
+	
+	
+	
+Ext.onReady(function(){
+   
+      var button_1 = Ext.get('department');
+				  button_1.on('click', function(){
+						if(!wing){ 						
+							 wing = new Ext.Window({
+									title: '选择部门',
+									closeAction: 'hide',
+									width: 500,
+									height:300,
+									plain:true,
+									items:treepangroup,
+									bodyStyle:'padding:5px;'
+						   });
+					   }
+					wing.show();		
+					
+			});	
+    	
+      localStore = new Ext.data.JsonStore({//构建用户列表数据存储器
+				      root: 'Results',
+			        totalProperty: 'totalCount',
+			        url:'/msa/main.xp',
+			        baseParams:{Fun:'msalocalStore'},
+				      fields: [
+				         {name: 'uid'},
+					       {name: 'uname'}
+				      ]
+			});
+						
+		
+      var Cb = new Ext.form.ComboBox({ //用户列表
+	         fieldLabel: '下拉框',  
+	         valueField:'uid',//json uid
+	         hiddenName:'uid',  //虚拟input hidden的name    
+	         displayField:'uname',     
+	         id:'CbId',      
+	         blankText:'所有用户',               
+	         emptyText:'所有用户', 
+	         renderTo: 'combobox', //渲染到div 的id位置处
+	         //applyTo:'combobox',
+	         width:100,              
+	         anchor:'95.2%',   
+	         selectOnFocus:true,      
+	         triggerAction:'all',     
+	         store:localStore,    
+	         typeAhead:true,      
+	         typeAheadDelay:250,    
+	         editable:false,       
+	         forceSelection:true,   
+	         mode: 'local',
+	         listeners:{
+           "select":function(combo,record,number){
+		                	    var alluser1;
+		                	    alluser1=combo.getValue();                
+		                      if(typeof(alluser1)=="所有用户"){
+		                        uid=-1;	
+		                      }else{
+		                      	uid=combo.getValue();//取得ComboBox0的选择值  
+		                      }                                    
+                    }
+           }        
+	     }); 	  
+    	
+    	
+	  		Ext.QuickTips.init();
+				var detailEl;
+				var win;
+			
+				var myMask = new Ext.LoadMask(Ext.getBody(), 
+				    {
+				        	msg:"Please wait..."
+				    });
+				myMask.show();
+
+    
+			 xtzystore = new Ext.data.JsonStore({
+				    root: 'Results',
+			        totalProperty: 'totalCount',
+			        url:'/msa/main.xp',
+			        baseParams:{Fun:'ltmsamailquery'},
+				      fields: [
+				         {name: 'uid'},
+				         {name: 'uname'},//用户名
+				         {name: 'udispname'},
+				         {name: 'mymailfile'},//邮件文件名
+					       {name: 'mymailfrom'},//发件人
+					  	   {name: 'mymailto'},//收件人
+				         {name: 'mymailsub'},//主题
+				         {name: 'mysdate'},//发送时间
+				         {name: 'mymailasize'},//附件
+				         {name: 'mymailsize'},//邮件大小
+						     {name: 'myflags'},//邮件状态
+				         {name: 'mymtype'},//邮件分类
+				         {name: 'myip'}//源IP
+				    ]
+				});
+			
+				xtzystore.load();
+				
+			//邮件全文json构造
+			 allContentstore = new Ext.data.JsonStore({
+	        root: 'Results',
+	        totalProperty: 'totalCount',
+	        url:'/msa/main.xp',
+	        baseParams:{Fun:'nasformsearchlist',mytype:'[$tabtype$]'},
+	        fields: [
+			       {name: 'sname'},
+				     {name: 'sdate'},
+				     {name: 'suser'},
+				     {name: 'scon'},
+				  	 {name: 'myurl'},
+					   {name: 'stype'},
+					   {name: 'fproc'},
+				     {name: 'delfun'},
+				     {name: 'mytype'}
+			    ]
+	     });
+	     
+	     allContentstore.load();
+
+  	HlPagingToolbar = Ext.extend(Ext.PagingToolbar, { 
+    displayInfo: true, 
+    displayMsg: '显示第 {0} 条到 {1} 条记录，共 {2} 条', 
+    emptyMsg: "无记录", 
+    initComponent : function(){ 
+        var pageSizeItems = [ 
+                     '-','每页', 
+                     this.inputItem = new Ext.form.NumberField({ 
+									    cls: 'x-tbar-page-number', 
+									    allowDecimals: false, 
+									    allowNegative: false, 
+									    enableKeyEvents: true, 
+									    maxValue: 500, 
+									    maxText: '每页不允许超过500条', 
+									    selectOnFocus: true, 
+									    value: this.pageSize, 
+									    submitValue: false, 
+									    listeners: { 
+									        scope: this, 
+									        keydown: this.onHlPagingKeyDown, 
+									        blur: this.onHlPagingBlur 
+									    } 
+                     }),'条','-',{
+						            //pressed: true,
+						            icon: '/msa/images/grid.png',
+						            enableToggle:true,
+						            text: '导出本页数据到Excel',
+						            cls: 'x-btn-text-icon details',
+						            toggleHandler: function(btn, pressed){
+						                downloadViewDataActive(xtzygrid);
+						            }
+						        },'-']; 
+         var userItems = this.items || []; 
+         this.items = userItems.concat(pageSizeItems); 
+         HlPagingToolbar.superclass.initComponent.call(this); 
+    }, 
+    onHlPagingKeyDown: function(field, e){ 
+        if(field.isValid()){ 
+            var k = e.getKey(); 
+             if (k == e.RETURN) { 
+                    e.stopEvent(); 
+                    this.pageSize = field.getValue(); 
+                    pagesize=this.pageSize;
+                    this.doRefresh(); 
+             } 
+        } 
+    }, 
+    onHlPagingBlur: function(field){ 
+        if(field.isValid()){ 
+            this.pageSize = field.getValue(); 
+            pagesize=this.pageSize;
+            this.doRefresh(); 
+        } 
+    } 
+});
+    var pagingBar= new HlPagingToolbar({
+        store: xtzystore,
+        pageSize: pagesize,
+        displayInfo: true});
+     
+    var allContentpagingBar= new HlPagingToolbar({
+        store: allContentstore,
+        pageSize: pagesize,
+        displayInfo: true});   
+     
+    
+    function conChange(val){
+        if(val == 1){
+            return 'SMTP';
+        }
+        return 'POP3';
+    }
+    
+    var xtzygrid = new Ext.grid.GridPanel({
+        store: xtzystore,
+        viewConfig:{forceFit: false, scrollOffset: 0},
+        columns: [
+            {id:'uname',header: "用户名", width: 120, sortable: true, dataIndex: 'uname'},
+            {header: "显示名", width: 100, sortable: true, dataIndex: 'udispname'},
+            {header: "邮件文件名",width: 100, sortable: true,  dataIndex: 'mymailfile'},
+            {header: "发件人",width: 100, sortable: true,  dataIndex: 'mymailfrom'},
+            {header: "收件人",width: 100, sortable: true,  dataIndex: 'mymailto'},
+            {header: "主题",  width: 100, sortable: true,  dataIndex: 'mymailsub'},
+            {header: "发送时间", width: 100, sortable: true, dataIndex: 'mysdate'},
+            {header: "附件大小", width: 80, sortable: true,  dataIndex: 'mymailasize'},
+            {header: "目的IP",   width: 100, sortable: true,  dataIndex: 'myip'},
+            {header: "邮件大小", width: 80, sortable: true, dataIndex: 'mymailsize'},
+            {header: "邮件状态", width: 100, sortable: true,  dataIndex: 'myflags',renderer: conChange},
+            {header: "邮件分类", width: 100, sortable: true,  dataIndex: 'mymtype'}
+        ],
+        tbar: pagingBar,
+        stripeRows: true,
+        autoExpandColumn: 'uname',
+        height:screen.height-50,
+        title:'查询结果列表',
+        frame:true,
+		    collapsible:true,
+		    loadMask:{msg:'正在加载数据，请稍侯……'},
+		    draggable:true
+    }); 
+   
+   xtzygrid.addListener('rowclick', rightClickFn);
+		function rightClickFn(client, rowIndex, e) { 
+					 rightClick.showAt(e.getXY()); 
+					 detailEl=  rowIndex;
+		}         
+　
+   var rightClick  = new Ext.menu.Menu({
+                id:'feeds-ctx',
+                items: [{
+                    id:'shuxing',
+                    iconCls:'load-icon',
+                    text:'该邮件内容',
+                    scope: this,
+                    handler:function(){
+                        var record = xtzygrid.getStore().getAt(detailEl);
+                        var usrl=record.get("mymailfile")+"/gnm-index.htm";  
+                        alert(usrl);
+						            var hgt=(screen.height)-190;
+                        var mywin =new  Ext.Window(
+							                {
+							                    id: 'east-panel',
+							                    title: '邮件浏览',
+							                    height: 400,
+							                    width: 500,
+							                    closeAction: 'close',
+							                    modal: 'true',
+							                    maximizable:'true',
+							                    margins:'0 5 0 0',
+							                    html: "<IFRAME  name='menufrm' width=100% height='"+(hgt-90)+"' SRC = '"+usrl+"'  border='0' frameborder='0' scrolling='yes'></iframe>" 
+							          }); 
+							          mywin.show(); 
+							          //mywin.maximize();
+                        }
+                },{
+                    id:'detail',
+                    iconCls:'load-icon',
+                    text:'该用户详细信息',
+                    scope: this,
+                    handler:function(){
+                        var record = xtzygrid.getStore().getAt(detailEl);
+                        var uid=record.get("uid");      
+                        var usrl="/msa/main.xp?Fun=msaTermInfoView+uid="+uid;
+					  
+						        var hgt=(screen.height)-190;
+                        var mywin =new  Ext.Window(
+							                {
+							                    id: 'east-panelmy',
+							                    title: '表单浏览',
+							                    height: 400,
+							                    width: 550,
+							                    closeAction: 'close',
+							                    modal: 'true',
+							                    maximizable:'true',
+							                    margins:'0 5 0 0',
+							                    html: "<IFRAME  name='menufrm' width=100% height='"+(hgt-90)+"' SRC = '"+usrl+"'  border='0' frameborder='0' scrolling='yes'></iframe>" 
+							          }); 
+							          mywin.show(); 
+							          mywin.maximize();
+                        } 
+                }]
+   });
+    
+    var northPanelTop = new Ext.Panel({
+    	frame:true,
+    　region:'north',
+    	title: '选择查询的条件',
+    	collapsible:true,
+    	contentEl:'north'
+    });
+    
+		
+		//全文检索grid
+		var allContentGrid = new Ext.grid.GridPanel({
+        store: allContentstore,
+        viewConfig:{forceFit: false, scrollOffset: 0},
+        columns: [
+            {id:'sname',header: "查询内容关键字", width: 100, sortable: true, dataIndex: 'sname'},
+            {header: "查询时间",  width: 100, sortable: true,  dataIndex: 'sdate'},
+            {header: "查询条件",  width: 800, sortable: true,  dataIndex: 'scon'},
+            {header: "查询人",    width: 80, sortable: true,  dataIndex: 'suser'},
+            {header: "状态",    width:200, sortable: true,  dataIndex: 'fproc'}
+        ],
+        tbar: allContentpagingBar,
+        stripeRows: true,
+        autoExpandColumn: 'sname',
+        height:screen.height-210,
+        title:'邮件全文检索列表',
+        frame:true,
+		    collapsible:true,
+		    loadMask:{msg:'正在加载数据，请稍侯……'},
+		    draggable:true
+    }); 
+		
+		allContentGrid.addListener('rowclick', rightClickFn2);
+    function rightClickFn2(client, rowIndex, e) { 
+								 rightClick2.showAt(e.getXY()); 
+								 detailEl= rowIndex		
+		} 
+		 var rightClick2 = new Ext.menu.Menu({
+                id:'feeds-ctx',
+                items: [{
+                    id:'shanchubaogao',
+                    iconCls:'load-icon',
+                    text:'删除查询结果',
+                    scope: this,
+                    handler:function(){                       
+                        var record=allContentGrid.getStore().getAt(detailEl);
+                        var delurl=record.get("myurl");
+                        var delfun=record.get("delfun");
+                        var xtype =record.get("mytype");                      
+		                    allContentstore.load({params:{Fun:delfun,file:delurl,mytype:xtype}});    
+                    }
+                },{
+                    id:'liulanbaogao',
+                    iconCls:'load-icon',
+                    text:'查看详细内容',
+                    scope: this,
+                    handler:function(){
+                    	 var record = allContentGrid.getStore().getAt(detailEl);
+                       var fileurl=record.get("myurl"); 
+                       var tabtype=record.get("mytype"); 
+                    	 xtzystore1 = new Ext.data.JsonStore({
+											      root: 'Results',
+										        totalProperty: 'totalCount',
+										        url:'/msa/main.xp',
+										        baseParams:{Fun:'msaMailconLook',url:fileurl,tabtype:tabtype},
+											      fields: [
+											         {name: 'v2'},
+											         {name: 'v1'},//用户名
+											         {name: 'v3'},
+											         {name: 'v4'},//邮件文件名
+												       {name: 'v5'},//发件人
+												  	   {name: 'v6'},//收件人
+											         {name: 'v7'},//主题
+											         {name: 'v8'},//发送时间
+											         {name: 'v9'},//附件
+											         {name: 'v10'},//邮件大小
+													     {name: 'v11'},//邮件状态
+											         {name: 'v12'},//邮件分类
+											         {name: 'v13'}//源IP
+											    ]
+											 });
+											 xtzystore1.load({params:{Fun:'msaMailconLook',url:fileurl,tabtype:tabtype,start:0,limit:pagesize}});
+                      
+                       HlPagingToolbar1 = Ext.extend(Ext.PagingToolbar, { 
+												    displayInfo: true, 
+												    displayMsg: '显示第 {0} 条到 {1} 条记录，共 {2} 条', 
+												    emptyMsg: "无记录", 
+												    initComponent : function(){ 
+												        var pageSizeItems = [ 
+												                     '-','每页', 
+												                     this.inputItem = new Ext.form.NumberField({ 
+																					    cls: 'x-tbar-page-number', 
+																					    allowDecimals: false, 
+																					    allowNegative: false, 
+																					    enableKeyEvents: true, 
+																					    maxValue: 500, 
+																					    maxText: '每页不允许超过500条', 
+																					    selectOnFocus: true, 
+																					    value: this.pageSize, 
+																					    submitValue: false, 
+																					    listeners: { 
+																					        scope: this, 
+																					        keydown: this.onHlPagingKeyDown, 
+																					        blur: this.onHlPagingBlur 
+																					    } 
+												                     }),'条','-','-']; 
+												         var userItems = this.items || []; 
+												         this.items = userItems.concat(pageSizeItems); 
+												         HlPagingToolbar1.superclass.initComponent.call(this); 
+												    }, 
+												    onHlPagingKeyDown: function(field, e){ 
+												        if(field.isValid()){ 
+												            var k = e.getKey(); 
+												             if (k == e.RETURN) { 
+												                    e.stopEvent(); 
+												                    this.pageSize = field.getValue(); 
+												                    pagesize=this.pageSize;
+												                    //alert(this.pageSize);
+												                    this.doRefresh(); 
+												             } 
+												        } 
+												    }, 
+												    onHlPagingBlur: function(field){ 
+												        if(field.isValid()){ 
+												            this.pageSize = field.getValue(); 
+												            //alert(this.pageSize);
+												            pagesize=this.pageSize;
+												            this.doRefresh(); 
+												        } 
+												    } 
+											 });
+										    
+										    
+										    var pagingBar1= new HlPagingToolbar1({
+									        store: xtzystore1,
+									        pageSize: pagesize,
+									        displayInfo: true});
+									        
+									        
+									       var xtzygrid1 = new Ext.grid.GridPanel({
+										        store: xtzystore1,
+										        viewConfig:{forceFit: false, scrollOffset: 0},
+										        columns: [
+										            {id:'v1',header: "用户名", width: 120, sortable: true, dataIndex: 'v1'},
+										            {header: "显示名", width: 100, sortable: true, dataIndex: 'v3'},
+										            {header: "邮件文件名",width: 100, sortable: true,  dataIndex: 'v4'},
+										            {header: "发件人",width: 100, sortable: true,  dataIndex: 'v5'},
+										            {header: "收件人",width: 100, sortable: true,  dataIndex: 'v6'},
+										            {header: "主题",  width: 100, sortable: true,  dataIndex: 'v7'},
+										            {header: "发送时间", width: 100, sortable: true, dataIndex: 'v8'},
+										            {header: "附件大小", width: 80, sortable: true,  dataIndex: 'v9'},
+										            {header: "目的IP",   width: 100, sortable: true,  dataIndex: 'v13'},
+										            {header: "邮件大小", width: 80, sortable: true, dataIndex: 'v10'},
+										            {header: "邮件状态", width: 100, sortable: true,  dataIndex: 'v11',renderer: conChange},
+										            {header: "邮件分类", width: 100, sortable: true,  dataIndex: 'v12'}
+										        ],
+										        tbar: pagingBar1,
+										        stripeRows: true,
+										        autoExpandColumn: 'v1',
+										        height:screen.height-50,
+										        title:'查询结果列表',
+										        frame:true,
+												    collapsible:true,
+												    loadMask:{msg:'正在加载数据，请稍侯……'},
+												    draggable:true
+										    });   
+										    
+										    var mywin =new  Ext.Window(
+							          {
+				                    id: 'viewpanel',
+				                    title: '察看查询结果',
+				                    height: 450,
+				                    width: 400,
+				                    closeAction: 'close',
+				                    modal: 'true',
+				                    maximizable:'true',
+				                    margins:'0 5 0 0',
+				                    layout: 'fit',
+								  					items: [xtzygrid1]
+							          }); 
+							          mywin.show(); 
+							          mywin.maximize();         
+                    }
+                },{
+                    id:'xiazai',
+                    iconCls:'load-icon',
+                    text:'下载查询结果',
+                    scope: this,
+                    handler:function(){
+                        var record = allContentGrid.getStore().getAt(detailEl);
+                        var myfile=record.get("myurl"); 
+                        var tabtype=record.get("mytype"); 
+                        if(tabtype==5){
+                        	alert(tabtype);
+                        	myurl="/msa/main.xp?Fun=msaBackListDownLoadCSV+downLoadFile=mailsearch/"+ myfile + "/search.csv";
+                        }else{
+                        	alert(tabtype);
+                        	myurl="/msa/main.xp?Fun=msaBackListDownLoadCSV+downLoadFile=webmailsearch/"+ myfile + "/search.csv";
+                        }
+                        
+								        downloadFile(myurl);
+                    }
+                }]
+    });
+		
+		var mainPanel= {
+									id: 'main-panel',
+									region:'center',
+                  collapsible: true,
+                  split:true,
+                  width: 135,
+                  height:500,
+                  minSize: 125,
+                  maxSize: 600,
+                  layout:'fit',
+                  margins:'0 5 0 0',
+                  items:new Ext.TabPanel({
+                        border:false,
+                        activeTab:0,
+                        items:[xtzygrid,allContentGrid]
+                  })                          
+      }
+
+     new Ext.Viewport({
+						layout: 'border',
+						items: [
+						 northPanelTop,mainPanel
+						],
+		        renderTo: Ext.getBody()
+		    });
+
+			myMask.hide();
+						
+}); 
+</script>
+
+
+</head>
+<body bgcolor="#f0f0f0" topmargin="0"   marginheight=0 leftmargin=0  marginwidth=0 topMargin="0"  text="#000000" leftmargin="0" >
+<div id="north">
+  <table width="97%" border="0" cellspacing="5" cellpadding="0" >
+    <tr>
+      <td width="94" height="36"><div align="left">部&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;门</div>
+        <div align="right"></div></td>
+      <td width="162" height="36"><div align="left">
+          <input type="button" id="department" class=inputf0 border="0" name="department" value="选择部门">
+      </div></td>
+      <td height="36"><div align="center">用&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;户</div></td>
+      <td height="36" colspan="4"><div id="combobox"></div></td>
+      <td width="61" height="36"><div>
+          <div align="center">类型</div>
+      </div></td>
+      <td width="91" height="36"><select name="flags"   class=inputself0 >
+          <option value="-1">全部邮件 
+          <option value="0">发送邮件 
+          <option value="1">接收邮件 
+          </select></td>
+      <td width="54" height="36"><div align="center">分类</div></td>
+      <td width="126" height="36">
+      <select name="mtype"  class=inputself0 >
+          <option value="-1" selected>选择分类</option> 
+           [$begintable mtypelist$]         
+            <option value=[$rid$]>[$rname$]</option>   
+           [$endtable$]
+      </select>
+      </td>
+    </tr>
+    <tr>
+      <td  height="22"><div align="left">主题包括 </div></td>
+      <td  height="22"><div align="left">
+          <input type="text"  class=inputf0 name="subject" size="20" maxlength="64" value="" >
+      </div></td>
+      <td width="140" height="22"><div align="center">远端IP地址 </div></td>
+      <td  height="22" colspan="8"><div align="left">
+          <input type="text"  class=inputf0 name="dip" size="20" maxlength="31" value="" >
+      </div></td>
+    </tr>
+    <tr>
+      <td height="22"  ><div align="left">发&nbsp;&nbsp;件&nbsp;&nbsp;人 </div></td>
+      <td  height="22"><div align="left">
+          <input type="text"  class=inputf0 name="from" size="20" maxlength="63" value="" >
+      </div></td>
+      <td height="22" ><div align="center">收&nbsp;&nbsp;&nbsp;件&nbsp;&nbsp;&nbsp;人 </div></td>
+      <td  height="22" colspan="8"><div align="left">
+          <input type="text"  class=inputf0 name="to" size="20" maxlength="63" value="" >
+      </div></td>
+    </tr>
+    <tr>
+      <td valign="top" height="22" ><div align="left">日期选择</div></td>
+      <td  height="22"><div align="left">      
+        <select name="seldate" class="inputself0">   
+        <option value="-1" selected>请选择</option>   
+          [$begintable datelist$]         
+          <option value=[$dayname$]>[$strdate$]</option>   
+          [$endtable$]
+        </select>
+        </div>
+          <div align="right"></div></td>
+      <td colspan="9" ><div align="right"></div>        <div align="right"></div></td>
+    </tr>
+
+    <tr>
+      <td  height="22" ><div align="left">大&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;小</div></td>
+      <td  height="22" colspan="3" ><input type="radio" name="btype" value="unit1" checked >&nbsp;
+全部
+  <input type="radio" name="btype" value="unit1">
+大于&nbsp;
+<input type="text"  class=inputf0 name="bbyte" size="8" maxlength="10"   value="0" >
+字节&nbsp; </td>
+      <td width="44" height="22" ><div align="right">附件</div></td>
+      <td colspan="6" height="22" ><div align="left">
+        <input type="radio" name="fbtype" value="unit1" checked >
+        全部
+        <input type="radio" name="fbtype" value="unit2">
+        有附件
+  <input type="hidden" name="fbbyte" size="10" maxlength="10"   value="0" >
+      </div></td>
+    </tr>
+    <tr>
+      <td  height="22" colspan="11" > 内容包括&nbsp;&nbsp;&nbsp;&nbsp;
+          <input type="text"  class=inputf0 name="content" size="20" maxlength="64" value="" >
+        (适用于内容查询） 查询最长时间
+        <input type="text" class=inputf0  name="maxtime" size="5" maxlength="4" value="1200" >
+        (适用于内容查询） </td>
+    </tr>
+    <tr>
+      <td height="22" colspan="11"  > 搜索附件内容
+        <input type="checkbox" name="attchk" value="0">
+        (包括(txt|doc|ppt|xls|csv|htm|html)适用于内容查询） </td>
+    </tr>
+    <tr>
+      <td height="10" colspan="11"> 记录排序方式
+        <input type="radio" name="osort" value="nosort" checked >
+        不排序
+        <input type="radio" name="osort" value="date">
+        日期
+        <input type="radio" name="osort" value="user"    >
+        用户
+        <input type="radio" name="osort" value="dip">
+        远IP地址
+        <input type="radio" name="osort" value="size">
+        大小
+        <input type="radio" name="osort" value="from">
+        发件地址
+        <input type="radio" name="osort" value="to">
+        收件地址
+        <select name="orderby"   class=inputself0 >
+          <option value="0" selected >升序</option>
+          <option value="1" >降序</option>
+        </select></td>
+    </tr>
+    <tr>
+      <td height="33" colspan="11" ><input type="button" name="ok"  value="记录查询" onClick="gg()"   class=inputf0 >
+          <input type="button" name="ok"  value="记录删除" onClick="gg1()"   class=inputf0 >
+          <input type="button" name="ok"  value="全文检索" onClick="gg2()"   class=inputf0 >
+          <input type="button" name="ok"  value="记录导出(HTML)" onClick="gg3()"  class=inputf0  >
+          <input type="hidden" name="tabtype"  value="[$tabtype$]"></td>
+    </tr>
+  </table>
+</div>
+</body>
+</html>

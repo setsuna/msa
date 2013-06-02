@@ -1,0 +1,182 @@
+﻿<html>
+<META content="text/html; charset=utf-8" http-equiv=Content-Type>
+<head><title>QOS configrator</title>
+<link REL=stylesheet HREF="/msa/publiccss/listdatetable.css" TYPE="text/css">
+<script src="/msa/publicjs/tablecssall.js"></script>
+<script src="/msa/publicjs/rmenu.js"></script>
+<style type="text/css">
+<!--
+.ttt {  border-style: outset; border-top-width: 2px; border-right-width: 2px; border-bottom-width: 2px; border-left-width: 2px}
+.nnoo {  filter: Gray}
+.hand {  cursor: hand}
+td{padding-top:0px}
+-->
+</style>
+<link rel="stylesheet" href="/msa/publiccss/pubcss.css" type="text/css">
+<script>
+function gotoFun(sid)
+{
+   listformtongdao.edittype.value=sid;
+   listformtongdao.submit();
+}
+</script>
+</head>
+
+<body bgcolor="#F0F0F0">
+<p>
+<form name="listform" action="/msa/main.xp" method="POST">
+<input type="hidden" name="qosid" value="[$sid$]" >
+<input type="hidden" name="Fun" value="ltupdateqos" >
+
+
+<input type="hidden" name="prio"  value="0" >
+
+
+  <table width="90%" border="0"   valign="top" >
+    <tr> 
+      <td width="90%"> 
+        <table width="90%" border="0" cellspacing="0" cellpadding="0" align="left" >
+          <tr align="left" >
+            <td align="left" >通道名称: 
+            <input type="text"  class=input name="qosname" value="[$qosname$]">
+            </td>
+          </tr>
+          
+           <tr align="left" >
+            <td>   下载带宽峰值：
+              <input type="text" class=input  name="qosrated"  size=6 value="[$qosrated$]" >KB
+            </td>
+            <td> 上传带宽峰值：
+              <input type="text"  class=input name="qosrateu"  size=6 value="[$qosrateu$]" >KB
+            </td>
+           
+          </tr>
+          
+           <tr align="left" >
+            <td>   下载带宽保证：
+              <input type="text" class=input  name="qosmixd"  size=6 value="[$qosmixd$]" >KB
+            </td>
+            <td> 上传带宽保证：
+              <input type="text"  class=input name="qosmixu"  size=6 value="[$qosmixu$]" >KB
+            </td>
+           
+          </tr>
+
+
+          <tr align="left" >
+            <td>  <input type="submit"  class=input name="submit" value="确定配置"/>
+            </td>
+            <td>&nbsp;
+             
+            </td>
+          </tr>
+        </table>
+      </td>
+  </tr>
+</table>
+</form>
+ </p>
+<hr>
+<form name="listformtongdao" method="post" action="/msa/main.xp"  method="POST" >
+<input type="hidden" name="Fun" value="lteditqos" >
+<input type="hidden" name="edittype" value="setdef" >
+<select name="qosid"  class=inputself0>
+ [$begintable dqoslist$]
+ <option value="[$dsid$]">[$dqosname$]</option>
+ [$endtable$] 
+</select>
+
+<input type="button" name="edit" value="编辑该通道"  class=input onClick="gotoFun('setdef');">
+<input type="button" name="del" value="删除该通道"  class=input onClick="gotoFun('Del');" >
+<input type="button" name="del" value="应用全部通道"  class=input onClick="gotoFun('APP');" >
+</form>
+<hr>
+<table width="800" border=1 cellpadding=0 cellspacing=1>
+	<tr>
+		<th colspan=3>名称</th>
+		<th colspan=3>通道速率</th>
+		<th width="123">通道峰值</th>
+		<th >队列方式</th>
+	</tr>
+	<tr>
+		<th colspan=3>下载通道</th>
+		<td >配置</td>
+		<td colspan="2">计算</td>
+		<td>配置</td>
+		<td >LINK: [$DOWNLINK$]KB </td>
+	</tr>
+	[$begintable bqoslist$]
+	<tr>
+		<td border=0 height=20 class=png><img src=/msa/images/ftln.gif></td>
+		<td colspan=2 class=left>[$bqosname$]</td>
+		<td>[$bqosrated$]KB</td>
+		<td >[$brate$]%</td>
+		<td width="30%">
+		<hr size="15" width="[$brate$]" align="left" color="#666666"/></td>
+		<td>[$bqosrateu$]KB</td>
+		<td width="140">[$btype$]</td>
+	</tr>
+	[$endtable$]
+	<tr>
+		<td width=32 border=0 height=20 class=png><img src=/msa/images/ftln.gif></td>
+		<td colspan=2 class=left><b>下载共享通道</b></td>
+		<td>[$shareqos$]KB</td>
+		<td>[$sharerate$]%</td>
+		<td><hr size="15" width="[$sharerate$]%" align="left" color="#999999"></td>
+		<td>[$shareqos$]KB</td>
+		<td>系统自动计算下载共享通道</td>
+	</tr>
+	[$begintable sqoslist$]
+	<tr>
+		<td width=32 border=0 height=20 class=png><img src=/msa/images/ftln.gif></td>
+		<td width=32 border=0 height=20 class=png><img src=/msa/images/ftln.gif></td>
+		<td width="101" colspan=1 class=left>[$sqosname$]</td>
+		<td>[$sqosrated$]KB</td>
+		<td>[$srate$]%</td>
+		<td><hr size="15" width="[$srate$]" align="left" color="#CCCCCC"></td>
+		<td>[$sqosrateu$]KB</td>
+		<td>[$stype$]</td>
+	</tr>
+	[$endtable$]
+	<tr>
+		<th colspan=3>上传通道</th>
+		<td>配置</td>
+		<td colspan="2">计算</td>
+		<td>配置</td>
+		<td >LINK: [$UPLINK$]KB </td>
+	</tr>
+	[$begintable upbqoslist$]
+	<tr>
+		<td width=32 border=0 height=20 class=png><img src=/msa/images/ftln.gif></td>
+		<td colspan=2 class=left>[$upbqosname$]</td>
+		<td>[$upbqosrated$]KB</td>
+		<td>[$upbrate$]%</td>
+		<td><hr size="15" width="[$upbrate$]" align="left" color="#666666"></td>
+		<td>[$upbqosrateu$]KB</td>
+		<td>[$upbtype$]</td>
+	</tr>
+	[$endtable$]
+	<tr>
+		<td width=32 border=0 height=20 class=png><img src=/msa/images/ftln.gif></td>
+		<td colspan=2 class=left><b>上传共享通道</b></td>
+		<td>[$upshareqos$]KB</td>
+		<td>[$upsharerate$]%</td>
+		<td><hr size="15" width="[$upsharerate$]%" align="left" color="#999999"></td>
+		<td>[$upshareqos$]KB</td>
+		<td>系统自动计算上传共享通道</td>
+	</tr>
+	[$begintable upsqoslist$]
+	<tr>
+		<td width=32 border=0 height=20 class=png><img src=/msa/images/ftln.gif></td>
+		<td width=32 border=0 height=20 class=png><img src=/msa/images/ftln.gif></td>
+		<td colspan=1 class=left>[$upsqosname$]</td>
+		<td>[$upsqosrated$]KB</td>
+		<td>[$upsrate$]%</td>
+		<td><hr align="left" width="[$upsrate$]" size="15" noshade color="#CCCCCC">
+		</td>
+		<td>[$upsqosrateu$]KB</td>
+		<td>[$upstype$]</td>
+	</tr>
+	[$endtable$]
+</table>
+</body></html>

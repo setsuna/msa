@@ -1,0 +1,104 @@
+gcc -c srv-keyword.c -O2 -nostartfiles   -Wall -Wunused  -Iinclude -I/app/msa/publiclib/include -I/app/msa/msa/include \
+-I/app/sqldb/include -I/usr/include/libxml2/ -DNO_SHARED_LIBS=1
+
+gcc -c srv-rule-sec.c -O2 -nostartfiles   -Wall -Wunused  -Iinclude -I/app/msa/publiclib/include -I/app/msa/msa/include \
+-I/app/sqldb/include -I/usr/include/libxml2/ -DNO_SHARED_LIBS=1
+
+gcc -c srv-rule-vid.c -O2 -nostartfiles   -Wall -Wunused  -Iinclude -I/app/msa/publiclib/include -I/app/msa/msa/include \
+-I/app/sqldb/include -I/usr/include/libxml2/ -DNO_SHARED_LIBS=1
+
+gcc -c srv-data-data.c -O2 -nostartfiles   -Wall -Wunused  -Iinclude -I/app/msa/publiclib/include -I/app/msa/msa/include \
+-I/app/sqldb/include -I/usr/include/libxml2/ -DNO_SHARED_LIBS=1
+
+gcc -c srv-data-form.c -O2 -nostartfiles   -Wall -Wunused  -Iinclude -I/app/msa/publiclib/include -I/app/msa/msa/include \
+-I/app/sqldb/include -I/usr/include/libxml2/ -DNO_SHARED_LIBS=1
+
+gcc -c srv-data-people.c -O2 -nostartfiles   -Wall -Wunused  -Iinclude -I/app/msa/publiclib/include -I/app/msa/msa/include \
+-I/app/sqldb/include -I/usr/include/libxml2/ -DNO_SHARED_LIBS=1
+
+gcc -c srv-data-conkeysech.c -O2 -nostartfiles   -Wall -Wunused  -Iinclude -I/app/msa/publiclib/include -I/app/msa/msa/include \
+-I/app/sqldb/include -I/usr/include/libxml2/ -DNO_SHARED_LIBS=1
+
+gcc -c srv-report-pageoption.c -O2 -nostartfiles   -Wall -Wunused  -Iinclude -I/app/msa/publiclib/include -I/app/msa/msa/include \
+-I/app/sqldb/include -I/usr/include/libxml2/ -DNO_SHARED_LIBS=1
+
+gcc -c srv-report-userline.c -O2 -nostartfiles   -Wall -Wunused  -Iinclude -I/app/msa/publiclib/include -I/app/msa/msa/include \
+-I/app/sqldb/include -I/usr/include/libxml2/ -DNO_SHARED_LIBS=1
+
+gcc -c srv-report-webline.c -O2 -nostartfiles   -Wall -Wunused  -Iinclude -I/app/msa/publiclib/include -I/app/msa/msa/include \
+-I/app/sqldb/include -I/usr/include/libxml2/ -DNO_SHARED_LIBS=1
+
+gcc -c srv-report-srvline.c -O2 -nostartfiles   -Wall -Wunused  -Iinclude -I/app/msa/publiclib/include -I/app/msa/msa/include \
+-I/app/sqldb/include -I/usr/include/libxml2/ -DNO_SHARED_LIBS=1
+
+gcc -c srv-report-flowline.c -O2 -nostartfiles   -Wall -Wunused  -Iinclude -I/app/msa/publiclib/include -I/app/msa/msa/include \
+-I/app/sqldb/include -I/usr/include/libxml2/ -DNO_SHARED_LIBS=1
+
+gcc -c srv-report-linereport.c -O2 -nostartfiles   -Wall -Wunused  -Iinclude -I/app/msa/publiclib/include -I/app/msa/msa/include \
+-I/app/sqldb/include -I/usr/include/libxml2/ -DNO_SHARED_LIBS=1
+
+
+gcc -c srv-route.c -O2 -nostartfiles   -Wall -Wunused  -Iinclude -I/app/msa/publiclib/include -I/app/msa/msa/include \
+-I/app/sqldb/include -I/usr/include/libxml2/ -DNO_SHARED_LIBS=1
+    /*启动脚本
+    printf("hello to ...\n");
+    chdir("/etc/msa/msa/start/");
+    if(chmod("firewall.up",755) == -1 ){
+    	  printf("hello tottttttttttttttttttt ...\n");
+        ltMsgPk->msgpktype=1;
+	      lt_TcpResponse(confd,ltMsgPk,2,"lthead",LT_TYPE_STRING,"Content-type: text/plain\n","lthtml",LT_TYPE_STRING,"0");
+        ltMsgFree(ltMsgPk);
+        return 0;
+    }
+    
+   
+    system("./etc/msa/msa/start/firewall.up");
+    printf("end to ...\n");*/
+    
+    
+    
+       if(strcmp(notestservice,"yes")==0){ //不启动验证服务 	
+		   		 lt_dbput_rootvars(dbPtr,1,"nostart","#");
+		   		 lt_page_content=ltPltFileParse("/app/httpd/conf/httpd.conf.plt",dbPtr->doc,0);
+			 		 if(lt_page_content==NULL){   
+			 		 		 	ltMsgPk->msgpktype=1;
+							  lt_TcpResponse(confd,ltMsgPk,2,"lthead",LT_TYPE_STRING,"Content-type: text/plain\n","lthtml",LT_TYPE_STRING,"0");				
+							  ltMsgFree(ltMsgPk);
+								lt_dbfree(dbPtr);
+								return 0;
+					 }else{
+					 		int iFd=0;
+							lt_page_content=strstr(lt_page_content,"#");
+							sprintf(caCmd,"/app/httpd/conf/httpd.conf");  						
+							iFd = open(caCmd,O_WRONLY | O_NDELAY | O_TRUNC | O_CREAT,0644); 
+							if(iFd >0) {
+							  write(iFd,lt_page_content,strlen(lt_page_content));
+							} 
+						  close(iFd);
+					 }
+					 lt_dbfree(dbPtr);
+					 sprintf(caCmd,"/app/httpd/bin/apachectl -k restart");  
+					 system(caCmd);
+   }else{ //启动验证服务
+		   	  
+		   		 lt_dbput_rootvars(dbPtr,1,"nostart"," ");
+		   		 lt_page_content=ltPltFileParse("/app/httpd/conf/httpd.conf.plt",dbPtr->doc,0);
+			 		 if(lt_page_content==NULL){  
+			 		 		 	ltMsgPk->msgpktype=1;
+							  lt_TcpResponse(confd,ltMsgPk,2,"lthead",LT_TYPE_STRING,"Content-type: text/plain\n","lthtml",LT_TYPE_STRING,"0");				
+							  ltMsgFree(ltMsgPk);
+								return 0;
+					 }else{
+							lt_page_content=strstr(lt_page_content,"#");
+							sprintf(caCmd,"/app/httpd/conf/httpd.conf");  
+							int iFd=0;
+							iFd = open(caCmd,O_WRONLY | O_NDELAY | O_TRUNC | O_CREAT,0644); 
+							if(iFd >0) {
+							  write(iFd,lt_page_content,strlen(lt_page_content));
+							} 
+						  close(iFd);
+					 }
+					 
+					 sprintf(caCmd,"/app/httpd/bin/apachectl -k restart");  
+					 system(caCmd);
+   }

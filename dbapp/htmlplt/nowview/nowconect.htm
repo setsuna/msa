@@ -1,0 +1,546 @@
+﻿<HTML><HEAD><TITLE>网络7层管理和过滤的领导者</TITLE>
+<META content="text/html; charset=utf-8" http-equiv=Content-Type>
+<LINK rel=stylesheet type=text/css href="/msa/extjs/resources/css/ext-all.css">
+<link rel="stylesheet" type="text/css" href="/msa/extjs/resources/css/feed-viewer.css" />
+<LINK rel=stylesheet type=text/css href="/msa/extjs/resources/css/xtheme-default.css" id="xthemecss" >
+<script type="text/javascript" src="/msa/extjs/adapter/ext/ext-base.js"></script>
+<SCRIPT type=text/javascript  src="/msa/extjs/ext-all.js"></SCRIPT>
+<script type=text/javascript  src="/msa/publicjs/exportexcel.js"></script>
+<LINK rel=stylesheet type=text/css href="/msa/publiccss/pubcss.css">
+<STYLE type=text/css>
+HTML {
+	BORDER-BOTTOM: 0px; BORDER-LEFT: 0px; PADDING-BOTTOM: 0px; MARGIN: 0px; PADDING-LEFT: 0px; PADDING-RIGHT: 0px; FONT: 9px verdana; HEIGHT: 100%; OVERFLOW: hidden; BORDER-TOP: 0px; BORDER-RIGHT: 0px; PADDING-TOP: 0px}
+BODY {
+	BORDER-BOTTOM: 0px; BORDER-LEFT: 0px; PADDING-BOTTOM: 0px; MARGIN: 0px; PADDING-LEFT: 0px; PADDING-RIGHT: 0px; FONT: 9px verdana; HEIGHT: 100%; OVERFLOW: hidden; BORDER-TOP: 0px; BORDER-RIGHT: 0px; PADDING-TOP: 0px
+}
+P {
+	MARGIN: 5px
+}
+</STYLE>
+
+<SCRIPT type=text/javascript>
+    Ext.BLANK_IMAGE_URL = '/msa/extjs/resources/images/default/s.gif';
+    var pagesize;
+    var intervaltime;
+    var xtzystore;
+    
+    var uname;
+    var uid=-1;
+		var gname;
+		var gid="[$mygid$]";
+		var srvname;
+		var srvid=-1;
+		var ipadd;
+		var mytype;
+		
+		pagesize=100;
+    intervaltime=20;
+    
+	  var treepan=new Ext.tree.TreePanel({
+		    	  id: 'tree-panel',
+		        region:'center',
+		        split: true,
+		        useArrows:true,
+		        autoScroll: true,
+		        animate:true,
+            enableDD:true,
+		        rootVisible: false,
+		        lines: false,
+		        useArrows: true,
+		        loader: new Ext.tree.TreeLoader({
+		        	dataUrl:'/msa/main.xp?Fun=msaGroupTreeView',
+		        	baseParams:{Fun:'msaGroupTreeView'} 
+		        }),
+		        root: new Ext.tree.AsyncTreeNode(),
+		        listeners: {
+		             click: function(node, e){		             	 
+						       gid=node.id;
+						       gname=node.text; 
+						     }     
+						}
+		});	 
+	  var mywindow = new Ext.Window({
+					      layout:'fit',
+			          title: '选择部门',
+			          width :200,
+			          height:250,
+			          closeAction :'hide',
+			          plain:true,
+			          items:treepan,
+			          buttons: [{
+		            text: '确定',
+		            handler  : function(){             
+				           	 if(gid!="-1" || gid!=""){				
+								      localStore.load({params:{Fun:'msalocalStore',groupid:gid}});  
+				             }
+		             mywindow.hide();           
+		          }
+		      }]
+		});
+		
+		var loader = treepan.getLoader(); 
+		loader.on("load", setNode);  
+		 
+		function setNode(){      
+			treepan.getSelectionModel().select(treepan.getNodeById(gid));     
+		} 
+		
+		   	
+		function powerPage(){										
+		    mywindow.show();	
+
+//       ,
+//						     afterrender: function(pnl) {
+//										treepan.getSelectionModel().select(treepan.getNodeById(gid));
+//								 }
+//        alert(treepan.getNodeById("0"));
+//        treepan.getSelectionModel().select(treepan.getNodeById(gid));    
+//         //获取所有的子节点  
+//        treepan.render(); 
+//
+//			  function findchildnode(node){
+//				  var childnodes = node.childNodes;
+//				  var nd;
+//				  //alert(childnodes.length);
+//				  for(var i=0;i<childnodes.length;i++){ //从节点中取出子节点依次遍历
+//					  nd=childnodes[i];
+//					  
+//					  if(nd.id==gid){
+//				  	  treepan.getSelectionModel().select(nd);
+//				    }
+//					  if(nd.hasChildNodes()){ //判断子节点下是否存在子节点
+//					   findchildnode(nd); //如果存在子节点 递归
+//				    }   
+//			    }
+//			  }  
+//
+//
+//			  var rootNode=treepan.getRootNode();//获取根节点
+//			  //alert(rootNode.text);
+//			  if(rootNode.id==gid){
+//			  	
+//			  	treepan.getSelectionModel().select(rootNode);
+//			  }else{
+//			  	findchildnode(rootNode); //开始递归
+//			  }
+			
+		   
+		}	 
+    
+    
+    Ext.onReady(function(){	
+	  		Ext.QuickTips.init();
+				var detailEl;				
+				var myMask = new Ext.LoadMask(Ext.getBody(), 
+				{
+				        	msg:"Please wait..."
+				});
+				myMask.show();
+						
+			var runner = new Ext.util.TaskRunner();
+			localStore = new Ext.data.JsonStore({//构建用户列表数据存储器
+				      root: 'Results',
+			        totalProperty: 'totalCount',
+			        url:'/msa/main.xp',
+			        baseParams:{Fun:'msalocalStore'},
+				      fields: [
+				         {name: 'uid'},
+					       {name: 'uname'}
+				      ]
+	    });
+	    	    
+      var Cb = new Ext.form.ComboBox({ //用户列表
+	         fieldLabel: '下拉框',  
+	         valueField:'uid',//json uid
+	         hiddenName:'uid',  //虚拟input hidden的name    
+	         displayField:'uname',     
+	         id:'CbId',      
+	         blankText:'所有用户',               
+	         emptyText:'所有用户', 
+	         renderTo: 'combobox', //渲染到div 的id位置处
+	         width:100,              
+	         anchor:'95.2%',   
+	         selectOnFocus:true,      
+	         triggerAction:'all',     
+	         store:localStore,    
+	         typeAhead:true,      
+	         typeAheadDelay:250,    
+	         editable:false,       
+	         forceSelection:true,   
+	         mode: 'local',
+	         listeners:{
+                "select":function(combo,record,number){
+		                	   uname=Ext.get('CbId').dom.value;   	                	
+		                	   var alluser=combo.getValue();                
+		                     if(typeof(alluser)=="所有用户"){
+		                           uid=-1;	
+		                     }else{
+		                      	   uid=combo.getValue();//取得选择值的uid
+		                     }              	                                 
+                     }
+           }        
+	    }); 
+
+    // create the data store
+    xtzystore = new Ext.data.JsonStore({
+        root: 'Results',
+        totalProperty: 'totalCount',
+        url:'/msa/main.xp',
+        baseParams:{
+        	Fun:'msaNowConectInfo',
+        	showtype:'[$showtype$]',
+        	sip:'[$ipadd$]'},
+        fields: [
+           {name: 'uid'},
+		       {name: 'uname'},
+				   {name: 'gname'},
+			     {name: 'lSip'},
+			     {name: 'lDip'},
+				   {name: 'nSport', type: 'int'},
+		       {name: 'nDport', type: 'int'},
+		       {name: 'shBytes', type: 'int'},
+		       {name: 'xiaBytes', type: 'int'},
+				   {name: 'cService'},
+		       {name: 'keyword'}
+        ]
+    });
+    
+    xtzystore.load();//默认数据载入    
+    
+    
+    
+    // create the Grid
+    
+    HlPagingToolbar = Ext.extend(Ext.PagingToolbar, { 
+    displayInfo: true, 
+    displayMsg: '共{2}条', 
+    emptyMsg: "无记录", 
+    initComponent : function(){ 
+    	   var pageSizeItems = [ 
+                     '-','每', 
+                     this.inputItem = new Ext.form.NumberField({ 
+									    cls: 'x-tbar-page-number', 
+									    allowDecimals: false, 
+									    allowNegative: false, 
+									    enableKeyEvents: true, 
+									    maxValue: 300, 
+									    maxText: '不允许超过300秒', 
+									    selectOnFocus: true, 
+									    value: intervaltime, 
+									    submitValue: false, 
+									    listeners: { 
+									        scope: this, 
+									        keydown: this.onHlTimeKeyDown, 
+									        blur: this.onHlTimeBlur 
+									    } 
+                     }),'秒刷新','-','每页', 
+                     this.inputItem = new Ext.form.NumberField({ 
+									    cls: 'x-tbar-page-number', 
+									    allowDecimals: false, 
+									    allowNegative: false, 
+									    enableKeyEvents: true, 
+									    maxValue: 500, 
+									    maxText: '每页不允许超过500条', 
+									    selectOnFocus: true, 
+									    value: this.pageSize, 
+									    submitValue: false, 
+									    listeners: { 
+									        scope: this, 
+									        keydown: this.onHlPagingKeyDown, 
+									        blur: this.onHlPagingBlur 
+									    } 
+                     }),'条','-',{
+						            //pressed: true,
+						            icon: '/msa/images/grid.png',
+						            enableToggle:true,
+						            text: '导出数据到Excel',
+						            cls: 'x-btn-text-icon details',
+						            toggleHandler: function(btn, pressed){
+						                downloadViewDataActive(xtzygrid);
+						            }
+						        },'-']; 
+		         var userItems = this.items || []; 
+		         this.items = userItems.concat(pageSizeItems); 
+		         HlPagingToolbar.superclass.initComponent.call(this); 
+		    }, 
+		    onHlPagingKeyDown: function(field, e){ 
+		        if(field.isValid()){ 
+		            var k = e.getKey(); 
+		             if (k == e.RETURN) { 
+		                    e.stopEvent(); 
+		                    this.pageSize = field.getValue(); 
+		                    pagesize=this.pageSize;
+		                    //alert(this.pageSize);
+		                    this.doRefresh(); 
+		             } 
+		        } 
+		    }, 
+		    onHlPagingBlur: function(field){ 
+		        if(field.isValid()){ 
+		            this.pageSize = field.getValue(); 
+		            //alert(this.pageSize);
+		            pagesize=this.pageSize;
+		            this.doRefresh(); 
+		        } 
+		    },
+		    onHlTimeKeyDown: function(field, e){ 
+		        if(field.isValid()){ 
+		            var k = e.getKey(); 
+		             if (k == e.RETURN) { 
+		                    e.stopEvent(); 
+		                    intervaltime = field.getValue(); 
+		                    runner.stopAll();
+												var task = {
+														run: function(){
+															 xtzystore.load();
+														},
+														interval: intervaltime*1000 // 每30秒一周期
+												};
+												runner.start(task);
+		             } 
+		        } 
+		    }, 
+		    onHlTimeBlur: function(field){ 
+		        if(field.isValid()){ 
+		            intervaltime = field.getValue(); 
+		            runner.stopAll();
+                var task = {
+														run: function(){
+															 xtzystore.load();
+														},
+														interval: intervaltime*1000 // 每30秒一周期
+								};
+								runner.start(task);
+		        } 
+		    }  
+		});
+    
+    var pagingBar= new HlPagingToolbar({
+        store: xtzystore,
+        pageSize: pagesize,
+        displayInfo: true});
+        
+
+    
+    var xtzygrid = new Ext.grid.GridPanel({
+        region:'center',
+        store: xtzystore,
+        tbar: pagingBar,
+        columns: [
+            {id:'uname',header: "用户名", width: 80, sortable: true,  dataIndex: 'uname'},
+            {header: "部门", width: 80, sortable: true,  dataIndex: 'gname'},
+            {header: "服务",   width: 80, sortable: true,  dataIndex: 'cService'},
+            {header: "出流量KB", width: 60, sortable: true,  dataIndex: 'shBytes'},
+            {header: "进流量KB",   width: 60, sortable: true,  dataIndex: 'xiaBytes'},
+            {header: "源端口",   width: 80, sortable: true,  dataIndex: 'nSport'},
+            {header: "源地址",   width: 60, sortable: true,  dataIndex: 'lSip'},
+            {header: "目的端口",  width: 60, sortable: true,  dataIndex: 'nDport'},
+            {header: "目的地址", width: 60, sortable: true, dataIndex: 'lDip'},
+            {header: "内容", width: 160, sortable: true, dataIndex: 'keyword'}
+        ],
+        stripeRows: true,
+        autoExpandColumn: 'uname',
+        height:screen.height-210,
+        title:'实时网络连接列表',
+        frame:true,
+		    collapsible:true,
+		    autoScroll:true,
+		    draggable:true
+    });
+    
+
+   var rightClick  = new Ext.menu.Menu({
+                id:'feeds-ctx',
+                items: [{
+                    id:'detail',
+                    iconCls:'load-icon',
+                    text:'该用户详细信息',
+                    scope: this,
+                    handler:function(){
+                        var record = xtzygrid.getStore().getAt(detailEl);
+                        var uid=record.get("uid");
+                        //alert(uid);  
+                        var usrl="/msa/main.xp?Fun=msaTermInfoView+uid="+uid;				  
+						            var hgt=(screen.height)-190;
+                        var mywin =new  Ext.Window(
+							                {
+							                    id: 'east-panelmy',
+							                    title: '表单浏览',
+							                    height: 400,
+							                    width: 550,
+							                    closeAction: 'close',
+							                    modal: 'true',
+							                    maximizable:'true',
+							                    margins:'0 5 0 0',
+							                    html: "<IFRAME  name='menufrm' width=100% height='"+(hgt-90)+"' SRC = '"+usrl+"'  border='0' frameborder='0' scrolling='yes'></iframe>" 
+							                 }); 
+							          mywin.show(); 
+							          mywin.maximize();                        } 
+                }]
+   });
+                
+   
+    xtzygrid.addListener('rowclick', rightClickFn);
+    function rightClickFn(client, rowIndex, e) {
+                rightClick.showAt(e.getXY()); 
+                detailEl=rowIndex;
+    }   
+
+		
+		var northPanelTop = new Ext.Panel({
+    	frame:true,
+    　region:'north',
+    	title: '选择查询的条件',
+    	collapsible:true,
+    	contentEl:'north'
+    });
+	
+						// Finally, build the main layout once all the pieces are ready.  This is also a good
+						// example of putting together a full-screen BorderLayout within a Viewport.
+						
+
+	   
+	   new Ext.Viewport({
+									layout: 'border',
+									items: [
+									 northPanelTop,xtzygrid
+									],
+					        renderTo: Ext.getBody()
+					    });
+		
+
+		myMask.hide();
+						 
+    var task = {
+								run: function(){
+									 xtzystore.load();
+								},
+								interval: intervaltime*1000 // 每30秒一周期
+		};
+						
+		runner.start(task);
+  
+            
+    });
+  
+  
+    function selectinput(){
+		   srvname=document.all.service.options[document.all.service.selectedIndex].innerText;
+		   srvid=document.all.service.value;
+		}
+    function sub(){
+      ipadd=document.all.ipaddress.value; 
+      if(ipadd!=""){   
+			    var regIP=/^(25[0-5]|2[0-4][0-9]|[0-1]{1}[0-9]{2}|[1-9]{1}[0-9]{1}|[1-9])\.(25[0-5]|2[0-4][0-9]|[0-1]{1}[0-9]{2}|[1-9]{1}[0-9]{1}|[1-9]|0)\.(25[0-5]|2[0-4][0-9]|[0-1]{1}[0-9]{2}|[1-9]{1}[0-9]{1}|[1-9]|0)\.(25[0-5]|2[0-4][0-9]|[0-1]{1}[0-9]{2}|[1-9]{1}[0-9]{1}|[0-9])$/;
+			    var IP_flag=false;
+				  if(regIP.test(ipadd)){
+						IP_flag= true;
+					}else{
+						IP_flag= false;
+					}
+					if (!IP_flag){
+					  Ext.MessageBox.alert("提示","对不起，IP地址格式错误");
+					  return false;
+					}
+		  }
+
+
+      xtzystore.baseParams={
+      	  Fun:'msaNowConectInfo',
+        	showtype:'[$showtype$]',
+        	gid:gid,
+					uid:uid,
+					sip:ipadd,
+					srvid:srvid};
+						
+			xtzystore.load({ 
+					params:{
+						Fun:'msaNowConectInfo',
+      	    start:0,
+						limit:pagesize,
+						gid:gid,
+						uid:uid,
+						sip:ipadd,
+						srvid:srvid
+					}				
+			});
+		}
+		
+
+		
+
+</SCRIPT>
+
+</HEAD>
+<BODY oncontextmenu="return false" style="SCROLLBAR-FACE-COLOR: #f0f0f0;  overflow-x:hidden;  OVERFLOW: scroll; SCROLLBAR-SHADOW-COLOR: #f0f0f0; SCROLLBAR-3DLIGHT-COLOR: #f0f0f0; SCROLLBAR-ARROW-COLOR: #f0f0f0; SCROLLBAR-DARKSHADOW-COLOR: #cccccc;">
+
+<DIV id=north >
+
+<form id="form1"  name="form1" method="post" action="/msa/main.xp">
+<table border="0" width=100% height=100% cellspacing="0" cellpadding="0" align=center bgcolor='#ffffff'>
+  <tr> 
+      <td width="100%"  valign=middle align=center height="25" bgcolor="f0f0f9" > 
+        <table width="100%" border="0" cellspacing="0">
+ 					<tr> 
+ 						
+			      <td height="26"> 
+			        <div align="left">部门</div>
+			        <input type="hidden" id="hiddengid" value="[$mygid$]">
+			      </td>
+			      
+	          <td height="26">
+		         <input type="button" id="department" class=inputf0 border="0" name="department" value="选择部门" onclick="powerPage();"> 
+	         	</td>
+	         	
+			      <td height="26">
+			        <div align="left">用户</div>
+			        <input type="hidden" id="hiddenuid" value="[$myuid$]">
+			      </td>
+			      
+				    <td height="26">
+		            <div id="combobox"><div>
+		         </td>   
+		          
+		        <td height="26">
+			        <div align="left">IP地址</div>
+			      </td>  
+			      
+		        <td height="26">
+		             <input class="inputf0" name="ipaddress" size="15" type="text" value="[$ipadd$]">
+		         </td> 
+   			
+    			<td height="26"> 
+			        <div align="left">服务</div>
+			    </td>
+			    
+			    <td height="26" align="left"> 
+        		<div align="left">
+							<select name="service"  onchange="selectinput()" class="inputself0" >
+								<option value=-1 selected >全部服务</option>
+								[$begintable srvlist$]
+								<option value=[$srvid$] [$sel$]>[$srvname$]
+								[$endtable$]
+							  </option>
+							</select>
+       			</div>
+     		  </td>
+     		  
+     		  <td height="26"> 
+			       <input name="chakan" value="立即查看" class="inputf0" onclick="sub()" type="button">
+			    </td>
+			       
+			       		 
+    		</tr>
+    		
+      </table>
+
+    </td>
+
+  </tr>
+  </table>
+  </form>
+
+</DIV>
+
+
+</BODY></HTML>

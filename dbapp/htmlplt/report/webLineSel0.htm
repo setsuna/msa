@@ -1,0 +1,178 @@
+﻿<HTML>
+<HEAD>
+<TITLE>网络7层管理和过滤的领导者</TITLE>
+<META content="text/html; charset=utf-8" http-equiv=Content-Type>
+<LINK rel=stylesheet type=text/css href="/msa/publiccss/pubcss.css">
+<LINK rel=stylesheet type=text/css href="/msa/extjs/resources/css/ext-all.css">
+<link rel="stylesheet" type="text/css" href="/msa/extjs/resources/css/feed-viewer.css" />
+<LINK rel=stylesheet type=text/css href="/msa/extjs/resources/css/xtheme-default.css" id="xthemecss" >
+<script type="text/javascript" src="/msa/extjs/adapter/ext/ext-base.js"></script>
+<script language = "Javascript" src = "/msa/publicjs/select_time.js"></script>
+<SCRIPT type=text/javascript  src="/msa/extjs/ext-all.js"></SCRIPT>
+<STYLE type=text/css>
+HTML {
+	BORDER-BOTTOM: 0px; BORDER-LEFT: 0px; PADDING-BOTTOM: 0px; MARGIN: 0px; PADDING-LEFT: 0px; PADDING-RIGHT: 0px; FONT: 12px verdana; HEIGHT: 100%; OVERFLOW: hidden; BORDER-TOP: 0px; BORDER-RIGHT: 0px; PADDING-TOP: 0px
+}
+BODY {
+	MARGIN: 0px; BORDER-BOTTOM: 0px; BORDER-LEFT: 0px; PADDING-BOTTOM: 0px; MARGIN: 0px; PADDING-LEFT: 0px; PADDING-RIGHT: 0px; FONT: 12px verdana; HEIGHT: 100%; OVERFLOW: hidden; BORDER-TOP: 0px; BORDER-RIGHT: 0px; PADDING-TOP: 0px
+}
+P {
+	MARGIN: 0px
+}
+</STYLE>
+<SCRIPT type=text/javascript>
+Ext.BLANK_IMAGE_URL = '/msa/extjs/resources/images/default/s.gif';
+Ext.onReady(function(){
+  new Ext.Viewport({
+				layout: 'border',
+				items: [{
+					region:'center',
+					layout:'fit',
+          split:false,
+          minSize: 100,
+          maxSize: 300,
+          frame:true,
+          collapsible:true,
+          autoScroll: true,
+          margins:'0 0 0 0',
+          contentEl:'north1'
+        }],
+        renderTo: Ext.getBody()
+  });
+});
+
+</SCRIPT>
+<style>
+    .complete .x-tree-node-anchor span {
+        text-decoration: line-through;
+        color: #777;
+    }
+</style>
+</HEAD>
+<body>
+	
+<div id="north1">
+	
+<div id="north2">
+<table width="100%" border="0" cellspacing="0" cellpadding="0" >
+  <tr> 
+    <td> 
+        <table width="100%" border="0" cellpadding="0" cellspacing="0">
+				<tr>
+				    <td width="50">&nbsp;</td>
+				    <td>&nbsp;  </td>
+				</tr>
+				<tr>
+				    <td width="50">&nbsp;</td>
+				    <td> 第一步：选择你所需要的时间段，系统将根据时间范围生成网址分类汇总报表</td>
+				</tr>
+				</table>  
+        <table width="100%" border="0" cellspacing="0" cellpadding="0" >
+          <div id="plabel"> 
+            <tr> 
+              <td width="50" > 
+                <div align="center">&nbsp;</div>
+              </td>
+              <td> 
+                <div align="left">
+                  开始日期:
+                  <input type="text"  class=inputf0 name="sdate" id="sdate" size="10" maxlength="10" value="2011/06/01" onClick=setday(sdate) readonly>
+                </div>
+              </td>
+            </tr> 
+             
+            <tr> 
+              <td width="50" > 
+                <div align="center">&nbsp;</div>
+              </td>
+              <td> 
+                <div align="left">
+                  结束日期:
+                  <input type="text"  class=inputf0 name="edate" id="edate" size="10" maxlength="10" value="2011/06/30" onClick=setday(edate) readonly>
+              </div>
+              </td>
+            </tr> 
+            <tr> 
+              <td width="50" height="20"> 
+                <div align="center">&nbsp;</div>
+              </td>
+              <td  height="20"> 
+                <div align="left"> 
+                 报告名称:
+                 <input type="text" class=inputf0  name="reportname" id="reportname" size="20" maxlength="32" value=""  >
+                </div>
+              </td>
+            </tr> 
+
+		        <tr> 
+              <td width="50" height="20"> 
+                <div align="center">&nbsp;</div>
+              </td>
+              <td  height="20"> 
+                <div align="left"> 
+                 邮件地址:
+                <input type="text"  class=inputf0 name="email" size="20" maxlength="32" value="sizhikai3012@qq.com">(填写邮件地址后生成的报告可自动发送到您的邮箱中！)
+                </div>
+              </td>
+            </tr> 
+          </div>
+        </table>       
+    </td>
+  </tr>
+</table>
+</div>
+	
+<div id="north3" style="display:none">
+	<table width="100%" border="0" cellpadding="0" cellspacing="0">
+				<tr>
+				    <td width="50">&nbsp;</td>
+				    <td>&nbsp;</td>
+				</tr>
+				<tr>
+				   <td width="50">&nbsp;</td>
+				    <td>第二步：系统将生成网址流量汇总报表  </td>
+				</tr>
+	</table>
+</div>
+	
+<div id="north4" style="display:none">
+	<table width="100%" border="0" cellpadding="0" cellspacing="0">
+				<tr>
+				    <td width="50">&nbsp;</td>
+				    <td>&nbsp;</td>
+				</tr>
+				<tr>
+				   <td width="50">&nbsp;</td>
+				    <td>第三步：系统将生成top30流量人员网址访问汇总报表  </td>
+				</tr>
+	</table>
+</div>
+	
+<div id="north5" style="display:none">
+	<table width="100%" border="0" cellpadding="0" cellspacing="0">
+				<tr>
+				    <td width="50">&nbsp;</td>
+				     <td>&nbsp;</td>
+				  </tr>
+				<tr>
+				   <td width="50">&nbsp;</td>
+				    <td>第四步：系统将生成网址访问次数汇总报表 </td>
+				</tr>
+	</table>
+</div>
+<div id="north6" style="display:none">
+	<table width="100%" border="0" cellpadding="0" cellspacing="0">
+				<tr>
+				    <td width="50">&nbsp;</td>
+				     <td>&nbsp;</td>
+				  </tr>
+				<tr>
+				   <td width="50">&nbsp;</td>
+				    <td>最后一步：系统将生成网址分类访问次数汇总报表</td>
+				</tr>
+	</table>
+</div>
+
+</div>
+</body>
+</html>

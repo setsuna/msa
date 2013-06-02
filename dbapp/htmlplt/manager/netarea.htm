@@ -1,0 +1,595 @@
+<HTML><HEAD><TITLE>网络7层管理和过滤的领导者</TITLE>
+<META content="text/html; charset=utf-8" http-equiv=Content-Type>
+<LINK rel=stylesheet type=text/css href="/msa/publiccss/pubcss.css">
+<LINK rel=stylesheet type=text/css href="/msa/extjs/resources/css/ext-all.css">
+<link rel="stylesheet" type="text/css" href="/msa/extjs/resources/css/feed-viewer.css" />
+<LINK rel=stylesheet type=text/css href="/msa/extjs/resources/css/xtheme-default.css" id="xthemecss" >
+<script type="text/javascript" src="/msa/extjs/adapter/ext/ext-base.js"></script>
+<SCRIPT type=text/javascript  src="/msa/extjs/ext-all.js"></SCRIPT>
+<script type=text/javascript  src="/msa/publicjs/select_time_st.js"></script>
+<script type=text/javascript  src="/msa/publicjs/exportexcel.js"></script>
+<STYLE type=text/css>HTML {
+	BORDER-BOTTOM: 0px; BORDER-LEFT: 0px; PADDING-BOTTOM: 0px; MARGIN: 0px; PADDING-LEFT: 0px; PADDING-RIGHT: 0px; FONT: 12px verdana; HEIGHT: 100%; OVERFLOW: hidden; BORDER-TOP: 0px; BORDER-RIGHT: 0px; PADDING-TOP: 0px
+}
+BODY {
+	BORDER-BOTTOM: 0px; BORDER-LEFT: 0px; PADDING-BOTTOM: 0px; MARGIN: 0px; PADDING-LEFT: 0px; PADDING-RIGHT: 0px; FONT: 12px verdana; HEIGHT: 100%; OVERFLOW: hidden; BORDER-TOP: 0px; BORDER-RIGHT: 0px; PADDING-TOP: 0px
+}
+P {
+	MARGIN: 5px
+}
+</STYLE>
+<SCRIPT type=text/javascript>
+Ext.BLANK_IMAGE_URL = '/msa/extjs/resources/images/default/s.gif'; 
+Ext.onReady(function(){ 
+	var policywin;
+	var groupwin;
+	var seled;
+	var btn_Service = Ext.get('Service');
+	var btn_Manager = Ext.get('Manager');
+	
+		//策略树
+	var policytree=new Ext.tree.TreePanel({
+		renderTo:Ext.getBody(),
+		height:300,
+		split: true,
+		useArrows:true,
+		autoScroll: true,
+		rootVisible: false,
+		lines: false,
+		useArrows: true,
+		root: new Ext.tree.AsyncTreeNode() ,
+		loader: new Ext.tree.TreeLoader({
+			dataUrl:'/msa/main.xp?Fun=msaPolicyTree',//传参数1或2  决定是否有多选框
+			baseParams:{Fun:'msaPolicyTree',type:2} 
+		})
+	 });
+	 
+	//部门树
+	var grouptreepan=new Ext.tree.TreePanel({
+		renderTo:Ext.getBody(),
+		height:300,
+		split: true,
+		useArrows:true,
+		autoScroll: true,
+		rootVisible: false,
+		lines: false,
+		useArrows: true,
+		root: new Ext.tree.AsyncTreeNode(),
+		loader: new Ext.tree.TreeLoader({
+			dataUrl:'/msa/main.xp?Fun=msaGroupTreeView',
+			baseParams:{Fun:'msaGroupTreeView'} 
+		}),
+		listeners: {
+					    click: function(node, e) {
+							document.getElementById('groupmanager').value=node.id;
+					    groupwin.hide();
+					   }
+					   }		
+	 });
+	 
+	 grouptreepan.on('load',function(node){
+       grouptreepan.expandAll(); 
+       var mynode=node;
+       mynode.getUI().toggleCheck(true);   
+   });
+
+	
+	btn_Service.on('click', function(){
+		if(!policywin){
+			policywin = new Ext.Window({
+				title: '选择所属策略',
+				closeAction: 'hide',
+				width: 500,
+				height:300,
+				plain:true,
+				items:policytree,
+				bodyStyle:'padding:5px;',
+				buttons:[{
+		                text     : '保存选择的策略',
+		                handler  : function(){
+		                seled="00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000";
+		                var selNodes = policytree.getChecked();
+				                Ext.each(selNodes, function(node){
+				                    if(node.id=='0'){
+				                      seled = '1' + seled.substring(node.id);
+				                    }else if(node.id=='127'){
+				                      seled = seled.substring(0,node.id) +  '1';
+				                    }else{
+				                      seled = seled.substring(0,node.id) +  '1' + seled.substring(node.id,127);
+				                    }
+				                });
+												document.getElementById('grouppolicy').value=seled;
+					    					policywin.hide();
+                    }
+                },{
+                    text     : '选择全部',
+                    handler  : function(){
+                    var rootNodes = policytree.getRootNode();
+                		if (rootNodes.childNodes && rootNodes.childNodes.length>0)
+                        {
+												var child;
+												seled="00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000";
+                        for (var i=0;i<rootNodes.childNodes.length;i++){
+                            child = rootNodes.childNodes[i];
+                            if(i=='0'){
+				                      seled = '1' + seled.substring(i);
+				                    }else if(i=='127'){
+				                      seled = seled.substring(0,i) +  '1';
+				                    }else{
+				                      seled = seled.substring(0,i) +  '1' + seled.substring(i,127);
+				                    }
+                            child.getUI().toggleCheck(true);
+                        }}
+                        document.getElementById('grouppolicy').value=seled;
+                        policywin.hide();
+                    }
+                }]
+			});
+		}
+		policywin.show();		
+	});
+	
+	
+
+	
+	
+	
+	
+	btn_Manager.on('click', function(){
+		if(!groupwin){
+		groupwin = new Ext.Window({
+				title: '选择所属部门',
+				closeAction: 'hide',
+				width: 500,
+				height:300,
+				plain:true,
+				items:grouptreepan,
+				bodyStyle:'padding:5px;'
+			});
+		}
+		groupwin.show();		
+	});
+
+	});
+</script>
+
+<script type="text/javascript">
+	  var xtzystore;
+		function addlistfun() {
+				
+			if(listform.bip.value=="" ){
+				alert("起始IP不能为空!");
+				listform.bip.focus();
+				return;
+			}
+			
+			if(!(listform.bip.value=="")){
+				var mybip=listform.bip.value;
+			  var regIP=/^(25[0-5]|2[0-4][0-9]|[0-1]{1}[0-9]{2}|[1-9]{1}[0-9]{1}|[1-9])\.(25[0-5]|2[0-4][0-9]|[0-1]{1}[0-9]{2}|[1-9]{1}[0-9]{1}|[1-9]|0)\.(25[0-5]|2[0-4][0-9]|[0-1]{1}[0-9]{2}|[1-9]{1}[0-9]{1}|[1-9]|0)\.(25[0-5]|2[0-4][0-9]|[0-1]{1}[0-9]{2}|[1-9]{1}[0-9]{1}|[0-9])$/;
+			  var IP_flag=false;
+			  if(regIP.test(mybip)){
+				IP_flag = true;
+				}else{
+				IP_flag = false;
+				}
+				if (!IP_flag){
+				  alert("对不起，ip地址格式错误！");
+					listform.bip.focus();
+					listform.bip.select();
+				  return false;
+				}
+			}
+			if(listform.eip.value=="" ){
+				alert("结束IP不能为空!");
+				listform.eip.focus();
+				return;
+			}
+			
+			if(!(listform.eip.value=="")){
+				var myeip=listform.eip.value;
+			  var regIP=/^(25[0-5]|2[0-4][0-9]|[0-1]{1}[0-9]{2}|[1-9]{1}[0-9]{1}|[1-9])\.(25[0-5]|2[0-4][0-9]|[0-1]{1}[0-9]{2}|[1-9]{1}[0-9]{1}|[1-9]|0)\.(25[0-5]|2[0-4][0-9]|[0-1]{1}[0-9]{2}|[1-9]{1}[0-9]{1}|[1-9]|0)\.(25[0-5]|2[0-4][0-9]|[0-1]{1}[0-9]{2}|[1-9]{1}[0-9]{1}|[0-9])$/;
+			  var IP_flag=false;
+			  if(regIP.test(myeip)){
+				IP_flag = true;
+				}else{
+				IP_flag = false;
+				}
+				if (!IP_flag){
+				  alert("对不起，ip地址格式错误！");
+					listform.eip.focus();
+					listform.eip.select();
+				  return false;
+				}
+			}
+			
+			if(!(listform.homeurl.value=="")){
+				var myurl=listform.homeurl.value;
+			  var regURL=/^http:\/\/[A-Za-z0-9]+\.[A-Za-z0-9]+[\/=\?%\-&_~`@[\]\:+!]*([^<>])*$/;
+			  var URL_flag=false;
+			  if(regURL.test(myurl)){
+				URL_flag = true;
+				}else{
+				URL_flag = false;
+				}
+				if (!URL_flag){
+				  alert("对不起，URL地址格式错误！");
+					listform.homeurl.focus();
+					listform.homeurl.select();
+				  return false;
+				}
+			}
+		  var grouppolicy=document.getElementById('grouppolicy').value;
+			var groupmanager=document.getElementById('groupmanager').value;
+			var bip=listform.bip.value;
+			var eip=listform.eip.value;
+			var netflag=listform.netflag.value;
+			var snmpnum=listform.snmpnum.value;
+			var homeurl=listform.homeurl.value;
+			var ipdesp=listform.ipdesp.value;
+			var aa=document.getElementById("hash").value;
+			
+			var myhash = document.getElementsByName("hash");
+		  for(i=0;i<myhash.length;i++){
+		    	if(myhash[i].checked){
+		    		break;
+		    	}
+		  };
+			var hashcheck=myhash[i].value;
+		
+			
+			Ext.Ajax.request({
+					method : 'POST', 
+			    url:'/msa/main.xp', 
+			    success: function(response, options){
+				  	 var retxt=response.responseText;
+				  	 if(retxt.substring(0,1)=="0"){
+				  	  	alert('添加网络对象成功!');
+				        xtzystore.load({params:{Fun:'ltnetarealist', start:0,limit:pagesize}});
+				  	 }else{
+				  	 	  alert("添加网络对象失败!"); 
+				  	 }
+				     
+				      
+		      },
+			    failure : function(){   
+				  	alert("添加网络对象失败!"); 
+			    },
+			    params:{Fun:'ltnetareaaction',
+					   	ipstart:bip,
+					   	ipend:eip,
+					   	ipdesp:ipdesp,
+					   	netflag:netflag,
+					   	snmpnum:snmpnum,
+					   	nohashcheck:hashcheck,
+					   	homeurl:homeurl,
+					   	groupid:groupmanager,
+					   	policyid:grouppolicy
+			   	}
+			
+			});
+		}
+    var northPanel;
+    Ext.BLANK_IMAGE_URL = '/msa/extjs/resources/images/default/s.gif';
+		var pagesize;
+		var havesearch;
+		pagesize=50;
+		havesearch=0;
+    Ext.onReady(function(){
+	  		Ext.QuickTips.init();
+				var detailEl;
+				var myMask = new Ext.LoadMask(Ext.getBody(), 
+				    {
+				        	msg:"Please wait..."
+				    });
+				myMask.show();
+    xtzystore = new Ext.data.JsonStore({
+        root: 'Results',
+        totalProperty: 'totalCount',
+        url:'/msa/main.xp',
+        baseParams:{Fun:'ltnetarealist'},
+        fields: [
+           {name: 'id'},
+           {name: 'ipstart'},
+           {name: 'ipend'},
+           {name: 'netflag'},
+           {name: 'snmpnum'},
+           {name: 'nohashcheck'},
+           {name: 'homeurl'},
+           {name: 'groupid'},
+           {name: 'policyid'},
+           {name: 'ipdesp'}
+        ]
+    });
+    xtzystore.load({params:{Fun:'ltnetarealist', start:0,limit:pagesize}});
+       var pagingBar = new Ext.PagingToolbar({
+        pageSize: pagesize,
+        store: xtzystore,
+        displayInfo: true,
+        displayMsg: '显示 {0} - {1} 共 {2}',
+        emptyMsg: "没有数据",
+        items:[
+            '-','每页',this.inputItem = new Ext.form.NumberField({ 
+    cls: 'x-tbar-page-number', 
+    allowDecimals: false, 
+    allowNegative: false, 
+    enableKeyEvents: true,
+    value: pagesize,
+    maxValue: 500, 
+    maxText: '每页不允许超过500条', 
+    selectOnFocus: true, 
+    submitValue: false,
+    listeners: { 
+        scope: this, 
+        keydown: function(field, e){ 
+	        if(field.isValid()){ 
+	            var k = e.getKey(); 
+	             if (k == e.RETURN) { 
+	                    e.stopEvent(); 
+	                    pagesize = field.getValue();
+	                    if(havesearch==1){
+	                      xtzystore.load({params:{Fun:'ltnetarealist', start:0,limit:pagesize}});
+	                    }
+	             } 
+	        } 
+        }, 
+        blur: function(field){
+	        if(field.isValid()){
+	            pagesize = field.getValue();
+	            if(havesearch==1){
+	                      xtzystore.load({params:{Fun:'ltnetarealist', start:0,limit:pagesize}});
+	            }
+	        } 
+        }
+    }}),
+    '条','-', {
+            icon: '/msa/images/grid.png',
+            enableToggle:true,
+            text: '导出本页数据到Excel',
+            cls: 'x-btn-text-icon details',
+            toggleHandler: function(btn, pressed){
+                downloadViewDataActive(xtzygrid);
+            }
+        },'-']
+    });
+   function conChange(val){
+        if(val == 1){
+            return 'IP扫描锁定';
+        }else if(val == 2){
+            return 'MAC扫描锁定';
+        }else if(val == 3){
+            return '主机名扫描锁定';
+        }else if(val == 4){
+            return 'PPPOE协议用户';
+        }else if(val == 5){
+            return 'AD域验证';
+        }else if(val == 6){
+            return '本地账户验证';
+        }else if(val == 7){
+            return '外部验证';
+        }else if(val == 8){
+            return 'HTTP验证同步';
+        }else if(val == 9){
+            return '外部被动身份验证';
+        }else if(val == 10){
+            return 'LDAP验证';
+        }else if(val == 11){
+            return 'RADUS验证';
+        }else if(val == 12){
+            return 'IP客户端锁定';
+        }else if(val == 13){
+            return 'MAC客户端锁定';
+        }else if(val == 14){
+            return '主机客户端锁定';
+        }else if(val == 15){
+            return '面过滤内部IP';
+        }else if(val == 16){
+            return '面过滤外部IP';
+        }else if(val == 17){
+            return '外部IP';
+        }else if(val == 99){
+            return '免监控';
+        }else if(val == 100){
+            return '禁止访问';
+        }
+        return val;
+    }
+    function snmpChange(val)
+    {	
+		    if(val == 0){
+		    	  return '不通过SNMP识别MAC';
+		    }
+		    else
+		    {
+		    	return '通过SNMP'+val+'识别MAC';
+		    }
+    }
+    var xtzygrid = new Ext.grid.GridPanel({
+        region:'center',
+        store: xtzystore,
+        columns: [
+            {id:'ipstart',header: "起始IP", width: 100, sortable: true, dataIndex: 'ipstart'},
+            {header: "结束IP",   width: 130, sortable: true,  dataIndex: 'ipend'},
+            {header: "IP描述",   width: 130, sortable: true,  dataIndex: 'ipdesp'},
+            {header: "网络标识",  width: 160, sortable: true,  dataIndex: 'netflag',renderer: conChange},
+            {header: "SNMP识别",  width: 200, sortable: true,  dataIndex: 'snmpnum',renderer: snmpChange},
+            {header: "首次访问页面",  width: 200, sortable: true,  dataIndex: 'homeurl'}
+        ],
+        tbar: pagingBar,
+        viewConfig:{
+			   		forceFit: false,
+			 			scrollOffset: 0 
+			  },
+        stripeRows: true,
+        autoExpandColumn: 'ipstart',
+        width:280,
+        height:screen.height-350,
+        frame:true,
+        title:'网络对象列表',
+		    collapsible:true,
+		    loadMask:{msg:'正在加载数据，请稍侯……'},
+		    draggable:true
+    });
+    
+    var detailEl;
+	  var rightClick  = new Ext.menu.Menu({
+							id:'feeds-ctx',
+							items: [{
+								id:'delrealidArealist',
+								iconCls:'load-icon',
+								text:'删除网络对象',
+								scope: this,
+								handler:function()
+								{
+									var record = xtzygrid.getStore().getAt(detailEl);
+									var my_id=record.get("id"); 
+									var deflag=1;
+									  Ext.MessageBox.confirm('提示','你确定要删除此网络对象吗？',function(button,text)
+									  {
+											if(button=="yes")
+											{
+												Ext.Ajax.request
+												({
+													url:'/msa/main.xp',
+													params:{Fun:'ltnetarealist',deflag:'1',start:0,limit:pagesize,del_id:my_id},
+													success:function(response,options){
+															var retxt=response.responseText;//从这句C文件拿到返回值0  lt_TcpResponse(confd,ltMsgPk,2,"lthead",LT_TYPE_STRING,"Content-type: application/json\n","lthtml",LT_TYPE_STRING,"0");
+                              if(retxt.substring(0,1)=="0"){
+															   Ext.MessageBox.alert('提示','网络对象删除成功!');
+		                             xtzystore.load({params:{Fun:'ltnetarealist', start:0,limit:pagesize}});
+                              }else{
+                                 Ext.MessageBox.alert('提示','网络对象删除失败!'); //没拿到返回值
+                              }
+													},
+													failure:function(){
+                                 Ext.MessageBox.alert('提示','网络对象删除失败!');
+                           }
+												});		    
+												 xtzystore.load({params:{Fun:'ltnetarealist', start:0,limit:pagesize}});
+									    }
+									   });
+								 }
+							}
+							/*,{添加新的右键菜单}*/
+						]});
+						 xtzygrid.addListener('rowclick', rightClickFn); 
+						 function rightClickFn(client, rowIndex, e) 
+						 {
+						   rightClick.showAt(e.getXY()); 
+						   detailEl=  rowIndex;
+             }  
+					  new Ext.Viewport({
+									layout: 'border',
+									items: [
+									  {
+                    region:'north',
+                    contentEl: 'north',
+                    split:true,
+                    height: 230,
+                    minSize: 100,
+                    maxSize: 300,
+                    collapsible: true,
+                    title:'添加网络对象',
+                    margins:'0 0 0 0'
+                   },xtzygrid
+									],
+					        renderTo: Ext.getBody()
+					    });
+			     myMask.hide();
+  });
+</SCRIPT>
+</HEAD>
+<BODY>
+<DIV id=north>
+<form id="listform"  name="listform" method="post" action="/msa/main.xp">
+  <table width="513" border="0" cellspacing="0" align="center" > 
+      <tr> 
+	      <td align="right" width="95" height="26">起始 IP</td>
+	      <td height="26"> 
+	        <input type="text" name="bip" size="15" maxlength="15" value="" class=input>
+	      </td>
+	      <td align="right" width="106" height="26">终止 IP</td>
+	      <td height="26"> 
+	        <input type="text" name="eip" size="15" maxlength="15" value="" class=input>
+	      </td>
+     </tr> 
+     
+    <tr> 
+	      <td align="right" width="95" height="26">IP描述</td>
+	      <td height="32" colspan="3">
+	        <input type="text" name="ipdesp" size="45" maxlength="50" value="" class=input>
+        </td>
+	  </tr> 
+     
+     <tr> 
+      <td align="right" width="95" height="32">网络标识</td>
+      <td height="32" width="151"> 
+      	<select name="netflag" class=inputsel >
+				 	<option value="1" > IP扫描锁定
+				 	<option value="2" > MAC扫描锁定
+				 	<option value="3" > 主机名扫描锁定
+				 	<option value="4" > PPPOE协议用户
+				 	<option value="5" > AD域验证
+				 	<option value="6" > 本地账户验证
+				 	<option value="7" > 外部验证
+				 	<option value="8" > HTTP验证同步
+				 	<option value="9" > 外部被动身份验证
+				 	<option value="10" > LDAP验证
+				 	<option value="11" > RADUS验证
+				 	<option value="12" > IP客户端锁定
+				 	<option value="13" > MAC客户端锁定
+				 	<option value="14" > 主机客户端锁定
+				 	<option value="15" > 面过滤内部IP
+				 	<option value="16" > 面过滤外部IP
+				 	<option value="17" > 外部IP
+					<option value="99" > 不监控
+					<option value="100"> 禁止连接
+	      </select>
+      </td>
+      <td align="right" width="106" height="32">SNMP识别</td>
+      <td height="32" width="153"> 
+      	<select name="snmpnum" class=inputsel >
+				 	<option value="0" selected > 不通过SNMP识别MAC
+					<option value="1" > 通过SNMP1识别MAC
+					<option value="2" > 通过SNMP2识别MAC
+					<option value="3" > 通过SNMP3识别MAC
+					<option value="4" > 通过SNMP4识别MAC
+					<option value="5" > 通过SNMP5识别MAC
+					<option value="6" > 通过SNMP6识别MAC
+        </select>
+      </td>
+    </tr>
+    <tr> 
+	      <td align="right" width="95" height="26">首次访问页面</td>
+	      <td height="32" colspan="3">
+	        <input type="text" name="homeurl" size="45" maxlength="50" value="" class=input>
+        </td>
+	  </tr> 
+	  <tr> 
+      <td align="right" width="95" height="26">操作</td>
+      <td height="32" width="151"> 
+        <input type="button" id="Service" name="Service" value="选择默认策略属性" border="0" class=input style="cursor: hand" >
+        </td>
+        
+        	<td>
+        <input type="button" id="Manager" name="Manager" value="选择所属部门属性"  border="0" class=input style="cursor: hand" >
+      </td>
+	  </tr>
+	     
+    <tr>
+      <td>&nbsp;</td>
+	  	<td height="32" colspan="2">
+        Hash算法查询
+          <input type="radio" name="hash" value="1"  style="cursor: hand" checked="checked" >是
+		&nbsp;&nbsp;<input type="radio" name="hash" value="0"  style="cursor: hand" >否
+      </td>
+	  <td> 
+        <input type="button" class=inputf0 name="add"  value="添加" onClick="addlistfun()" style="cursor: hand" >
+        </td>
+	  </tr>
+	  <input type="hidden" name="grouppolicy" id="grouppolicy" value="1000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000">
+	  <input type="hidden" name="groupmanager" id="groupmanager" value="0">
+  </table>
+</form>
+</DIV>
+</BODY>
+</HTML>

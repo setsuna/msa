@@ -1,0 +1,94 @@
+<HTML><HEAD><TITLE>网络7层管理和过滤的领导者</TITLE>
+<style type="text/css">
+.xi{border-left-style:none;border-right-style:none;border-top-style:none;}
+</style>
+<META content="text/html; charset=utf-8" http-equiv=Content-Type>
+<LINK rel=stylesheet type=text/css href="/msa/publiccss/pubcss.css">
+<LINK rel=stylesheet type=text/css href="/msa/extjs/resources/css/ext-all.css">
+<link rel="stylesheet" type="text/css" href="/msa/extjs/resources/css/feed-viewer.css" />
+<LINK rel=stylesheet type=text/css href="/msa/extjs/resources/css/xtheme-default.css" id="xthemecss" >
+<script type="text/javascript" src="/msa/extjs/adapter/ext/ext-base.js"></script>
+<SCRIPT type=text/javascript  src="/msa/extjs/ext-all.js"></SCRIPT>
+<script type=text/javascript  src="/msa/publicjs/exportexcel.js"></script>
+<STYLE type=text/css>HTML {
+	BORDER-BOTTOM: 0px; BORDER-LEFT: 0px; PADDING-BOTTOM: 0px; MARGIN: 0px; PADDING-LEFT: 0px; PADDING-RIGHT: 0px; FONT: 12px verdana; HEIGHT: 100%; OVERFLOW: hidden; BORDER-TOP: 0px; BORDER-RIGHT: 0px; PADDING-TOP: 0px
+}
+BODY {
+	BORDER-BOTTOM: 0px; BORDER-LEFT: 0px; PADDING-BOTTOM: 0px; MARGIN: 0px; PADDING-LEFT: 0px; PADDING-RIGHT: 0px; FONT: 12px verdana; HEIGHT: 100%; OVERFLOW: hidden; BORDER-TOP: 0px; BORDER-RIGHT: 0px; PADDING-TOP: 0px
+}
+P {
+	MARGIN: 5px
+}
+</STYLE>
+
+<SCRIPT type=text/javascript>
+    Ext.BLANK_IMAGE_URL = '/msa/extjs/resources/images/default/s.gif';
+		var xtzystore;
+		var pagesize;
+		var havesearch;
+		pagesize=100;
+		havesearch=0;
+    Ext.onReady(function()
+    {
+	  		Ext.QuickTips.init();
+				var myMask = new Ext.LoadMask(Ext.getBody(), 
+				{
+				        	msg:"Please wait..."
+				});
+				myMask.show();  
+        
+				var northPanel1 = new Ext.Panel({
+				    frame:true,
+				    region:'north1',
+				    title:'记录级别',
+				    collapsible:true,
+				    html: "<IFRAME id='Levelfrm' name='Levelfrm' target='main' width=100% height=100% SRC = '/msa/main.xp?Fun=ltmaillevel'  border='0' frameborder='0' scrolling='yes'></iframe>"
+				    });  
+				var northPanel2 = new Ext.Panel({
+				    frame:true,
+				    region:'north2',
+				    title:'免监控域名',
+				    collapsible:true,
+				    html: "<IFRAME id='Mailfrm' name='Mailfrm' target='main' width=100% height=100% SRC = '/msa/manager/noListenMail.htm'  border='0' frameborder='0' scrolling='yes'></iframe>"
+				    });
+				var northPanel3 = new Ext.Panel({
+				    frame:true,
+				    region:'north3',
+				    title:'邮件分类',
+				    collapsible:true,
+				    html: "<IFRAME id='Mailfrm' name='Mailfrm' target='main' width=100% height=100% SRC = '/msa/manager/maillist.htm'  border='0' frameborder='0' scrolling='yes'></iframe>"
+				    });
+				var mainPanel= {
+									id: 'main-panel',
+									region:'center',
+	                collapsible: true,
+	                split:true,
+	                layout:'fit',
+	                height:screen.height-100,
+	                margins:'0 5 0 0',
+	                items:
+	                    new Ext.TabPanel({
+	                        border:false,
+	                        activeTab:0,
+	                        items:[northPanel1,northPanel2,northPanel3]
+	                    })
+	      }
+			  new Ext.Viewport({
+							layout: 'border',
+							items: [mainPanel],
+			        renderTo: Ext.getBody()
+			  });		
+	      myMask.hide();
+  });  
+</SCRIPT>
+
+</HEAD>
+<BODY oncontextmenu="return false">
+		<DIV id=north>
+				<CENTER>
+				   <TABLE id=FT cellSpacing=0 cellPadding=0 width="100%"  border=0>	
+				   </TABLE>
+				</CENTER>
+		</DIV>
+</BODY>
+</HTML>

@@ -1,0 +1,352 @@
+<html>
+<head>
+  <title>Custom Layouts and Containers - Portal Sample</title>
+<LINK rel=stylesheet type=text/css href="/msa/extjs/resources/css/ext-all.css">
+<link rel="stylesheet" type="text/css" href="/msa/extjs/resources/css/xtheme-default.css">
+<script type="text/javascript" src="/msa/extjs/adapter/ext/ext-base.js"></script>
+<SCRIPT type=text/javascript  src="/msa/extjs/ext-all.js"></SCRIPT>
+
+<script type="text/javascript" src="/msa/extjs/Portal.js"></script>
+<script type="text/javascript" src="/msa/extjs/PortalColumn.js"></script>
+<link rel="stylesheet" type="text/css" href="/msa/extjs/resources/css/portal.css" />
+<link rel="stylesheet" type="text/css" href="/msa/extjs/resources/css/sample.css" />
+<SCRIPT type=text/javascript>
+	  Ext.BLANK_IMAGE_URL = '/msa/extjs/resources/images/default/s.gif';
+		Ext.onReady(function(){
+		var portalColumnId = "row";
+		var menu = new Ext.menu.Menu({
+	    id: 'basicMenu',
+	    items: [new Ext.menu.Item({
+	            text: '浏览4天内数据',
+	            checkHandler: checkHandler
+	        }),
+	        new Ext.menu.Item({
+	            text: '浏览8天内数据',
+	            handler: clickHandler
+	        }),
+	        new Ext.menu.Item({
+	            text: '浏览12天内数据',
+	            checkHandler: checkHandler
+	        }),
+	        new Ext.menu.Item({
+	            text: '浏览16天内数据',
+	            checkHandler: checkHandler
+	        }),
+	        '-'
+	    ]
+		});
+		function clickHandler() {
+	}
+		function checkHandler() {
+	}
+
+    // create some portlet tools using built in Ext tool ids
+    var tools = [
+//    {
+//        id:'gear',
+//        handler: function(){
+//            Ext.Msg.alert('Message', 'The Settings tool was clicked.');
+//        }
+//    },
+    {
+        id:'close',
+        handler: function(e, target, panel){
+            panel.ownerCt.remove(panel, true);
+        }
+    }];
+    
+    var c0_r0 = new Ext.ux.Portlet({
+						    xtype:'portlet',
+						    id:'panel_00',
+						    margins:'10 0 0 0',
+								//title: 'Grid in a Portlet',
+								layout:'fit',
+								height:200,
+								collapsible : false,
+								collapsed:false,
+		            tools: tools,
+								items: []
+    });
+
+    var c0_r1 = new Ext.ux.Portlet({
+					      xtype:'portlet',
+					      id:'panel_01',
+					      margins:'10 0 0 0',
+								//title: 'Grid in a Portlet',
+								layout:'fit',
+								height:200,
+								collapsible : false,
+								collapsed:false,
+			          tools: tools,
+								items: []
+    });
+
+		var c0_r2=new Ext.ux.Portlet({
+								xtype:'portlet',
+					      id:'panel_02',
+					      margins:'10 0 0 0',
+								//title: 'Grid in a Portlet',
+								layout:'fit',
+								height:200,
+								collapsible : false,
+								collapsed:false,
+							  tools: tools,
+								items: []
+       });
+		var c0_r3=new Ext.ux.Portlet({
+								xtype:'portlet',
+					      id:'panel_03',
+					      margins:'10 0 0 0',
+								//title: 'Grid in a Portlet',
+								layout:'fit',
+								height:200,
+								collapsible : false,
+								collapsed:false,
+							  tools: tools,
+								items: []
+		});
+   	var col_0 = new Ext.ux.PortalColumn({
+		       			columnWidth:.25,
+		            style:'padding:10px 0 10px 10px',
+		            items:[c0_r0,c0_r1,c0_r2,c0_r3]
+   	});
+    var c1_r0 = new Ext.ux.Portlet({
+            		xtype:'portlet',
+				     		id:'panel_10',
+				     		margins:'10 0 0 0',
+								//title: 'Grid in a Portlet',
+								layout:'fit',
+								height:200,
+								collapsible : false,
+								collapsed:false,
+								tools: tools,
+								items: []
+		});
+		var c1_r1 = new Ext.ux.Portlet({
+			        xtype:'portlet',
+				      id:'panel_11',
+				      margins:'10 0 0 0',
+						  //title: 'Grid in a Portlet',
+						  layout:'fit',
+							height:200,
+							collapsible : false,
+							collapsed:false,
+		          tools: tools,
+							items: []
+		});
+		var c1_r2 = new Ext.ux.Portlet({
+				     xtype:'portlet',
+				     id:'panel_12',
+				     margins:'10 0 0 0',
+						//title: 'Grid in a Portlet',
+						layout:'fit',
+						height:200,
+						collapsible : false,
+						collapsed:false,
+						items: []
+		});
+		var c1_r3 = new Ext.ux.Portlet({
+				     xtype:'portlet',
+				     id:'panel_13',
+				     margins:'10 0 0 0',
+						//title: 'Grid in a Portlet',
+						layout:'fit',
+						height:200,
+						collapsible : false,
+						collapsed:false,
+						items: []
+		});
+		var col_1 = new Ext.ux.PortalColumn({
+                columnWidth:.25,
+                style:'padding:10px 0 10px 10px',
+                items:[c1_r0,c1_r1,c1_r2,c1_r3]
+		});
+		var c2_r0 = new Ext.ux.Portlet({
+            xtype:'portlet',
+				     id:'panel_20',
+				     margins:'10 0 0 0',
+							//title: 'Grid in a Portlet',
+							layout:'fit',
+							height:200,
+							collapsible : false,
+							collapsed:false,
+							            tools: tools,
+							items: []
+		});
+		var c2_r1 = new Ext.ux.Portlet({
+			        xtype:'portlet',
+				      id:'panel_21',
+				      margins:'10 0 0 0',
+						  //title: 'Grid in a Portlet',
+						  layout:'fit',
+							height:200,
+							collapsible : false,
+							collapsed:false,
+		          tools: tools,
+							items: []
+		});
+		var c2_r2 = new Ext.ux.Portlet({
+				     xtype:'portlet',
+				     id:'panel_22',
+				     margins:'10 0 0 0',
+						//title: 'Grid in a Portlet',
+						layout:'fit',
+						height:200,
+						collapsible : false,
+						collapsed:false,
+						items: []
+		});
+		var c2_r3 = new Ext.ux.Portlet({
+				     xtype:'portlet',
+				     id:'panel_23',
+				     margins:'10 0 0 0',
+						//title: 'Grid in a Portlet',
+						layout:'fit',
+						height:200,
+						collapsible : false,
+						collapsed:false,
+						items: []
+		});
+		var col_2 = new Ext.ux.PortalColumn({
+                columnWidth:.25,
+                style:'padding:10px 0 10px 10px',
+                items:[c2_r0,c2_r1,c2_r2,c2_r3]
+		});
+		var c3_r0 = new Ext.ux.Portlet({
+            xtype:'portlet',
+				     id:'panel_30',
+				     margins:'10 0 0 0',
+							//title: 'Grid in a Portlet',
+							layout:'fit',
+							height:200,
+							collapsible : false,
+							collapsed:false,
+							            tools: tools,
+							items: []
+		});
+		var c3_r1 = new Ext.ux.Portlet({
+			        xtype:'portlet',
+				      id:'panel_31',
+				      margins:'10 0 0 0',
+						  //title: 'Grid in a Portlet',
+						  layout:'fit',
+							height:200,
+							collapsible : false,
+							collapsed:false,
+		          tools: tools,
+							items: []
+		});
+		var c3_r2 = new Ext.ux.Portlet({
+				     xtype:'portlet',
+				     id:'panel_32',
+				     margins:'10 0 0 0',
+						//title: 'Grid in a Portlet',
+						layout:'fit',
+						height:200,
+						collapsible : false,
+						collapsed:false,
+						items: []
+		});
+		var c3_r3 = new Ext.ux.Portlet({
+				     xtype:'portlet',
+				     id:'panel_33',
+				     margins:'10 0 0 0',
+						//title: 'Grid in a Portlet',
+						layout:'fit',
+						height:200,
+						collapsible : false,
+						collapsed:false,
+						items: []
+		});
+		var col_3 = new Ext.ux.PortalColumn({
+                columnWidth:.2,
+                style:'padding:10px 0 10px 10px',
+                items:[c3_r0,c3_r1,c3_r2,c3_r3]
+		});
+		_portal = new Ext.ux.Portal({
+				xtype:'portal',
+				border: false,
+        //region:'center',
+        //margins:'35 5 5 0',
+        items:[col_0,col_1,col_2,col_3]
+
+        /*
+         * Uncomment this block to test handling of the drop event. You could use this
+         * to save portlet position state for example. The event arg e is the custom
+         * event defined in Ext.ux.Portal.DropZone.
+         */
+        ,listeners: {
+            'drop': function(e){
+            //Ext.Msg.alert('aaa',dump_obj(this.items));
+            //Ext.Msg.alert('aaa',dump_obj(this.items));
+             //Ext.Msg.alert('aaa',dump_obj(e.portal));
+
+                Ext.Msg.alert('Portlet Dropped', e.panel.title+':id:'+e.panel.id + '<br />Column: ' +
+                  e.columnIndex + '<br />Position: ' + e.position);
+            }
+        }
+
+});
+		var mainpanel= new Ext.Panel({
+				xtype:'portal',
+				region: 'center',
+    		height:screen.height,
+        autoScroll:true,
+        collapsible: true,
+        split:true,
+        layout:'fit',
+        margins:'0 5 0 0',
+        title: '数据中心',
+        tbar:[{text:"选项",
+        			pressed: true,
+	            icon: '/msa/images/menu-show.gif',
+	            enableToggle:true,
+	            cls: 'x-btn-text-icon details',
+        			menu:menu}],
+        items:[_portal]        
+		});
+    var viewport = new Ext.Viewport({
+        layout:'border',
+        items:[mainpanel]
+    });
+//    for (var j = 0; j <4; j++) {
+//				var portalColumn = new Ext.ux.PortalColumn({
+//						id : portalColumnId + j,
+//						xtpye:'portal',
+//						columnWidth :.44,
+//						style : 'padding:2px 2px 2px 2px',
+//						items:[]
+//				});
+//				Ext.getCmp("pp").add(portalColumn);
+//				viewport.doLayout();
+//				var newpanel = new Ext.Panel({
+//						id:'dynamicpanel',
+//						title: 'Panel 2',
+//						renderTo:portalColumnId + j,
+//						draggable:true,
+//						tools: tools,
+//						autoWidth:true,
+//					  collapsible:true,
+//					  width: 80,
+//					  height:80,
+//					  items:[{
+//        				id:'pp',
+//        				xtype:'portal',
+//                columnWidth:.44,
+//                style:'padding:10px 0 10px 10px',
+//                items:[]
+//            }]
+//				});
+//				newpanel.doLayout();
+//				portalColumn.add("dynamicpanel");
+////				alert(Ext.getCmp("staticpanel").ownerCt);
+////				alert(Ext.getCmp("dynamicpanel").ownerCt);
+//	  }
+});
+</SCRIPT>
+</head>
+<script type="text/javascript" src="/msa/extjs/Portlet.js"></script>
+<body>
+<div id="menubutton"></div>
+</body>
+</html>

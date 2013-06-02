@@ -1,0 +1,649 @@
+gcc -c srv-data.c -O2 -nostartfiles   -Wall -Wunused  -Iinclude -I/app/msa/publiclib/include -I/app/msa/msa/include \
+-I/app/sqldb/include -I/usr/include/libxml2/ -DNO_SHARED_LIBS=1
+
+gcc -c srv-report.c -O2 -nostartfiles   -Wall -Wunused  -Iinclude -I/app/msa/publiclib/include -I/app/msa/msa/include \
+-I/app/sqldb/include -I/usr/include/libxml2/ -DNO_SHARED_LIBS=1
+
+gcc -c page-option.c -O2 -nostartfiles   -Wall -Wunused  -Iinclude -I/app/msa/publiclib/include -I/app/msa/msa/include \
+-I/app/sqldb/include -I/usr/include/libxml2/ -DNO_SHARED_LIBS=1
+
+gcc -c srv-reports.c -O2 -nostartfiles   -Wall -Wunused  -Iinclude -I/app/msa/publiclib/include -I/app/msa/msa/include \
+-I/app/sqldb/include -I/usr/include/libxml2/ -DNO_SHARED_LIBS=1
+
+gcc -c srv-gnowview.c -O2 -nostartfiles   -Wall -Wunused  -Iinclude -I/app/msa/publiclib/include -I/app/msa/msa/include \
+-I/app/sqldb/include -I/usr/include/libxml2/ -DNO_SHARED_LIBS=1
+
+gcc -c srv-srvrule.c -O2 -nostartfiles   -Wall -Wunused  -Iinclude -I/app/msa/publiclib/include -I/app/msa/msa/include \
+-I/app/sqldb/include -I/usr/include/libxml2/ -DNO_SHARED_LIBS=1
+
+
+gcc -c srv-webview.c -O2 -nostartfiles   -Wall -Wunused  -Iinclude -I/app/msa/publiclib/include -I/app/msa/msa/include \
+-I/app/sqldb/include -I/usr/include/libxml2/ -DNO_SHARED_LIBS=1
+
+
+gcc -c srv-nowconect.c -O2 -nostartfiles   -Wall -Wunused  -Iinclude -I/app/msa/publiclib/include -I/app/msa/msa/include \
+-I/app/sqldb/include -I/usr/include/libxml2/ -DNO_SHARED_LIBS=1
+
+
+gcc -c srv-pnowview.c -O2 -nostartfiles   -Wall -Wunused  -Iinclude -I/app/msa/publiclib/include -I/app/msa/msa/include \
+-I/app/sqldb/include -I/usr/include/libxml2/ -DNO_SHARED_LIBS=1
+
+
+gcc -c srv-import.c -O2 -nostartfiles   -Wall -Wunused  -Iinclude -I/app/msa/publiclib/include -I/app/msa/msa/include \
+-I/app/sqldb/include -I/usr/include/libxml2/ -DNO_SHARED_LIBS=1
+
+
+gcc -c srv-export.c -O2 -nostartfiles   -Wall -Wunused  -Iinclude -I/app/msa/publiclib/include -I/app/msa/msa/include \
+-I/app/sqldb/include -I/usr/include/libxml2/ -DNO_SHARED_LIBS=1
+
+gcc -c srv-userexport.c -O2 -nostartfiles   -Wall -Wunused  -Iinclude -I/app/msa/publiclib/include -I/app/msa/msa/include \
+-I/app/sqldb/include -I/usr/include/libxml2/ -DNO_SHARED_LIBS=1
+
+
+gcc -c srv-data.c -O2 -nostartfiles   -Wall -Wunused  -Iinclude -I/app/msa/publiclib/include -I${srcdir}/include \
+-I/app/sqldb/include -I/usr/include/libxml2/ -DNO_SHARED_LIBS=1
+
+gcc -c srv-userimport.c -O2 -nostartfiles   -Wall -Wunused  -Iinclude -I/app/msa/publiclib/include -I/app/msa/msa/include \
+-I/app/sqldb/include -I/usr/include/libxml2/ -DNO_SHARED_LIBS=1
+
+gcc -c srv-sysclean.c -O2 -nostartfiles   -Wall -Wunused  -Iinclude -I/app/msa/publiclib/include -I/app/msa/msa/include \
+-I/app/sqldb/include -I/usr/include/libxml2/ -DNO_SHARED_LIBS=1
+
+
+gcc -c srv-service.c -O2 -nostartfiles   -Wall -Wunused  -Iinclude -I/app/msa/publiclib/include -I/app/msa/msa/include \
+-I/app/sqldb/include -I/usr/include/libxml2/ -DNO_SHARED_LIBS=1
+
+gcc -c srv-servicerecord.c -O2 -nostartfiles   -Wall -Wunused  -Iinclude -I/app/msa/publiclib/include -I/app/msa/msa/include \
+-I/app/sqldb/include -I/usr/include/libxml2/ -DNO_SHARED_LIBS=1
+
+
+gcc -c srv-consch.c -O2 -nostartfiles   -Wall -Wunused  -Iinclude -I/app/msa/publiclib/include -I/app/msa/msa/include \
+-I/app/sqldb/include -I/usr/include/libxml2/ -DNO_SHARED_LIBS=1
+
+gcc -c srv-srvline.c -O2 -nostartfiles   -Wall -Wunused  -Iinclude -I/app/msa/publiclib/include -I/app/msa/msa/include \
+-I/app/sqldb/include -I/usr/include/libxml2/ -DNO_SHARED_LIBS=1
+
+gcc -c srv-flowline.c -O2 -nostartfiles   -Wall -Wunused  -Iinclude -I/app/msa/publiclib/include -I/app/msa/msa/include \
+-I/app/sqldb/include -I/usr/include/libxml2/ -DNO_SHARED_LIBS=1
+
+gcc -c srv-webline.c -O2 -nostartfiles   -Wall -Wunused  -Iinclude -I/app/msa/publiclib/include -I/app/msa/msa/include \
+-I/app/sqldb/include -I/usr/include/libxml2/ -DNO_SHARED_LIBS=1
+
+gcc -c srv-userline.c -O2 -nostartfiles   -Wall -Wunused  -Iinclude -I/app/msa/publiclib/include -I/app/msa/msa/include \
+-I/app/sqldb/include -I/usr/include/libxml2/ -DNO_SHARED_LIBS=1
+
+
+gcc -g dailyreporttemplate.c srv-dailyreportcall.c  -O2 -Wall -Wunused   -I/usr/include  -I/app/msa/msa/include  -I/app/msa/publiclib/include  -I/app/sqldb/include -I/usr/include/libxml2/  -DNO_SHARED_LIBS=1 -o /app/msa/bin/dailyreporttemplate /app/msa/msa/lib/srvlib.a /app/msa/msa/lib/mainlib.a  /app/msa//publiclib/lib/publib.a \-L /app/sqldb/lib -lpq    \-lm  -lpthread  -lm -lgd  -lxml2  -liconv  -lssl 
+
+gcc -c srv-group.c -O2 -nostartfiles   -Wall -Wunused  -Iinclude -I/app/msa/publiclib/include -I/app/msa/msa/include \
+-I/app/sqldb/include -I/usr/include/libxml2/ -DNO_SHARED_LIBS=1
+
+gcc -c srv-linereport.c -O2 -nostartfiles   -Wall -Wunused  -Iinclude -I/app/msa/publiclib/include -I/app/msa/msa/include \
+-I/app/sqldb/include -I/usr/include/libxml2/ -DNO_SHARED_LIBS=1
+
+gcc -c srv-qos.c -O2 -nostartfiles   -Wall -Wunused  -Iinclude -I/app/msa/publiclib/include -I/app/msa/msa/include \
+-I/app/sqldb/include -I/usr/include/libxml2/ -DNO_SHARED_LIBS=1
+
+gcc -c srv-changepass.c -O2 -nostartfiles   -Wall -Wunused  -Iinclude -I/app/msa/publiclib/include -I/app/msa/msa/include \
+-I/app/sqldb/include -I/usr/include/libxml2/ -DNO_SHARED_LIBS=1
+
+/app/ns/java/jdk1.6.0_01/bin/javac -cp /app/msa/msa/cfile/java/poi-3.7-20101029.jar:/app/msa/msa/cfile/java/poi-ooxml-3.7-20101029.jar:/app/msa/msa/cfile/java/poi-scratchpad-3.7-20101029.jar:/app/msa/msa/cfile/java/poi-ooxml-schemas-3.7-20101029.jar Toexcel.java
+
+/app/ns/java/jdk1.6.0_01/bin/javac -classpath /app/msa/msa/cfile/java/poi-3.7-20101029.jar:/app/msa/msa/cfile/java/poi-ooxml-3.7-20101029.jar:/app/msa/msa/cfile/java/poi-scratchpad-3.7-20101029.jar:/app/msa/msa/cfile/java/poi-ooxml-schemas-3.7-20101029.jar Toexcel.java
+/app/ns/java/jdk1.6.0_01/bin/javac -classpath /app/msa/msa/cfile/java/poi-3.7-20101029.jar Toexcel.java
+
+/app/ns/java/jdk1.6.0_01/bin/javac -cp /app/ns/java/poi/poi-3.7-20101029.jar:/app/ns/java/poi/javacsv.jar Toexcel.java
+app/ns/java/jdk1.6.0_01/bin/java -Duser.language=zh -Dfile.encoding=GBK -cp /app/ns/java/poi/poi-3.7-20101029.jar:/app/ns/java/poi/javacsv.jar: ./ Toexcel
+
+
+
+srv-srvrule.c
+ltFileCopyA
+ltFileCopyAF
+
+
+
+
+killall -9 msaLocalServer
+/app/httpd/bin/apachectl start  启动apache
+
+JSON测试
+https://192.168.0.60/msa/main.xp?Fun=msaMailconLook+url=91720000
+
+https://192.168.0.60/msa/main.xp?Fun=toreporttemplate
+
+msaoutflowproc
+reporttemplateupdate
+toreportcreate
+templatereportlist
+https://192.168.0.60/msa/main.xp?Fun=msaConKeywordJson
+https://192.168.0.60/msa/main.xp?Fun=toreportcreate
+https://192.168.0.60/msa/main.xp?Fun=reporttemplateupdate
+https://192.168.0.60/msa/main.xp?Fun=msaoutflowproc
+
+
+https://192.168.0.60/msa/main.xp?Fun=msaReportSrvLineAjaxSubmit
+
+https://192.168.0.60/msa/main.xp?Fun=msaZhuXianFenXiClick+reportdir=/datacenter/msa/report/srvlinereport/21920000/
+
+https://192.168.0.60/msa/main.xp?Fun=templatereportlista+reportdir=dailyreport/1297909147
+https://192.168.0.60/main/main.xp?Fun=templatereportlista+reportdir=dailyreport/1297909147
+
+
+https://192.168.0.60/msa/main.xp?Fun=msaAccessList+url=ipsearch/admin_48960000/search+start=0+limit=100
+
+https://192.168.0.60/msa/main.xp?Fun=msaAccessList+url=11-09-06/iplog/iplog-11
+
+https://192.168.0.60/msa/main.xp?Fun=msaipbacksearch+seldate=10-12-07+seltime=10:00:08+sip=192.168.0.101+dip=121.9.214.180+dport=80+selsrv=HTTP上网+searchconX=11+gid=default-group+searchname=111+showtype=1
+
+https://192.168.0.96/main/main.xp?Fun=ltnassearchkeyquery+groupid=-1+user=-1+
+
+
+
+sprintf(caTempDir,"%s/report/%d/%lu/",_datacenterdir,reporttype,ltStrGetId());
+access函数：功 能: 确定文件或文件夹的访问权限。即，检查某个文件的存取方式，
+比如说是只读方式、只写方式等。如果指定的存取方式有效，则函数返回0，否则函数返回-1。
+void *memset(void *s,int c,size_t n) 将已开辟内存空间 s 的首 n 个字节的值设为值 c。
+
+函数名: strncmp
+功 能: 串比较
+用 法: int strncmp(char *str1, char *str2, int maxlen);
+说明:比较字符串str1和str2的大小，如果str1小于str2，返回值就<0，反之如果str1大于str2，
+返回值就>0，如果str1等于str2，返回值就=0，maxlen指的是str1与str2的比较的字符数。
+此函数功能即比较字符串str1和str2的前maxlen个字符。 
+
+1。void *memset(void *s,int c,size_t n)
+总的作用：将已开辟内存空间 s 的首 n 个字节的值设为值 c。
+
+C语言中open函数
+作用:打开和创建文件。 　
+简述: 　　#include <fcntl.h> 　　int open(const char *pathname, int oflag, ... /* mode_t mode */); 　
+返回值：成功则返回文件描述符，否则返回 -1 　　对于 open 函数来说，
+第三个参数（...）仅当创建新文件时（即 使用了O_CREAT 时）才使用，
+用于指定文件的访问权限位（access permission bits）。
+pathname 是待打开/创建文件的路径名（如 C:/cpp/a.cpp）；
+oflag 用于指定文件的打开/创建模式，这个参数可由以下常量（定义于 fcntl.h）通过逻辑或构成。
+ 　　O_RDONLY 只读模式 　　O_WRONLY 只写模式 　　O_RDWR 读写模式 　　打开/创建文件时，至少得使用上述三个常量中的一个。以下常量是选用的： 　　O_APPEND 每次写操作都写入文件的末尾 　　O_CREAT 如果指定文件不存在，则创建这个文件 　　O_EXCL 如果要创建的文件已存在，则返回 -1，并且修改 errno 的值 　　O_TRUNC 如果文件存在，并且以只写/读写方式打开，则清空文件全部内容(即将其长度截短为0) 　　O_NOCTTY 如果路径名指向终端设备，不要把这个设备用作控制终端。 　　O_NONBLOCK 如果路径名指向 FIFO/块文件/字符文件，则把文件的打开和后继 I/O
+设置为非阻塞模式
+　　（nonblocking mode） 　　以下三个常量同样是选用的，它们用于同步输入输出 　　O_DSYNC 等待物理 I/O 结束后再 write。在不影响读取新写入的数据的 　　前提下，不等待文件属性更新。 　　O_RSYNC read 等待所有写入同一区域的写操作完成后再进行 　　O_SYNC 等待物理 I/O 结束后再 write，包括更新文件属性的 I/O 　　open 返回的文件描述符一定是最小的未被使用的描述符。 　　如果 NAME_MAX（文件名最大长度，不包括'\0'）是 14，而我们想在当前目录下创建文件名长度超过 14 字节的文件，早期的 System V 系统（如 SVR2）会截断超出部分，只保留前 14 个字节；而由 BSD 衍生的（BSD-derived）系统会返回错误信息，并且把 errno 置为 ENAMETOOLONG。 　　POSIX.1 引入常量 _POSIX_NO_TRUNC 用于决定是否截断长文件名/长路径名。如果_POSIX_NO_TRUNC 设定为禁止截断，并且路径名长度超过 PATH_MAX（包括 '\0'），或者组成路径名的任意文件名长度超过 NAME_MAX，则返回错误信息，并且把 errno 置为 ENAMETOOLONG。
+
+
+函数名: strstr 　
+　功 能: 在字符串中查找指定字符串的第一次出现 　
+　用 法: char *strstr(char *str1, char *str2); 　
+　strstr原型：extern char *strstr(char *haystack, char *needle); 　　
+用法：#include <string.h> 　　功能：从字符串haystack中寻找needle第一次出现的位置（不比较结束符NULL)。
+ 　　说明：返回指向第一次出现needle位置的指针，如果没找到则返回NULL。
+grid列宽调整
+viewConfig:{forceFit: true, scrollOffset: 0},
+_ltPubInfo->pubMsgStr[0].conStr
+
+缺少的函数：
+ltStrAddF没有
+ltwebquerymaila：邮件查询
+strutf82gb(searchconX,cpOut,strlen(searchconX)
+toshowsearch()
+striptrailingwhitespace(&line);
+
+缺少的参数： _ltPubInfo->httpcountofpage;默认为100: _ltPubInfo->lServiceNum 
+_ltPubInfo->topSrvName[iii] _ltPubInfo->ltService[srvid]
+
+
+AccessList.htm:服务访问记录
+ipbacksearchlist.htm：服务访问记录搜索
+BlockAccessList.htm：服务阻断记录
+ipblocksearchlist.htm：服务阻断记录搜索
+HttpAccessList.htm：HTTP访问记录
+httpbacksearchlist.htm:HTTP访问记录搜索
+
+
+
+表：
+msasearchkey
+msahttplog
+msahttpreport
+msasrvreport
+
+caSdate=1292515200
+caEdate=1293551999
+
+drop table msasrvreport;
+create table msasrvreport (
+    userid            int,              /* 用户ID */
+    sdate       char(10),              /* 日期      */
+    service     int,                   /* 服务代码  */
+    ubytes      bigint,                /* 上行流量  */
+    dbytes      bigint,                /* 下行流量  */
+    ctime       int,                   /* 连接次数  */
+    onlinetime  int default 0          /* 连接时间  */
+
+);
+create index msasrvreport_index0 on nassrvreport (userid);
+create index msasrvreport_index1 on nassrvreport (sdate);
+
+ 
+
+drop table msahttpreport;
+create table msahttpreport (
+    userid      int,                /* 用户ID  */
+    sdate       char(10),           /* 日期 */
+    host        varchar(64),        /* 网址 */
+    bytes       bigint default 0,             /* 流量      */
+    lcount      int default 0,             /* 点击次数  */
+    ctime       int default 0,                 /* 连接时间  */
+    urlsort     char(6) default '0000'
+
+);
+create index msahttpreport_index1 on nashttpreport (userid);
+create index msahttpreport_index2 on nashttpreport (sdate);
+
+drop table msasrvreport;
+create table msasrvreport (
+    userid      int,    
+    sdate       char(10),             
+    service     int,                   
+    ubytes      bigint,              
+    dbytes      bigint,                
+    ctime       int,                  
+    onlinetime  int default 0          
+);
+create index msasrvreport_index0 on msasrvreport (userid);
+create index msasrvreport_index1 on msasrvreport (sdate);
+
+ 
+
+drop table msahttpreport;
+create table msahttpreport (
+    userid      int,               
+    sdate       char(10),         
+    host        varchar(64),     
+    bytes       bigint default 0,          
+    lcount      int default 0,        
+    ctime       int default 0,        
+    urlsort     char(6) default '0000'
+);
+create index msahttpreport_index1 on msahttpreport (userid);
+create index msahttpreport_index2 on msahttpreport (sdate);
+
+
+ 
+
+drop table msafileloglist;
+
+该表用来预先查看哪天含有表
+create table msafileloglist (    a表
+    sdate      varchar(12), 
+    tabname    varchar(64)
+);
+
+ sdatte:日期
+ tabname:表名
+
+drop table msafilelog20101022;
+
+该表为系统生成，每天都会产生一张表
+create table msafilelog20101022 (  b表
+    userid     int,
+    tantype    int,   
+    stime      varchar(8),//时间
+    filename   varchar(64),//文件名
+    fileurl    varchar(128),//数据中心相对路径
+    contenttype   varchar(64)   //内容
+);
+
+create index msafilelog20101022_ind1 on msaimlog (userid);
+
+1:ftp上传
+2:ftp下载
+3:msn file
+4:qq file
+5:upload 表单
+6:smtp file
+7:pop3 file
+8:http download
+
+
+
+vv=(char **)malloc(maxv*sizeof(char *));
+函数名称StrAlloc函数说明 为字符串分配指定字节的内存,并返回内存指针,函数原型如下: 
+char * __fastcall StrAlloc(Cardinal Size);
+
+/app/httpd/bin/apachectl start
+
+20101216132520
+SUBSTRING ( expression, start, length ) 
+(1).CAST()函数的参数是一个表达式，它包括用AS关键字分隔的源值和目标数据类型。以下例子用于将文本字符串'12'转换为整型:
+
+ 
+ SELECT CAST('12' AS int)
+
+varchar(24)
+select substring(CAST(ltime AS varchar(24)),9,2) from msasearchkey;
+
+CAST(substring(CAST(ltime AS varchar(24)),9,2) AS int)
+
+select CAST(substring(CAST(ltime AS varchar(24)),9,2) AS int) from msasearchkey;--小时转位整形然后比较大小
+
+select CAST(ltime AS varchar(24))from msasearchkey;
+
+
+select substring(CAST(ltime AS varchar(24)),1,8) from msasearchkey;
+select CAST(substring(CAST(ltime AS varchar(24)),1,8) AS int) from msasearchkey;
+select CAST(substring(CAST(ltime AS varchar(24)),3,6) AS int) from msasearchkey;--年月日截取然后再转换为整形然后比较大小
+select substring(CAST(ltime AS varchar(24)),1,8) from msasearchkey;
+select CAST(substring(CAST(b.ltime AS varchar(24)),3,6) AS int) from msasearchkey;
+
+insert into msasearchkey values(1,1282515211,'host1','searchkey1');
+insert into msasearchkey values(2,1272515222,'host2','searchkey2');
+insert into msasearchkey values(3,1262515233,'host3','searchkey3');
+insert into msasearchkey values(4,1252515244,'host4','searchkey4');
+insert into msasearchkey values(5,1293551999,'host5','searchkey5');
+insert into msasearchkey values(1,1294479200,'host5','searchkey5');
+
+insert into msasearchkey values(1,1294479200,'1','1');
+insert into msasearchkey values(2,1293579200,'2','2');
+insert into msasearchkey values(3,1293579400,'4','4');
+
+
+insert into msasearchkey values(4,1293579422,'4','4');
+insert into msasearchkey values(5,1293579400,'5','5');
+insert into msasearchkey values(6,1293579466,'6','6');
+
+
+insert into msasrvreport values(1,'2010-11-20','1',512,555,200,77);
+insert into msasrvreport values(2,'2010-09-20','2',512,555,200,66);
+insert into msasrvreport values(3,'2010-06-20','3',512,555,200,33);
+insert into msasrvreport values(4,'2010-10-20','4',512,555,200,55);
+insert into msasrvreport values(5,'2010-08-20','5',512,555,200,33);
+insert into msasrvreport values(6,'2010-12-20','6',512,555,200,66);
+
+insert into msahttpreport values(1,'2010-12-23','www.baidu.com',52,5565,2020,'0000');
+insert into msahttpreport values(2,'2010-01-25','www.sina.com',5120,5455,2040,'0000');
+insert into msahttpreport values(3,'2010-07-27','www.google.com',5192,5655,2400,'5555');
+insert into msahttpreport value0000'2010-02-22','www.heidsoft.com',5142,7555,2050,'0000');
+insert into msahttpreport values(5,'2010-02-20','www.liubin.com',5612,5855,2050,'2222');
+insert into msahttpreport values(6,'2010-12-20','www.yongy.com',5132,5455,2600,'2323');
+
+
+insert into msaimlog values(1,0,'2010-12-23','13:22:44','from','to','hello',1);
+insert into msaimlog values(2,1,'2010-01-25','13:33:55','from','to','hao do you',2);
+insert into msaimlog values(3,2,'2010-07-27','14:22:00','from','to','good',4);
+insert into msaimlog values(4,3,'2010-02-22','15:44:33','from','to','nice to ment',3);
+insert into msaimlog values(5,4,'2010-02-20','16:55:22','from','to','girl and boy',5);
+insert into msaimlog values(6,5,'2010-12-20','17:33:33','from','to','sorry',6);
+
+
+insert into msafileloglist values('10-10-22','msafilelog20101022');
+insert into msafileloglist values('2011-01-12','msafilelog20110112');
+insert into msafileloglist values('2011-01-13','msafilelog20110113');
+
+drop table msafilelog20110112;
+drop table msafilelog20110113;
+
+create table msafileloglist( 
+    sdate      varchar(12), 
+    tabname    varchar(64)
+);
+
+create table msafilelog20110113(
+    userid     int,
+    tantype    int,   
+    stime      varchar(8),
+    filename   varchar(64),
+    fileurl    varchar(128),
+    contenttype   varchar(64)
+);
+create index msafilelog20110113_ind1 on msaimlog (userid);
+
+drop index msafilelog20110113_ind1;
+
+
+insert into msafilelog20110112 values(1,0,'13:01:12','ftpfile','datacenter','hello,good');
+insert into msafilelog20110112 values(2,1,'14:04:12','qq','datacenter','how,good');
+insert into msafilelog20110112 values(3,2,'15:08:12','msn','datacenter','ni hao,good');
+insert into msafilelog20110112 values(4,3,'16:01:12','http','datacenter','nice,good');
+insert into msafilelog20110112 values(5,4,'17:33:12','erjinzhi','datacenter','girl,good');
+insert into msafilelog20110112 values(6,5,'11:45:12','upload','datacenter','boy,good');
+
+insert into msafilelog20110113 values(1,0,'13:01:12','ftpfile','datacenter','hello,good');
+insert into msafilelog20110113 values(2,1,'14:04:12','qq','datacenter','how,good');
+insert into msafilelog20110113 values(3,2,'15:08:12','msn','datacenter','ni hao,good');
+insert into msafilelog20110113 values(4,3,'16:01:12','http','datacenter','nice,good');
+insert into msafilelog20110113 values(5,4,'17:33:12','erjinzhi','datacenter','girl,good');
+insert into msafilelog20110113 values(6,5,'11:45:12','upload','datacenter','boy,good');
+
+
+1.删除表中的行：TRUNCATE TABLE
+2.删除表中的行：DELETE 语句
+3.删除表：DROP TABLE
+TRUNCATE TABLE 删除表中的所有行，而不记录单个行删除操作。
+语法 TRUNCATE TABLE table_name 参数 table_name是要截断的表的名称或要删除其全部行的表的名称。
+注释 TRUNCATE TABLE 在功能上与不带 WHERE 子句的 DELETE 语句相同：二者均删除表中的全部行。但 TRUNCATE TABLE 比 DELETE 速度快，且使用的系统和事务日志资源少。 DELETE 语句每次删除一行，并在事务日志中为所删除的每行记录一项。TRUNCATE TABLE 通过释放存储表数据所用的数据页来删除数据，并且只在事务日志中记录页的释放。
+TRUNCATE TABLE 删除表中的所有行，但表结构及其列、约束、索引等保持不变。新行标识所用的计数值重置为该列的种子。
+如果想保留标识计数值，请改用 DELETE。
+如果要删除表定义及其数据，请使用 DROP TABLE 语句。 对于由 FOREIGN KEY 约束引用的表，不能使用 TRUNCATE TABLE，而应使用不带 WHERE 子句的 DELETE 语句。由于 TRUNCATE TABLE 不记录在日志中，所以它不能激活触发器。
+TRUNCATE TABLE 不能用于参与了索引视图的表。
+示例下例删除 authors 表中的所有数据。 TRUNCATE TABLE authors
+用DROP TABLE 命令删除
+DROP TABLE 命令可以删除一个表和表中的数据及其与表有关的所有索引、触发器、约束、字段等许可对象，即把与表有关的一切从数据库中删除。
+DROP TABLE 命令的语法如下：
+DROP TABLE table_name 
+
+
+
+[root@zhaoxia bin]# ./msaShutDown 
+[root@zhaoxia bin]# ipcs
+[root@zhaoxia bin]# ipcrm -s 262152
+
+insert into msauser(userid,username,dispname,Certificate_type,Certificate_code,sex,password,bindemail,bindip,bindmac,ratelimit,ratetype,addtime,groupid0,groupid1,groupid2,groupid3,groupid4,moreflag,policyid,locktime)values(2,'1','1',111,'',0,'1','','','',0,0,1293084632,1,0,0,0,0,'','',1293033600)
+insert into msauser(userid,username,dispname,Certificate_type,Certificate_code,sex,password,bindemail,bindip,bindmac,ratelimit,ratetype,addtime,groupid0,groupid1,groupid2,groupid3,groupid4,moreflag,policyid,locktime)values(2,'1','1',111,'',0,'1','','','',0,0,1293084632,1,0,0,0,0,'','',1293033600)
+
+
+邮件：
+当日发送的邮件
+当日接收的邮件
+访日带附件的邮件
+当日大于1M的邮件
+当日符合报警策略的邮件
+当日符合关键字报警的邮件
+全部邮件检索
+
+drop table msamailloglist;
+create table msamailloglist (
+    sdate      varchar(12), 
+    tabname    varchar(64)
+);
+
+
+
+insert into msamailloglist values('2011-01-13','msamaillog20110113');
+insert into msamailloglist values('2011-01-14','msamaillog20110114');
+
+
+
+drop table msamaillog20101022;
+create table msamaillog20101022 (
+    sid        int    primary key,
+    userid     int,
+    sdate      char(24),
+    mailfile   char(128),        /* 邮件文件名      */
+    mailfrom   char(128),        /* 发件人          */
+    mailto     char(128),        /* 收件人          */
+    mailsub    char(128),        /* 主题            */
+    mailasize  bigint,           /* 附件            */
+    mailsize   bigint,           /* 邮件大小 大于   */
+    flags      int,              /* 邮件状态 0--pop3  1-smtp*/
+    mtype      char(64),         /* 邮件分类        */
+    rback      int  default 0,   /* key*/
+    dip        char(24) default '0.0.0.0'
+);
+
+create index msamaillog20101022_ind0 on msamaillog20101022 (sid);
+create index msamaillog20101022_ind1 on msamaillog20101022 (userid);
+create index msamaillog20101022_ind2 on msamaillog20101022 (sdate);
+
+insert into msamaillog20110113 values(1,1,'2011-01-13 13:01:12','mailname1','from1','to1','hello1',999,888,0,'mytpye',0,'192.168.0.60');
+insert into msamaillog20110113 values(2,2,'2011-01-13 14:01:12','mailname2','from2','to2','hello2',999,888,0,'mytpye',0,'192.168.0.60');
+insert into msamaillog20110113 values(3,3,'2011-01-13 15:01:12','mailname3','from3','to3','hello3',999,888,0,'mytpye',0,'192.168.0.60');
+insert into msamaillog20110113 values(4,4,'2011-01-13 16:01:12','mailname4','from4','to4','hello4',999,888,0,'mytpye',0,'192.168.0.60');
+insert into msamaillog20110113 values(5,5,'2011-01-13 17:01:12','mailname5','from5','to5','hello5',999,888,0,'mytpye',0,'192.168.0.60');
+insert into msamaillog20110113 values(6,6,'2011-01-13 18:01:12','mailname6','from6','to6','hello6',999,888,0,'mytpye',0,'192.168.0.60');
+
+insert into msamaillog20110114 values(1,1,'2011-01-14 13:01:12','mailname1','from1','to1','hello1',999,888,0,'mytpye',0,'192.168.0.60');
+insert into msamaillog20110114 values(2,2,'2011-01-14 14:01:12','mailname2','from2','to2','hello2',999,888,0,'mytpye',0,'192.168.0.60');
+insert into msamaillog20110114 values(3,3,'2011-01-14 15:01:12','mailname3','from3','to3','hello3',999,888,0,'mytpye',0,'192.168.0.60');
+insert into msamaillog20110114 values(4,4,'2011-01-14 16:01:12','mailname4','from4','to4','hello4',999,888,0,'mytpye',0,'192.168.0.60');
+insert into msamaillog20110114 values(5,5,'2011-01-14 17:01:12','mailname5','from5','to5','hello5',999,888,0,'mytpye',0,'192.168.0.60');
+insert into msamaillog20110114 values(6,6,'2011-01-14 18:01:12','mailname6','from6','to6','hello6',999,888,0,'mytpye',0,'192.168.0.60');
+
+
+web邮件
+当日的邮件
+当日带附件的邮件
+当日大于1M的邮件
+邮件检索
+
+
+drop table msawebmailloglist;
+create table msawebmailloglist (
+    sdate      varchar(12), 
+    tabname    varchar(64)
+);
+
+insert into msawebmailloglist values('2011-02-11','msawebmaillog20110111');
+insert into msawebmailloglist values('2011-02-10','msawebmaillog20110110');
+
+drop table msawebmaillog20110211;
+create table msawebmaillog20110211 (
+    sid        int    primary key,
+    userid     int,
+    sdate      char(24),
+    mailfile   char(128),        /* 邮件文件名      */
+    mailfrom   char(128),        /* 发件人          */
+    mailto     char(128),        /* 收件人          */
+    mailsub    char(128),        /* 主题            */
+    mailasize  bigint,           /* 附件            */
+    mailsize   bigint,           /* 邮件大小 大于   */
+    flags      int,              /* 邮件状态 0--pop3  1-smtp*/
+    mtype      char(64),         /* 邮件分类        */
+    rback      int  default 0,   /* key*/
+    dip        char(24) default '0.0.0.0'
+);
+
+create index msawebmaillog20110211_ind0 on msawebmaillog20110211 (sid);
+create index msawebmaillog20110211_ind1 on msawebmaillog20110211 (userid);
+create index msawebmaillog20110211_ind2 on msawebmaillog20110211 (sdate);
+
+
+ 
+/* 邮件监控过滤条件  */
+drop table msamailfilter;
+create table msamailfilter (  
+    rid        int,             /* 规则ID          */
+    num        int,             /* 执行序号  或  布控ID    */
+    rname      varchar(63) not null,       /* 规则名称        */
+    mailfrom   varchar(63) default '',     /* 发件人          */
+    mailto     varchar(63)  default '',    /* 收件人          */
+    mailsub    varchar(63)  default '',    /* 主题            */
+    mailcont   varchar(63)  default '',    /* 内容            */
+    mailsize   int default 0,              /* 邮件大小 大于   */
+    attname    varchar(63)  default '',    /* 附件名称        */
+    attsize    int default 0,              /* 附件大小 大于   */
+    flags      smallint default 0,         /* 类别 0:发送  1:接收 */
+    sflags     smallint default 0,               /* 通知方式 0--不通知  1--通知  2--转发  */
+    smail      varchar(63)   default '',   /* 转发邮箱        */
+    rnum       int   default 0,            /*收件人数目*/
+    maction    int   default 1             /*监控动作1：监控  0：不监控*/
+);
+
+
+insert into msamaillog20110117 values(1,1,'2011-01-17','mailname1','from1','to1','hello1',999,888,1,'mytpye',0,'192.168.0.60');
+insert into msamaillog20110117 values(2,2,'2011-01-17','mailname2','from2','to2','hello2',999,888,0,'mytpye',1,'192.168.0.60');
+insert into msamaillog20110117 values(3,3,'2011-01-17','mailname3','from3','to3','hello3',999,888,1,'mytpye',1,'192.168.0.60');
+insert into msamaillog20110117 values(4,4,'2011-01-17','mailname4','from4','to4','hello4',999,888,0,'mytpye',1,'192.168.0.60');
+insert into msamaillog20110117 values(5,5,'2011-01-17','mailname5','from5','to5','hello5',999,888,1,'mytpye',0,'192.168.0.60');
+insert into msamaillog20110117 values(6,6,'2011-01-17','mailname6','from6','to6','hello6',999,888,1,'mytpye',0,'192.168.0.60');
+insert into msamaillog20110117 values(7,7,'2011-01-17','/datacenter/msa/mailmon/212500000','from7','to7','hello7',999,888,1,'mytpye',0,'192.168.0.60');
+insert into msamaillog20110117 values(8,8,'2011-01-17','/datacenter/msa/mailmon','from8','to8','hello8',999,888,0,'mytpye',1,'192.168.0.60');
+insert into msamaillog20110117 values(9,9,'2011-01-17','/datacenter/msa/mailmon','from9','to9','hello9',999,888,1,'mytpye',1,'192.168.0.60');
+
+drop table msamaillog20110117;
+create table msamaillog20110117 (
+    sid        int    primary key,
+    userid     int,
+    sdate      char(24),
+    mailfile   char(128),
+    mailfrom   char(128),  
+    mailto     char(128), 
+    mailsub    char(128), 
+    mailasize  bigint,  
+    mailsize   bigint,  
+    flags      int,  
+    mtype      char(64),  
+    rback      int  default 0, 
+    dip        char(24) default '0.0.0.0'
+);
+
+create index msamaillog20110117_ind0 on msamaillog20110117 (sid);
+create index msamaillog20110117_ind1 on msamaillog20110117 (userid);
+create index msamaillog20110117_ind2 on msamaillog20110117 (sdate);
+
+
+create table msamaillog20110114 (
+    sid        int    primary key,
+    userid     int,
+    sdate      char(24),
+    mailfile   char(128),
+    mailfrom   char(128),  
+    mailto     char(128), 
+    mailsub    char(128), 
+    mailasize  bigint,  
+    mailsize   bigint,  
+    flags      int,  
+    mtype      char(64),  
+    rback      int  default 0, 
+    dip        char(24) default '0.0.0.0'
+);
+
+create index msamaillog20110114_ind0 on msamaillog20110114 (sid);
+create index msamaillog20110114_ind1 on msamaillog20110114 (userid);
+create index msamaillog20110114_ind2 on msamaillog20110114 (sdate);
+
+
+drop table msamailfilter;
+create table msamailfilter (  
+    rid        int,  
+    num        int,     
+    rname      varchar(63) not null,  
+    mailfrom   varchar(63) default '',  
+    mailto     varchar(63)  default '', 
+    mailsub    varchar(63)  default '',  
+    mailcont   varchar(63)  default '',  
+    mailsize   int default 0,        
+    attname    varchar(63)  default '', 
+    attsize    int default 0,        
+    flags      smallint default 0,   
+    sflags     smallint default 0,   
+    smail      varchar(63)   default '', 
+    rnum       int   default 0,       
+    maction    int   default 1  
+);
+
+----------------------------------------------
+服务汇总：
+全部汇总
+
+
+----------------------------------------------
+报表页面说明
+/app/msa/msa/htmlplt/reportcenter/reportstylesetting.htm 模板新建首页
+/app/msa/msa/htmlplt/reportcenter/reportstylesettingedit.htm 模板编辑页面
+报表函数说明
+srv-newreport.c:
+toreporttemplate
+reporttemplate
+
+page-option.c
+
+
+

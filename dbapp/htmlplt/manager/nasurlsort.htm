@@ -1,0 +1,502 @@
+﻿<html>
+<head>
+<title>URL分类地址库</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<LINK rel=stylesheet type=text/css href="/msa/publiccss/pubcss.css">
+<LINK rel=stylesheet type=text/css href="/msa/extjs/resources/css/ext-all.css">
+<link rel="stylesheet" type="text/css" href="/msa/extjs/resources/css/feed-viewer.css" />
+<LINK rel=stylesheet type=text/css href="/msa/extjs/resources/css/xtheme-default.css" id="xthemecss" >
+<script type="text/javascript" src="/msa/extjs/adapter/ext/ext-base.js"></script>
+<SCRIPT type=text/javascript  src="/msa/extjs/ext-all.js"></SCRIPT>
+<script language="javascript">
+function updatefun(p){
+	if(p<76){
+		Ext.MessageBox.alert('提示',"该类别是系统类别，不能修改!");
+		return false;
+	}
+  var wing1;
+  var hgt=(screen.height)-220;
+  var panel1 =new Ext.Panel({
+		layout:'fit',
+		height:500,
+		autoScroll: true,
+		contentEl:'additive1'
+	});
+	if(!wing1){
+		var url="/msa/main.xp?Fun=lturlsort+sortid="+p;
+		wing1  =new  Ext.Window({
+      id: 'east-panel',
+      title: 'URL信息修改',
+      height: hgt,
+      width: 400,
+      closeAction: 'close',
+      buttonAlign:"center",
+      modal: 'true',
+      maximizable:'true',
+      margins:'0 5 0 0',
+      html: "<IFRAME  name='Urlfrm' width=100% height='"+(hgt-80)+"' SRC ="+url+" border='0' frameborder='0' scrolling='yes'></iframe>",
+      buttons:[{text: '修改类别名称和描述', 
+  				   	 handler: function(){
+  				   	 	var frm=document.all('Urlfrm').contentWindow.document;
+								var mysortname=frm.getElementById("sortname").value;	
+								var mysortdesc=frm.getElementById("sortdesc").value;
+								var mylevel=frm.getElementById("level").value;
+								
+								Ext.Ajax.request({
+								   method : 'POST', 
+								   url:'/msa/main.xp', 
+								   success: function(response, options){
+										  var retxt=response.responseText;
+										  wing1.close();
+										  if(retxt==0 ){ 
+	     								 location.href="main.xp?Fun=lturlsortlist"; 
+										  }else{
+											 Ext.MessageBox.alert('提示',"修改失败!");
+										  }
+									 },
+								   failure : function() 
+								   {
+									  wing1.close();     
+									  Ext.MessageBox.alert('提示',"修改失败!"); 
+								   },
+									 params:{Fun:'ltupdateurlsort',sortname:mysortname,sortdesc:mysortdesc,level:mylevel,sortid:p}
+								});								
+  				   	 }
+        	  },{text   :'修改该类别的URL列表', 
+						 	 handler: function(){
+  				   	 	var frm=document.all('Urlfrm').contentWindow.document;
+								var myurllist=frm.getElementById("urllist").value;	
+								Ext.Ajax.request({
+								   method : 'POST', 
+								   url:'/msa/main.xp', 
+								   success: function(response, options){
+										  var retxt=response.responseText;
+										  wing1.close();
+										  if(retxt==0 ){ 
+										   location.href="main.xp?Fun=lturlsortlist"; 
+										  }else{
+											 Ext.MessageBox.alert('提示',"修改失败!");
+										  }
+										},
+								   failure : function() 
+								   {
+									  wing1.close();     
+									  Ext.MessageBox.alert('提示',"修改失败!"); 
+								   },
+								params:{Fun:'ltsaveurlsort',urllist:myurllist,sortid:p}
+								});								
+  				   	 }       
+						}]
+		});
+		wing1.show();
+		wing1.maximize();
+	}
+}
+</script>
+</head>
+<body bgcolor="#F0f0f0" text="#000000" leftmargin="0" topmargin="0"  style="SCROLLBAR-FACE-COLOR: #f0f0f0;  overflow-x:hidden;  OVERFLOW: scroll; SCROLLBAR-SHADOW-COLOR: #f0f0f0; SCROLLBAR-3DLIGHT-COLOR: #f0f0f0; SCROLLBAR-ARROW-COLOR: #f0f0f0; SCROLLBAR-DARKSHADOW-COLOR: #cccccc;">
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+  <tr> 
+    <td height="27" background="./images/nn2.gif" width="180"> 
+      <div align="center"><font color="#FFFFFF"> 系 统 URL 地 址 库</font></div>
+    </td>
+    <td height="27" background="./images/nn1.gif">&nbsp;</td>
+  </tr>
+</table>
+
+<table width="100%" cellspacing="0" cellpadding="0" border="1" bordercolor="">
+	<tr>
+	<td width="17%" style="background-color:949285">网站性质</td>
+	<td width="19%" style="background-color:949285">网站类别</td>
+	<td width="46%" style="background-color:949285">网站描述</td>
+	<td width="18%" style="background-color:949285">危害级别/备注</td>
+	</tr>
+	<tr>
+	<td rowspan="6" style="background-color:949285"><input type="lable" id="[$topsortid1$]" readonly="true"  value="[$topsortname1$]" class="input" style="border-left-style:none;border-right-style:none;border-bottom-style:none; border-top-style:none; background-color:949285"></td>
+	<td>1:<input type="lable" id="[$sortid1$]"  value="[$sortname1$]" class="input"  style="border-left-style:none;border-right-style:none;border-bottom-style:none; border-top-style:none;CURSOR: hand" onClick="updatefun('[$sortid1$]')"></td>
+	<td>[$sortdesc1$]</td>
+	<td>[$level1$]</td>
+	</tr>
+	<tr><td>2:<input type="lable" id="[$sortid2$]"  value="[$sortname2$]" class="input"  style="border-left-style:none;border-right-style:none;border-bottom-style:none; border-top-style:none;CURSOR: hand" onClick="updatefun('[$sortid2$]')"></td>
+	<td>[$sortdesc2$]</td>
+	<td>[$level2$]</td>
+	</tr>
+	<tr><td>3:<input type="lable" id="[$sortid3$]"  value="[$sortname3$]" class="input"  style="border-left-style:none;border-right-style:none;border-bottom-style:none; border-top-style:none;CURSOR: hand" onClick="updatefun('[$sortid3$]')"></td>
+	<td>[$sortdesc3$]</td>
+	<td>[$level3$]</td>
+	</tr>
+	<tr><td>4:<input type="lable" id="[$sortid4$]"  value="[$sortname4$]" class="input"  style="border-left-style:none;border-right-style:none;border-bottom-style:none; border-top-style:none;CURSOR: hand" onClick="updatefun('[$sortid4$]')"></td>
+	<td>[$sortdesc4$]</td>
+	<td>[$level4$]</td>
+	</tr>
+	<tr><td>5:<input type="lable" id="[$sortid5$]"  value="[$sortname5$]" class="input"  style="border-left-style:none;border-right-style:none;border-bottom-style:none; border-top-style:none;CURSOR: hand" onClick="updatefun('[$sortid5$]')"></td>
+	<td>[$sortdesc5$]</td>
+	<td>[$level5$]</td>
+	</tr>
+	<tr><td>6:<input type="lable" id="[$sortid6$]"  value="[$sortname6$]" class="input"  style="border-left-style:none;border-right-style:none;border-bottom-style:none; border-top-style:none;CURSOR: hand" onClick="updatefun('[$sortid6$]')"></td>
+	<td>[$sortdesc6$]</td>
+	<td>[$level6$]</td>
+	</tr>
+	<tr>
+	<td rowspan="2" style="background-color:949285"><input type="lable" id="[$topsortid7$]" readonly="true"  value="[$topsortname7$]" class="input" style="border-left-style:none;border-right-style:none;border-bottom-style:none; border-top-style:none; background-color:949285"></td>
+	<td>7:<input type="lable" id="[$sortid7$]"  value="[$sortname7$]" class="input"  style="border-left-style:none;border-right-style:none;border-bottom-style:none; border-top-style:none;CURSOR: hand" onClick="updatefun('[$sortid7$]')"></td>
+	<td>[$sortdesc7$]</td>
+	<td>[$level7$]</td>
+	</tr>
+	<tr><td>8:<input type="lable" id="[$sortid8$]"  value="[$sortname8$]" class="input"  style="border-left-style:none;border-right-style:none;border-bottom-style:none; border-top-style:none;CURSOR: hand" onClick="updatefun('[$sortid8$]')"></td>
+	<td>[$sortdesc8$]</td>
+	<td>[$level8$]</td>
+	</tr>
+	<tr>
+	<td rowspan="12" style="background-color:949285"><input type="lable" id="[$topsortid9$]" readonly="true"  value="[$topsortname9$]" class="input" style="border-left-style:none;border-right-style:none;border-bottom-style:none; border-top-style:none; background-color:949285"></td>
+	<td>9:<input type="lable" id="[$sortid9$]"  value="[$sortname9$]" class="input"  style="border-left-style:none;border-right-style:none;border-bottom-style:none; border-top-style:none;CURSOR: hand" onClick="updatefun('[$sortid9$]')"></td>
+	<td>[$sortdesc9$]</td>
+	<td>[$level9$]</td>
+	</tr>
+	<tr><td>10:<input type="lable" id="[$sortid10$]"  value="[$sortname10$]" class="input"  style="border-left-style:none;border-right-style:none;border-bottom-style:none; border-top-style:none;CURSOR: hand" onClick="updatefun('[$sortid10$]')"></td>
+	<td>[$sortdesc10$]</td>
+	<td>[$level10$]</td>
+	</tr>
+	<tr><td>11:<input type="lable" id="[$sortid11$]"  value="[$sortname11$]" class="input"  style="border-left-style:none;border-right-style:none;border-bottom-style:none; border-top-style:none;CURSOR: hand" onClick="updatefun('[$sortid11$]')"></td>
+	<td>[$sortdesc11$]</td>
+	<td>[$level11$]</td>
+	</tr>
+	<tr><td>12:<input type="lable" id="[$sortid12$]"  value="[$sortname12$]" class="input"  style="border-left-style:none;border-right-style:none;border-bottom-style:none; border-top-style:none;CURSOR: hand" onClick="updatefun('[$sortid12$]')"></td>
+	<td>[$sortdesc12$]</td>
+	<td>[$level12$]</td>
+	</tr>
+	<tr><td>13:<input type="lable" id="[$sortid13$]"  value="[$sortname13$]" class="input"  style="border-left-style:none;border-right-style:none;border-bottom-style:none; border-top-style:none;CURSOR: hand" onClick="updatefun('[$sortid13$]')"></td>
+	<td>[$sortdesc13$]</td>
+	<td>[$level13$]</td>
+	</tr>
+	<tr><td>14:<input type="lable" id="[$sortid14$]"  value="[$sortname14$]" class="input"  style="border-left-style:none;border-right-style:none;border-bottom-style:none; border-top-style:none;CURSOR: hand" onClick="updatefun('[$sortid14$]')"></td>
+	<td>[$sortdesc14$]</td>
+	<td>[$level14$]</td>
+	</tr>
+	<tr><td>15:<input type="lable" id="[$sortid15$]"  value="[$sortname15$]" class="input"  style="border-left-style:none;border-right-style:none;border-bottom-style:none; border-top-style:none;CURSOR: hand" onClick="updatefun('[$sortid15$]')"></td>
+	<td>[$sortdesc15$]</td>
+	<td>[$level15$]</td>
+	</tr>
+	<tr><td>16:<input type="lable" id="[$sortid16$]"  value="[$sortname16$]" class="input"  style="border-left-style:none;border-right-style:none;border-bottom-style:none; border-top-style:none;CURSOR: hand" onClick="updatefun('[$sortid16$]')"></td>
+	<td>[$sortdesc16$]</td>
+	<td>[$level16$]</td>
+	</tr>
+	<tr><td>17:<input type="lable" id="[$sortid17$]"  value="[$sortname17$]" class="input"  style="border-left-style:none;border-right-style:none;border-bottom-style:none; border-top-style:none;CURSOR: hand" onClick="updatefun('[$sortid17$]')"></td>
+	<td>[$sortdesc17$]</td>
+	<td>[$level17$]</td>
+	</tr>
+	<tr><td>18:<input type="lable" id="[$sortid18$]"  value="[$sortname18$]" class="input"  style="border-left-style:none;border-right-style:none;border-bottom-style:none; border-top-style:none;CURSOR: hand" onClick="updatefun('[$sortid18$]')"></td>
+	<td>[$sortdesc18$]</td>
+	<td>[$level18$]</td>
+	</tr>
+	<tr><td>19:<input type="lable" id="[$sortid19$]"  value="[$sortname19$]" class="input"  style="border-left-style:none;border-right-style:none;border-bottom-style:none; border-top-style:none;CURSOR: hand" onClick="updatefun('[$sortid19$]')"></td>
+	<td>[$sortdesc19$]</td>
+	<td>[$level19$]</td>
+	</tr>
+	<tr><td>20:<input type="lable" id="[$sortid20$]"  value="[$sortname20$]" class="input"  style="border-left-style:none;border-right-style:none;border-bottom-style:none; border-top-style:none;CURSOR: hand" onClick="updatefun('[$sortid20$]')"></td>
+	<td>[$sortdesc20$]</td>
+	<td>[$level20$]</td>
+	</tr>
+	<tr>
+	<td rowspan="5" style="background-color:949285"><input type="lable" id="[$topsortid21$]" readonly="true"  value="[$topsortname21$]" class="input" style="border-left-style:none;border-right-style:none;border-bottom-style:none; border-top-style:none; background-color:949285"></td>
+	<td>21:<input type="lable" id="[$sortid21$]"  value="[$sortname21$]" class="input"  style="border-left-style:none;border-right-style:none;border-bottom-style:none; border-top-style:none;CURSOR: hand" onClick="updatefun('[$sortid21$]')"></td>
+	<td>[$sortdesc21$]</td>
+	<td>[$level21$]</td>
+	</tr>
+	<tr><td>22:<input type="lable" id="[$sortid22$]"  value="[$sortname22$]" class="input"  style="border-left-style:none;border-right-style:none;border-bottom-style:none; border-top-style:none;CURSOR: hand" onClick="updatefun('[$sortid22$]')"></td>
+	<td>[$sortdesc22$]</td>
+	<td>[$level22$]</td>
+	</tr>
+	<tr><td>23:<input type="lable" id="[$sortid23$]"  value="[$sortname23$]" class="input"  style="border-left-style:none;border-right-style:none;border-bottom-style:none; border-top-style:none;CURSOR: hand" onClick="updatefun('[$sortid23$]')"></td>
+	<td>[$sortdesc23$]</td>
+	<td>[$level23$]</td>
+	</tr>
+	<tr><td>24:<input type="lable" id="[$sortid24$]"  value="[$sortname24$]" class="input"  style="border-left-style:none;border-right-style:none;border-bottom-style:none; border-top-style:none;CURSOR: hand" onClick="updatefun('[$sortid24$]')"></td>
+	<td>[$sortdesc24$]</td>
+	<td>[$level24$]</td>
+	</tr>
+	<tr><td>25:<input type="lable" id="[$sortid25$]"  value="[$sortname25$]" class="input"  style="border-left-style:none;border-right-style:none;border-bottom-style:none; border-top-style:none;CURSOR: hand" onClick="updatefun('[$sortid25$]')"></td>
+	<td>[$sortdesc25$]</td>
+	<td>[$level25$]</td>
+	</tr>
+	<tr>
+	<td rowspan="5" style="background-color:949285"><input type="lable" id="[$topsortid26$]" readonly="true"  value="[$topsortname26$]" class="input" style="border-left-style:none;border-right-style:none;border-bottom-style:none; border-top-style:none; background-color:949285"></td>
+	<td>26:<input type="lable" id="[$sortid26$]"  value="[$sortname26$]" class="input"  style="border-left-style:none;border-right-style:none;border-bottom-style:none; border-top-style:none;CURSOR: hand" onClick="updatefun('[$sortid26$]')"></td>
+	<td>[$sortdesc26$]</td>
+	<td>[$level26$]</td>
+	</tr>
+	<tr><td>27:<input type="lable" id="[$sortid27$]"  value="[$sortname27$]" class="input"  style="border-left-style:none;border-right-style:none;border-bottom-style:none; border-top-style:none;CURSOR: hand" onClick="updatefun('[$sortid27$]')"></td>
+	<td>[$sortdesc27$]</td>
+	<td>[$level27$]</td>
+	</tr>
+	<tr><td>28:<input type="lable" id="[$sortid28$]"  value="[$sortname28$]" class="input"  style="border-left-style:none;border-right-style:none;border-bottom-style:none; border-top-style:none;CURSOR: hand" onClick="updatefun('[$sortid28$]')"></td>
+	<td>[$sortdesc28$]</td>
+	<td>[$level28$]</td>
+	</tr>
+	<tr><td>29:<input type="lable" id="[$sortid29$]"  value="[$sortname29$]" class="input"  style="border-left-style:none;border-right-style:none;border-bottom-style:none; border-top-style:none;CURSOR: hand" onClick="updatefun('[$sortid29$]')"></td>
+	<td>[$sortdesc29$]</td>
+	<td>[$level29$]</td>
+	</tr>
+	<tr><td>30:<input type="lable" id="[$sortid30$]"  value="[$sortname30$]" class="input"  style="border-left-style:none;border-right-style:none;border-bottom-style:none; border-top-style:none;CURSOR: hand" onClick="updatefun('[$sortid30$]')"></td>
+	<td>[$sortdesc30$]</td>
+	<td>[$level30$]</td>
+	</tr>
+	<tr>
+	<td rowspan="5" style="background-color:949285"><input type="lable" id="[$topsortid31$]" readonly="true"  value="[$topsortname31$]" class="input" style="border-left-style:none;border-right-style:none;border-bottom-style:none; border-top-style:none; background-color:949285"></td>
+	<td>31:<input type="lable" id="[$sortid31$]"  value="[$sortname31$]" class="input"  style="border-left-style:none;border-right-style:none;border-bottom-style:none; border-top-style:none;CURSOR: hand" onClick="updatefun('[$sortid31$]')"></td>
+	<td>[$sortdesc31$]</td>
+	<td>[$level31$]</td>
+	</tr>
+	<tr><td>32:<input type="lable" id="[$sortid32$]"  value="[$sortname32$]" class="input"  style="border-left-style:none;border-right-style:none;border-bottom-style:none; border-top-style:none;CURSOR: hand" onClick="updatefun('[$sortid32$]')"></td>
+	<td>[$sortdesc32$]</td>
+	<td>[$level32$]</td>
+	</tr>
+	<tr><td>33:<input type="lable" id="[$sortid33$]"  value="[$sortname33$]" class="input"  style="border-left-style:none;border-right-style:none;border-bottom-style:none; border-top-style:none;CURSOR: hand" onClick="updatefun('[$sortid33$]')"></td>
+	<td>[$sortdesc33$]</td>
+	<td>[$level33$]</td>
+	</tr>
+	<tr><td>34:<input type="lable" id="[$sortid34$]"  value="[$sortname34$]" class="input"  style="border-left-style:none;border-right-style:none;border-bottom-style:none; border-top-style:none;CURSOR: hand" onClick="updatefun('[$sortid34$]')"></td>
+	<td>[$sortdesc34$]</td>
+	<td>[$level34$]</td>
+	</tr>
+	<tr><td>35:<input type="lable" id="[$sortid35$]"  value="[$sortname35$]" class="input"  style="border-left-style:none;border-right-style:none;border-bottom-style:none; border-top-style:none;CURSOR: hand" onClick="updatefun('[$sortid35$]')"></td>
+	<td>[$sortdesc35$]</td>
+	<td>[$level35$]</td>
+	</tr>
+	<tr>
+	<td rowspan="4" style="background-color:949285"><input type="lable" id="[$topsortid36$]" readonly="true"  value="[$topsortname36$]" class="input" style="border-left-style:none;border-right-style:none;border-bottom-style:none; border-top-style:none; background-color:949285"></td>
+	<td>36:<input type="lable" id="[$sortid36$]"  value="[$sortname36$]" class="input"  style="border-left-style:none;border-right-style:none;border-bottom-style:none; border-top-style:none;CURSOR: hand" onClick="updatefun('[$sortid36$]')"></td>
+	<td>[$sortdesc36$]</td>
+	<td>[$level36$]</td>
+	</tr>
+	<tr><td>37:<input type="lable" id="[$sortid37$]"  value="[$sortname37$]" class="input"  style="border-left-style:none;border-right-style:none;border-bottom-style:none; border-top-style:none;CURSOR: hand" onClick="updatefun('[$sortid37$]')"></td>
+	<td>[$sortdesc37$]</td>
+	<td>[$level37$]</td>
+	</tr>
+	<tr><td>38:<input type="lable" id="[$sortid38$]"  value="[$sortname38$]" class="input"  style="border-left-style:none;border-right-style:none;border-bottom-style:none; border-top-style:none;CURSOR: hand" onClick="updatefun('[$sortid38$]')"></td>
+	<td>[$sortdesc38$]</td>
+	<td>[$level38$]</td>
+	</tr>
+	<tr><td>39:<input type="lable" id="[$sortid39$]"  value="[$sortname39$]" class="input"  style="border-left-style:none;border-right-style:none;border-bottom-style:none; border-top-style:none;CURSOR: hand" onClick="updatefun('[$sortid39$]')"></td>
+	<td>[$sortdesc39$]</td>
+	<td>[$level39$]</td>
+	</tr>
+	<tr>
+	<td rowspan="13" style="background-color:949285"><input type="lable" id="[$topsortid41$]" readonly="true"  value="[$topsortname41$]" class="input" style="border-left-style:none;border-right-style:none;border-bottom-style:none; border-top-style:none; background-color:949285"></td>
+	<td>40:<input type="lable" id="[$sortid40$]"  value="[$sortname40$]" class="input"  style="border-left-style:none;border-right-style:none;border-bottom-style:none; border-top-style:none;CURSOR: hand" onClick="updatefun('[$sortid40$]')"></td>
+	<td>[$sortdesc40$]</td>
+	<td>[$level40$]</td>
+	</tr>
+	<tr><td>41:<input type="lable" id="[$sortid41$]"  value="[$sortname41$]" class="input"  style="border-left-style:none;border-right-style:none;border-bottom-style:none; border-top-style:none;CURSOR: hand" onClick="updatefun('[$sortid41$]')"></td>
+	<td>[$sortdesc41$]</td>
+	<td>[$level41$]</td>
+	</tr>
+	<tr><td>42:<input type="lable" id="[$sortid42$]"  value="[$sortname42$]" class="input"  style="border-left-style:none;border-right-style:none;border-bottom-style:none; border-top-style:none;CURSOR: hand" onClick="updatefun('[$sortid42$]')"></td>
+	<td>[$sortdesc42$]</td>
+	<td>[$level42$]</td>
+	</tr>
+	<tr><td>43:<input type="lable" id="[$sortid43$]"  value="[$sortname43$]" class="input"  style="border-left-style:none;border-right-style:none;border-bottom-style:none; border-top-style:none;CURSOR: hand" onClick="updatefun('[$sortid43$]')"></td>
+	<td>[$sortdesc43$]</td>
+	<td>[$level43$]</td>
+	</tr>
+	<tr><td>44:<input type="lable" id="[$sortid44$]"  value="[$sortname44$]" class="input"  style="border-left-style:none;border-right-style:none;border-bottom-style:none; border-top-style:none;CURSOR: hand" onClick="updatefun('[$sortid44$]')"></td>
+	<td>[$sortdesc44$]</td>
+	<td>[$level44$]</td>
+	</tr>
+	<tr><td>45:<input type="lable" id="[$sortid45$]"  value="[$sortname45$]" class="input"  style="border-left-style:none;border-right-style:none;border-bottom-style:none; border-top-style:none;CURSOR: hand" onClick="updatefun('[$sortid45$]')"></td>
+	<td>[$sortdesc45$]</td>
+	<td>[$level45$]</td>
+	</tr>
+	<tr><td>46:<input type="lable" id="[$sortid46$]"  value="[$sortname46$]" class="input"  style="border-left-style:none;border-right-style:none;border-bottom-style:none; border-top-style:none;CURSOR: hand" onClick="updatefun('[$sortid46$]')"></td>
+	<td>[$sortdesc46$]</td>
+	<td>[$level46$]</td>
+	</tr>
+	<tr><td>47:<input type="lable" id="[$sortid47$]"  value="[$sortname47$]" class="input"  style="border-left-style:none;border-right-style:none;border-bottom-style:none; border-top-style:none;CURSOR: hand" onClick="updatefun('[$sortid47$]')"></td>
+	<td>[$sortdesc47$]</td>
+	<td>[$level47$]</td>
+	</tr>
+	<tr><td>48:<input type="lable" id="[$sortid48$]"  value="[$sortname48$]" class="input"  style="border-left-style:none;border-right-style:none;border-bottom-style:none; border-top-style:none;CURSOR: hand" onClick="updatefun('[$sortid48$]')"></td>
+	<td>[$sortdesc48$]</td>
+	<td>[$level48$]</td>
+	</tr>
+	<tr><td>49:<input type="lable" id="[$sortid49$]"  value="[$sortname49$]" class="input"  style="border-left-style:none;border-right-style:none;border-bottom-style:none; border-top-style:none;CURSOR: hand" onClick="updatefun('[$sortid49$]')"></td>
+	<td>[$sortdesc49$]</td>
+	<td>[$level49$]</td>
+	</tr>
+	<tr><td>50:<input type="lable" id="[$sortid50$]"  value="[$sortname50$]" class="input"  style="border-left-style:none;border-right-style:none;border-bottom-style:none; border-top-style:none;CURSOR: hand" onClick="updatefun('[$sortid50$]')"></td>
+	<td>[$sortdesc50$]</td>
+	<td>[$level50$]</td>
+	</tr>
+	<tr><td>51:<input type="lable" id="[$sortid51$]"  value="[$sortname51$]" class="input"  style="border-left-style:none;border-right-style:none;border-bottom-style:none; border-top-style:none;CURSOR: hand" onClick="updatefun('[$sortid51$]')"></td>
+	<td>[$sortdesc51$]</td>
+	<td>[$level51$]</td>
+	</tr>
+	<tr><td>52:<input type="lable" id="[$sortid52$]"  value="[$sortname52$]" class="input"  style="border-left-style:none;border-right-style:none;border-bottom-style:none; border-top-style:none;CURSOR: hand" onClick="updatefun('[$sortid52$]')"></td>
+	<td>[$sortdesc52$] </td>
+	<td>[$level52$]</td>
+	</tr>
+	<tr>
+	<td rowspan="5" style="background-color:949285"><input type="lable" id="[$topsortid53$]" readonly="true"  value="[$topsortname53$]" class="input" style="border-left-style:none;border-right-style:none;border-bottom-style:none; border-top-style:none; background-color:949285"></td>
+	<td>53:<input type="lable" id="[$sortid153$]"  value="[$sortname53$]" class="input"  style="border-left-style:none;border-right-style:none;border-bottom-style:none; border-top-style:none;CURSOR: hand" onClick="updatefun('[$sortid53$]')""></td>
+	<td>[$sortdesc53$]</td>
+	<td>[$level53$]</td>
+	</tr>
+	<tr><td>54:<input type="lable" id="[$sortid54$]"  value="[$sortname54$]" class="input"  style="border-left-style:none;border-right-style:none;border-bottom-style:none; border-top-style:none;CURSOR: hand" onClick="updatefun('[$sortid54$]')"></td>
+	<td>[$sortdesc54$]</td>
+	<td>[$level54$]</td>
+	</tr>
+	<tr><td>55:<input type="lable" id="[$sortid55$]"  value="[$sortname55$]" class="input"  style="border-left-style:none;border-right-style:none;border-bottom-style:none; border-top-style:none;CURSOR: hand" onClick="updatefun('[$sortid55$]')"></td>
+	<td>[$sortdesc55$]</td>
+	<td>[$level55$]</td>
+	</tr>
+	<tr><td>56:<input type="lable" id="[$sortid56$]"  value="[$sortname56$]" class="input"  style="border-left-style:none;border-right-style:none;border-bottom-style:none; border-top-style:none;CURSOR: hand" onClick="updatefun('[$sortid56$]')"></td>
+	<td>[$sortdesc56$]</td>
+	<td>[$level56$]</td>
+	</tr>
+	<tr><td>57:<input type="lable" id="[$sortid57$]"  value="[$sortname57$]" class="input"  style="border-left-style:none;border-right-style:none;border-bottom-style:none; border-top-style:none;CURSOR: hand" onClick="updatefun('[$sortid57$]')"></td>
+	<td>[$sortdesc57$]</td>
+	<td>[$level57$]</td>
+	</tr>
+	<tr>
+	<td rowspan="7" style="background-color:949285"><input type="lable" id="[$topsortid58$]" readonly="true"  value="[$topsortname58$]" class="input" style="border-left-style:none;border-right-style:none;border-bottom-style:none; border-top-style:none; background-color:949285"></td>
+	<td>58:<input type="lable" id="[$sortid58$]"  value="[$sortname58$]" class="input"  style="border-left-style:none;border-right-style:none;border-bottom-style:none; border-top-style:none;CURSOR: hand" onClick="updatefun('[$sortid58$]')"></td>
+	<td>[$sortdesc58$]</td>
+	<td>[$level58$]</td>
+	</tr>
+	<tr><td>59:<input type="lable" id="[$sortid59$]"  value="[$sortname59$]" class="input"  style="border-left-style:none;border-right-style:none;border-bottom-style:none; border-top-style:none;CURSOR: hand" onClick="updatefun('[$sortid59$]')"></td>
+	<td>[$sortdesc59$]</td>
+	<td>[$level59$]</td>
+	</tr>
+	<tr><td>60:<input type="lable" id="[$sortid60$]"  value="[$sortname60$]" class="input"  style="border-left-style:none;border-right-style:none;border-bottom-style:none; border-top-style:none;CURSOR: hand" onClick="updatefun('[$sortid60$]')"></td>
+	<td>[$sortdesc60$]</td>
+	<td>[$level60$]</td>
+	</tr>
+	<tr><td>61:<input type="lable" id="[$sortid61$]"  value="[$sortname61$]" class="input"  style="border-left-style:none;border-right-style:none;border-bottom-style:none; border-top-style:none;CURSOR: hand" onClick="updatefun('[$sortid61$]')"></td>
+	<td>[$sortdesc61$]</td>
+	<td>[$level61$]</td>
+	</tr>
+	<tr><td>62:<input type="lable" id="[$sortid62$]"  value="[$sortname62$]" class="input"  style="border-left-style:none;border-right-style:none;border-bottom-style:none; border-top-style:none;CURSOR: hand" onClick="updatefun('[$sortid62$]')"></td>
+	<td>[$sortdesc62$]</td>
+	<td>[$level62$]</td>
+	</tr>
+	<tr><td>63:<input type="lable" id="[$sortid63$]"  value="[$sortname63$]" class="input"  style="border-left-style:none;border-right-style:none;border-bottom-style:none; border-top-style:none;CURSOR: hand" onClick="updatefun('[$sortid63$]')"></td>
+	<td>[$sortdesc63$]</td>
+	<td>[$level63$]</td>
+	</tr>
+	<tr><td>64:<input type="lable" id="[$sortid64$]"  value="[$sortname64$]" class="input"  style="border-left-style:none;border-right-style:none;border-bottom-style:none; border-top-style:none;CURSOR: hand" onClick="updatefun('[$sortid64$]')"></td>
+	<td>[$sortdesc64$]</td>
+	<td>[$level64$]</td>
+	</tr>
+	<tr>
+	<td rowspan="4" style="background-color:949285"><input type="lable" id="[$topsortid65$]" readonly="true"  value="[$topsortname65$]" class="input" style="border-left-style:none;border-right-style:none;border-bottom-style:none; border-top-style:none; background-color:949285"></td>
+	<td>65:<input type="lable" id="[$sortid65$]"  value="[$sortname65$]" class="input"  style="border-left-style:none;border-right-style:none;border-bottom-style:none; border-top-style:none;CURSOR: hand" onClick="updatefun('[$sortid65$]')"></td>
+	<td>[$sortdesc65$]</td>
+	<td>[$level65$]</td>
+	</tr>
+	<tr><td>66:<input type="lable" id="[$sortid66$]"  value="[$sortname66$]" class="input"  style="border-left-style:none;border-right-style:none;border-bottom-style:none; border-top-style:none;CURSOR: hand" onClick="updatefun('[$sortid66$]')"></td>
+	<td>[$sortdesc66$]</td>
+	<td>[$level66$]</td>
+	</tr>
+	<tr><td>67:<input type="lable" id="[$sortid67$]"  value="[$sortname67$]" class="input"  style="border-left-style:none;border-right-style:none;border-bottom-style:none; border-top-style:none;CURSOR: hand" onClick="updatefun('[$sortid67$]')"></td>
+	<td>[$sortdesc67$]</td>
+	<td>[$level67$]</td>
+	</tr>
+	<tr><td>68:<input type="lable" id="[$sortid68$]"  value="[$sortname68$]" class="input"  style="border-left-style:none;border-right-style:none;border-bottom-style:none; border-top-style:none;CURSOR: hand" onClick="updatefun('[$sortid68$]')"></td>
+	<td>[$sortdesc68$]</td>
+	<td>[$level68$]</td>
+	</tr>
+	<tr>
+	<td rowspan="7" style="background-color:949285"><input type="lable" id="[$topsortid69$]" readonly="true"  value="[$topsortname69$]" class="input" style="border-left-style:none;border-right-style:none;border-bottom-style:none; border-top-style:none; background-color:949285"></td>
+	<td>69:<input type="lable" id="[$sortid69$]"  value="[$sortname69$]" class="input"  style="border-left-style:none;border-right-style:none;border-bottom-style:none; border-top-style:none;CURSOR: hand" onClick="updatefun('[$sortid69$]')"></td>
+	<td>[$sortdesc69$]</td>
+	<td>[$level69$]</td>
+	</tr>
+	<tr><td>70:<input type="lable" id="[$sortid70$]"  value="[$sortname70$]" class="input"  style="border-left-style:none;border-right-style:none;border-bottom-style:none; border-top-style:none;CURSOR: hand" onClick="updatefun('[$sortid70$]')"></td>
+	<td>[$sortdesc70$]</td>
+	<td>[$level70$]</td>
+	</tr>
+	<tr><td>71:<input type="lable" id="[$sortid71$]"  value="[$sortname71$]" class="input"  style="border-left-style:none;border-right-style:none;border-bottom-style:none; border-top-style:none;CURSOR: hand" onClick="updatefun('[$sortid71$]')"></td>
+	<td>[$sortdesc71$]</td>
+	<td>[$level71$]</td>
+	</tr>
+	<tr><td>72:<input type="lable" id="[$sortid72$]"  value="[$sortname72$]" class="input"  style="border-left-style:none;border-right-style:none;border-bottom-style:none; border-top-style:none;CURSOR: hand" onClick="updatefun('[$sortid72$]')"></td>
+	<td>[$sortdesc72$]</td>
+	<td>[$level72$]</td>
+	</tr>
+	<tr><td>73:<input type="lable" id="[$sortid73$]"  value="[$sortname73$]" class="input"  style="border-left-style:none;border-right-style:none;border-bottom-style:none; border-top-style:none;CURSOR: hand" onClick="updatefun('[$sortid73$]')"></td>
+	<td>[$sortdesc73$]</td>
+	<td>[$level73$]</td>
+	</tr>
+	<tr><td>74:<input type="lable" id="[$sortid74$]"  value="[$sortname74$]" class="input"  style="border-left-style:none;border-right-style:none;border-bottom-style:none; border-top-style:none;CURSOR: hand" onClick="updatefun('[$sortid74$]')"></td>
+	<td>[$sortdesc74$]</td>
+	<td>[$level74$]</td>
+	</tr>
+	<tr><td>75:<input type="lable" id="[$sortid75$]"  value="[$sortname75$]" class="input"  style="border-left-style:none;border-right-style:none;border-bottom-style:none; border-top-style:none;CURSOR: hand" onClick="updatefun('[$sortid75$]')"></td>
+	<td>[$sortdesc75$]</td>
+	<td>[$level75$]</td>
+	</tr>
+	<tr>
+	<td rowspan="16" style="background-color:949285"><input type="lable" id="[$topsortid76$]" readonly="true"  value="[$topsortname76$]" class="input" style="border-left-style:none;border-right-style:none;border-bottom-style:none; border-top-style:none; background-color:949285"></td>
+	<td>76:<input type="lable" id="[$sortid76$]"  value="[$sortname76$]" class="input"  style="border-left-style:none;border-right-style:none;border-bottom-style:none; border-top-style:none;CURSOR: hand" onClick="updatefun('[$sortid76$]')"></td>
+	<td>[$sortdesc76$]</td>
+	<td>[$level76$]</td>
+	</tr>
+	<tr><td>77:<input type="lable" id="[$sortid77$]"  value="[$sortname77$]" class="input" style="border-left-style:none;border-right-style:none;border-bottom-style:none; border-top-style:none;CURSOR: hand" onClick="updatefun('[$sortid77$]')"></td>
+	<td>[$sortdesc77$]</td>
+	<td>[$level77$]</td>
+	</tr>
+	<tr><td>78:<input type="lable" id="[$sortid78$]"  value="[$sortname78$]" class="input" style="border-left-style:none;border-right-style:none;border-bottom-style:none; border-top-style:none;CURSOR: hand" onClick="updatefun('[$sortid78$]')"></td>
+	<td>[$sortdesc78$]</td>
+	<td>[$level78$]</td>
+	</tr>
+	<tr><td>79:<input type="lable" id="[$sortid79$]"  value="[$sortname79$]" class="input" style="border-left-style:none;border-right-style:none;border-bottom-style:none; border-top-style:none;CURSOR: hand" onClick="updatefun('[$sortid79$]')"></td>
+	<td>[$sortdesc79$]</td>
+	<td>[$level79$]</td>
+	</tr>
+	<tr><td>80:<input type="lable" id="[$sortid80$]"  value="[$sortname80$]" class="input" style="border-left-style:none;border-right-style:none;border-bottom-style:none; border-top-style:none;CURSOR: hand" onClick="updatefun('[$sortid80$]')"></td>
+	<td>[$sortdesc80$]</td>
+	<td>[$level80$]</td>
+	</tr>
+	<tr><td>81:<input type="lable" id="[$sortid81$]"  value="[$sortname81$]" class="input" style="border-left-style:none;border-right-style:none;border-bottom-style:none; border-top-style:none;CURSOR: hand" onClick="updatefun('[$sortid81$]')"></td>
+	<td>[$sortdesc81$]</td>
+	<td>[$level81$]</td>
+	</tr>
+	<tr><td>82:<input type="lable" id="[$sortid82$]"  value="[$sortname82$]" class="input" style="border-left-style:none;border-right-style:none;border-bottom-style:none; border-top-style:none;CURSOR: hand" onClick="updatefun('[$sortid82$]')"></td>
+	<td>[$sortdesc82$]</td>
+	<td>[$level82$]</td>
+	</tr>
+	<tr><td>83:<input type="lable" id="[$sortid83$]"  value="[$sortname83$]" class="input" style="border-left-style:none;border-right-style:none;border-bottom-style:none; border-top-style:none;CURSOR: hand" onClick="updatefun('[$sortid83$]')"></td>
+	<td>[$sortdesc83$]</td>
+	<td>[$level83$]</td>
+	</tr>
+	<tr><td>84:<input type="lable" id="[$sortid84$]"  value="[$sortname84$]" class="input" style="border-left-style:none;border-right-style:none;border-bottom-style:none; border-top-style:none;CURSOR: hand" onClick="updatefun('[$sortid84$]')"></td>
+	<td>[$sortdesc84$]</td>
+	<td>[$level84$]</td>
+	</tr>
+	<tr><td>85:<input type="lable" id="[$sortid85$]"  value="[$sortname85$]" class="input" style="border-left-style:none;border-right-style:none;border-bottom-style:none; border-top-style:none;CURSOR: hand" onClick="updatefun('[$sortid85$]')"></td>
+	<td>[$sortdesc85$]</td>
+	<td>[$level85$]</td>
+	</tr>
+	<tr><td>86:<input type="lable" id="[$sortid86$]"  value="[$sortname86$]" class="input" style="border-left-style:none;border-right-style:none;border-bottom-style:none; border-top-style:none;CURSOR: hand" onClick="updatefun('[$sortid86$]')"></td>
+	<td>[$sortdesc86$]</td>
+	<td>[$level86$]</td>
+	</tr>
+	<tr><td>87:<input type="lable" id="[$sortid87$]"  value="[$sortname87$]" class="input" style="border-left-style:none;border-right-style:none;border-bottom-style:none; border-top-style:none;CURSOR: hand" onClick="updatefun('[$sortid87$]')"></td>
+	<td>[$sortdesc87$]</td>
+	<td>[$level87$]</td>
+	</tr>
+	<tr><td>88:<input type="lable" id="[$sortid88$]"  value="[$sortname88$]" class="input" style="border-left-style:none;border-right-style:none;border-bottom-style:none; border-top-style:none;CURSOR: hand" onClick="updatefun('[$sortid88$]')"></td>
+	<td>[$sortdesc88$]</td>
+	<td>[$level88$]</td>
+	</tr>
+	<tr><td>89:<input type="lable" id="[$sortid89$]"  value="[$sortname89$]" class="input" style="border-left-style:none;border-right-style:none;border-bottom-style:none; border-top-style:none;CURSOR: hand" onClick="updatefun('[$sortid89$]')"></td>
+	<td>[$sortdesc89$]</td>
+	<td>[$level89$]</td>
+	</tr>
+	<tr><td>90:<input type="lable" id="[$sortid90$]"  value="[$sortname90$]" class="input" style="border-left-style:none;border-right-style:none;border-bottom-style:none; border-top-style:none;CURSOR: hand" onClick="updatefun('[$sortid90$]')"></td>
+	<td>[$sortdesc90$]</td>
+	<td>[$level90$]</td>
+	</tr>
+</table>
+</body>
+</html>

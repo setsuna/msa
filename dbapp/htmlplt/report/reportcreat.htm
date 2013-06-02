@@ -1,0 +1,169 @@
+<html>
+<head>
+<title>报告</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<LINK rel=stylesheet type=text/css href="/msa/extjs/resources/css/ext-all.css">
+<LINK rel=stylesheet type=text/css href="/msa/extjs/resources/css/xtheme-default.css"> 
+<link rel="stylesheet" type="text/css" href="/msa/publiccss/feed-viewer.css" />
+<SCRIPT type=text/javascript src="/msa/extjs/adapter/ext/ext-base.js"></SCRIPT>
+<SCRIPT type=text/javascript  src="/msa/extjs/ext-all.js"></SCRIPT> 
+<style type="text/css">
+<!--
+body {  font-size: 12pt}
+table {  font-size: 9pt}
+form {margin: 0px;}
+-->
+</style>
+<STYLE type=text/css>HTML {
+	BORDER-BOTTOM: 0px; BORDER-LEFT: 0px; PADDING-BOTTOM: 0px; MARGIN: 0px; PADDING-LEFT: 0px; PADDING-RIGHT: 0px; FONT: 12px verdana; HEIGHT: 100%; OVERFLOW: hidden; BORDER-TOP: 0px; BORDER-RIGHT: 0px; PADDING-TOP: 0px
+}
+BODY {
+	BORDER-BOTTOM: 0px; BORDER-LEFT: 0px; PADDING-BOTTOM: 0px; MARGIN: 0px; PADDING-LEFT: 0px; PADDING-RIGHT: 0px; FONT: 12px verdana; HEIGHT: 100%; OVERFLOW: hidden; BORDER-TOP: 0px; BORDER-RIGHT: 0px; PADDING-TOP: 0px
+}
+P {
+	MARGIN: 5px        
+}
+.settings {    
+	BACKGROUND-IMAGE: url(/msa/extjs/shared/icons/fam/folder_wrench.png)
+}
+.nav {
+	BACKGROUND-IMAGE: url(/msa/extjs/shared/icons/fam/folder_go.png)
+}
+</STYLE>
+<script type="text/javascript">
+   Ext.BLANK_IMAGE_URL = '/msa/extjs/resources/images/default/s.gif';
+
+		Ext.apply(Ext.form.VTypes, {
+       daterange : function(val, field) {
+        var date = field.parseDate(val);
+
+        if(!date){
+            return;
+        }
+        if (field.startDateField && (!this.dateRangeMax || (date.getTime() != this.dateRangeMax.getTime()))) {
+            var start = Ext.getCmp(field.startDateField);
+            start.setMaxValue(date);
+            start.validate(); 
+            this.dateRangeMax = date;
+        } 
+        else if (field.endDateField && (!this.dateRangeMin || (date.getTime() != this.dateRangeMin.getTime()))) {
+            var end = Ext.getCmp(field.endDateField);
+            end.setMinValue(date);
+            end.validate(); 
+            this.dateRangeMin = date;
+        }
+        /*
+         * Always return true since we're only using this vtype to set the
+         * min/max allowed values (these are tested for after the vtype test)
+         */
+        return true;
+    }
+ 
+});
+
+ Ext.onReady(function(){
+	
+	  		    Ext.QuickTips.init();
+
+				var detailEl;
+
+	var formPanel=new Ext.form.FormPanel({
+					defaultType : 'textfield',                              
+					labelAlign : 'right',
+					buttonAlign: 'center',
+					labelWidth : 80, 
+					height:270,
+					width:450,
+					region : "center", 
+					frame:'true',
+					defaults:{ border : false  
+					},
+					/*style:{"margin-left":"0px",
+							"margin-top":"100px"
+					},*/ 
+					onSubmit:Ext.emptyFn,
+					submit:function(){
+					this.getEl().dom.action='/msa/main.xp',  
+					this.getEl().dom.method='POST',
+					this.getEl().dom.submit();},
+					items : [{                                              
+						xtype: 'hidden',
+						name : 'Fun',
+						value : 'reportcreate'
+						},
+					    {                                         
+						xtype: 'hidden',
+						name : 'tempindex',
+						value : '[$tempindex$]'
+						}, 
+						{                                              
+						xtype: 'hidden',  
+						name : 'type',
+						value : '2'
+						}, {   
+						xtype:'datefield',
+						fieldLabel : '开始日期', 
+						format:'Y/m/d',
+						name : 'sdate',
+						id:'sdate',
+						vtype:'daterange',
+						endDateField:'edate'
+						},{
+						xtype:'datefield',
+						fieldLabel : '结束日期',
+						format:'Y/m/d',
+						name : 'edate',
+						id:'edate',
+						vtype:'daterange',
+						startDateField: 'sdate'
+						}, {                                                        
+						fieldLabel : '报告名称', 
+						name : 'reportname',
+						allowBlank: false,    //cant' be null
+						blankText:'名称不能为空！'
+						}],
+
+						buttons : [ {                                                
+							text : '确定提交',
+							formBind:true,
+						 	handler:function(){
+							if(formPanel.form.isValid()){ 
+							formPanel.getForm().submit({
+									success:function(){Ext.Msg.alert("提交成功！"); },
+									failure:function(){Ext.Msg.alert("提交失败！");} });  }    
+									
+							//handler:sub,formBind:true     
+							} 
+							},{
+							text:'重置',   
+                            handler:function(){ formPanel.getForm().reset(); }
+							}
+						//}
+						] 
+
+				});
+
+
+					 new Ext.Viewport({
+									id:'tree-xtzy-panel',
+								    layout:'table',
+									region : "center",
+									defaults: {
+										bodyStyle:'padding:15px 15px'
+									},
+									
+								  items: formPanel,
+					        renderTo: Ext.getBody()
+					    }); 
+
+});
+
+</script>
+
+</head>
+
+<body  topmargin="0" oncontextmenu="return false" text="#000000" leftmargin="0" >
+
+ 
+</body>
+</html>

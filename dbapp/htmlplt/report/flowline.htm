@@ -1,0 +1,784 @@
+<html class="x-viewport"><head><title>网络7层管理和过滤的领导者</title>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+<link rel="stylesheet" type="text/css" href="/msa/extjs/resources/css/ext-all.css">
+<link rel="stylesheet" type="text/css" href="/msa/publiccss/feed-viewer.css">
+<link rel="stylesheet" type="text/css" href="/msa/publiccss/pubcss.css">
+<link rel="stylesheet" type="text/css" href="/msa/extjs/resources/css/xtheme-default.css">
+<script type="text/javascript" src="/msa/extjs/adapter/ext/ext-base.js"></script>
+<script type="text/javascript" src="/msa/extjs/ext-all.js"></script>
+<link rel="stylesheet" href="/msa/publiccss/css.css" type="text/css">
+<script language = "Javascript" src = "/msa/publicjs/select_time.js"></script>
+<script language = "Javascript" src = "/msa/publicjs/exportexcel.js"></script>
+
+<style type="text/css">
+HTML {
+	BORDER-BOTTOM: 0px; BORDER-LEFT: 0px; PADDING-BOTTOM: 0px; MARGIN: 0px; PADDING-LEFT: 0px; PADDING-RIGHT: 0px; FONT: 12px verdana; HEIGHT: 100%; OVERFLOW: hidden; BORDER-TOP: 0px; BORDER-RIGHT: 0px; PADDING-TOP: 0px
+}
+BODY {
+	BORDER-BOTTOM: 0px; BORDER-LEFT: 0px; PADDING-BOTTOM: 0px; MARGIN: 0px; PADDING-LEFT: 0px; PADDING-RIGHT: 0px; FONT: 12px verdana; HEIGHT: 100%; OVERFLOW: hidden; BORDER-TOP: 0px; BORDER-RIGHT: 0px; PADDING-TOP: 0px
+}
+P {
+	MARGIN: 5px
+}
+.settings {
+	BACKGROUND-IMAGE: url(/msa/extjs/shared/icons/fam/folder_wrench.png)
+}
+.nav {
+	BACKGROUND-IMAGE: url(/msa/extjs/shared/icons/fam/folder_go.png)
+}
+</style>
+
+<script type="text/javascript">
+		Ext.BLANK_IMAGE_URL = '/msa/extjs/resources/images/default/s.gif';
+		var uid;
+		var gid;
+		var detailEl;
+	  var urlValue;
+	  var responseDir;
+		var hgt=(screen.height)-220;
+    Ext.onReady(function(){
+			Ext.QuickTips.init();		
+			var gtreepan=new Ext.tree.TreePanel({
+	    	  height:400,
+					split: true,
+					useArrows:true,
+					autoScroll: true,
+					rootVisible: false,
+					lines: false,
+					useArrows: true,
+					root:   new Ext.tree.AsyncTreeNode(),
+					loader: new Ext.tree.TreeLoader({
+							dataUrl:'/msa/main.xp?Fun=msaGroup',
+							baseParams:{Fun:'msaGroup'} 
+					}),
+					listeners: {
+		            click: function(node, e){
+					       gid=node.id;
+						    }
+					}
+
+	});
+
+    var wing;
+    var button_1 = Ext.get('department');
+		button_1.on('click', function(){
+				if(!wing){
+				var wing = new Ext.Window({
+								layout      : 'fit',
+                title: '选择部门',
+                width       : 500,
+                height      : 300,
+                closeAction :'hide',
+                plain       : true,
+                items       : gtreepan,
+								buttons: [{
+                    text     : '确定',
+                    handler  : function(){
+                     if(gid=="-1" || gid==""){
+									 		return;
+							       }else{		
+								         localStore.load({params:{Fun:'msalocalStore',groupid:gid}});  
+				             }
+				             wing.hide();		              
+                    }
+                  }] 
+							});
+				}
+				wing.show();
+
+		});	
+		
+		  localStore = new Ext.data.JsonStore({//构建用户列表数据存储器
+						      root: 'Results',
+					        totalProperty: 'totalCount',
+					        url:'/msa/main.xp',
+					        baseParams:{Fun:'msalocalStore'},
+						      fields: [
+						         {name: 'uid'},
+							       {name: 'uname'}
+						      ]
+			});
+						
+		
+      var Cb = new Ext.form.ComboBox({ 
+	         fieldLabel: '下拉框',  
+	         valueField:'uid',
+	         hiddenName:'uid',
+	         displayField:'uname',     
+	         id:'CbId',      
+	         blankText:'所有用户',               
+	         emptyText:'所有用户', 
+	         renderTo: 'combobox', 
+	         width:100,              
+	         anchor:'95.2%',   
+	         selectOnFocus:true,      
+	         triggerAction:'all',     
+	         store:localStore,    
+	         typeAhead:true,      
+	         typeAheadDelay:250,    
+	         editable:false,       
+	         forceSelection:true,   
+	         mode: 'local',
+	         listeners:{
+                "select":function(combo,record,number){
+		                	    var alluser1;
+		                	    alluser1=combo.getValue();                
+		                      if(typeof(alluser1)=="所有用户"){
+		                           uid=-1;	
+		                      }else{
+		                      	   uid=combo.getValue();//取得ComboBox0的选择值  
+		                      }		                                                        
+                     }
+            }        
+	     });
+	  
+		var myMask = new Ext.LoadMask(Ext.getBody(),
+    {
+        	msg:"Please wait..."
+    });
+		myMask.show();
+		
+					
+    var cm=new Ext.grid.ColumnModel([
+			{id:'reportname',header: "报告名称", width: 100, sortable: true, dataIndex: 'reportname'},
+      {header: "报告状态",   width: 100, sortable: true,  dataIndex: 'reportstate'},
+      {header: "报告生成日期",   width: 120, sortable: true,  dataIndex: 'dates'}
+		]);
+  
+ 		reportstore=new Ext.data.SimpleStore({
+		 url:'/msa/main.xp?Fun=msaReportRecordJson+reportdir=flowlinereport',
+           fields: [
+            {name: 'reportname'},
+            {name: 'dates'},
+            {name: 'reportdir'},
+	          {name: 'bfile'},  
+	          {name: 'reportstate'}
+            ]
+		});   
+		reportstore.load();
+
+		var reportgrid=new Ext.grid.GridPanel({
+        store           :reportstore,
+        viewConfig:{forceFit: true, scrollOffset: 0},
+        cm					:cm,
+        stripeRows      :true,
+        autoExpandColumn:'reportname',
+        frame           :false,
+		    collapsible     :true,
+		    loadMask        :{msg:'正在加载数据，请稍侯……'},
+		    draggable       :false
+		});
+		function showsysdelrule(btn){
+		        if(btn=='yes'){
+		        	 var record = reportgrid.getStore().getAt(detailEl);
+               var files=record.get("bfile");
+               var reportdirs=record.get("reportdir");
+               reportstore.load({params:{Fun:'msaReportRecordJson',file:files,reportdir:reportdirs}});
+		        }
+		};
+		var rightClick  = new Ext.menu.Menu({
+                id:'feeds-ctx',
+                items: [{
+                    id:'shanchubaogao',
+                    iconCls:'load-icon',
+                    text:'删除报告',
+                    scope: this,
+                    handler:function(){
+                          Ext.MessageBox.confirm('Confirm', '您确认要删除吗?', showsysdelrule);
+                    }
+                },{
+                    id:'liulanbaogao',
+                    iconCls:'load-icon',
+                    text:'浏览报告',
+                    scope: this,
+                    handler:function(){
+                        var record = reportgrid.getStore().getAt(detailEl);
+                        var files=record.get("bfile");
+                        var reportdirs=record.get("reportdir");
+                        var usrl="/msadata/report/"+reportdirs+"/"+files+"/index.htm";
+                        var mywin =new  Ext.Window(
+							                {
+							                    id: 'east-panel',
+							                    title: '结果浏览',
+							                    height: hgt,
+							                    width: 400,
+							                    closeAction: 'close',
+							                    modal: 'true',
+							                    maximizable:'true',
+							                    margins:'0 5 0 0',
+							                    html: "<IFRAME  name='resultfrm' width=100% height='"+(hgt-80)+"' SRC = '"+usrl+"'  border='0' frameborder='0' scrolling='yes'></iframe>"
+							          });
+							          mywin.show();
+							          mywin.maximize();
+					   				}
+                },{
+                    id:'xiazaibaogao',
+                    iconCls:'load-icon',
+                    text:'下载报告',
+                    scope: this,
+                    handler:function(){
+                        var record = reportgrid.getStore().getAt(detailEl);
+                        var files=record.get("bfile");
+                        var reportdirs=record.get("reportdir");
+                        var usrl="/msa/main.xp?Fun=msaDataCenetrDownLoad+downLoadFileName=report.tgz+downLoadFile=report/"+reportdirs+"/"+files+"/report.tgz";
+                        downloadFile(usrl);
+
+                    }
+                }]});
+ 		reportgrid.addListener('rowclick', rightClickFn);
+		function rightClickFn(client, rowIndex, e) {
+			                rightClick.showAt(e.getXY());
+			                detailEl=  rowIndex;
+		}
+		
+		
+    
+    var changeTab = function changeTab(){
+		    var id = card.getLayout().activeItem.id;
+		    var prev = Ext.getCmp('move-prev');
+		  	var next = Ext.getCmp('move-next');
+		    var exit = Ext.getCmp('exit');
+				var sdate = Ext.getDom('sdate').value;
+				var edate = Ext.getDom('edate').value;
+				var reportname = Ext.getDom('reportname').value;
+				var email = Ext.getDom('email').value;   
+				var email_Flag = false;
+				var reg = /^\w+((-\w+)|(\.\w+))*\@[A-Za-z0-9]+((\.|-)[A-Za-z0-9]+)*\.[A-Za-z0-9]+$/;//邮箱格式正则表达式
+			  alert(gid);
+			  alert(uid);
+				if(sdate==''||edate==''||reportname==''){
+	            Ext.Msg.alert('提示信息','请填写完整条件');	            
+	            return false;
+		    }
+				
+				email_Flag = reg.test(email);
+				if(!email_Flag){
+					Ext.MessageBox.alert("提示信息","对不起，您输入的邮箱地址格式错误。");
+					Ext.getDom('email').focus();
+					Ext.getDom('email').select();
+					return false;
+				}
+		    if(id=='card-0'){ 
+		    	
+		    				Ext.MessageBox.show({
+				           msg: '报告生成中，这需要一段时间，您可以继续等待或者稍后察看结果',
+				           progressText: 'apply...',
+				           width:300,
+				           wait:true,
+				           waitConfig: {interval:500},
+				           icon:'ext-mb-download'
+				   			});
+				    		setTimeout(function(){
+				            Ext.MessageBox.hide();
+				        }, 10000); 
+
+	          		Ext.Ajax.request({
+			                method : 'POST',
+			                url:'/msa/main.xp',
+			                success: function(response,options){
+			                		if(response.responseText.length>0){	   
+														urlValue="/msadata/report/flowlinereport/"+response.responseText+"/index.htm";
+														responseDir=response.responseText;
+														//card.maximize();
+														var frm=document.all('step2frm').contentWindow.document;
+														frm.location.href=urlValue;
+												    prev.setDisabled(false);
+												    next.setDisabled(false);
+												    card.getLayout().setActiveItem(1);
+												  }else{
+												  	Ext.MessageBox.alert("操作失败");
+												  }
+												  
+				    							reportstore.load();
+											},
+											failure: function(response,options){
+														Ext.MessageBox.alert("操作失败");
+											},
+		                	params:{Fun:'msaReportFlowLineAjaxSubmit',
+                              sdate:sdate,
+                              edate:edate,
+                              reportname:reportname,
+                              email:email,
+                              gid:gid,
+                              uid:uid, 
+                              step:1                                                    
+                      }	
+			          });
+					   
+	  		}else if(id=='card-1'){			
+	  							
+		    				Ext.MessageBox.show({
+				           msg: '报告生成中，这需要一段时间，您可以继续等待或者稍后察看结果',
+				           progressText: 'apply...',
+				           width:300,
+				           wait:true,
+				           waitConfig: {interval:500},
+				           icon:'ext-mb-download'
+				   			});
+				    		setTimeout(function(){
+				            Ext.MessageBox.hide();
+				        }, 10000); 	
+
+		          		Ext.Ajax.request({
+				                method : 'POST',
+				                url:'/msa/main.xp',
+				                success: function(response,options){
+				                		if(response.responseText.length>0){	   
+															urlValue="/msadata/report/flowlinereport/"+response.responseText+"/page2.htm";
+															//card.maximize();
+															var frm=document.all('step3frm').contentWindow.document;
+															frm.location.href=urlValue;
+													    prev.setDisabled(false);
+													    next.setDisabled(false);
+													    card.getLayout().setActiveItem(2);
+													  }else{
+													  	Ext.MessageBox.alert("操作失败");
+													  }
+													  reportstore.load();
+												},
+												failure: function(response,options){
+															Ext.MessageBox.alert("操作失败");
+												},
+			                	params:{Fun:'msaReportFlowLineAjaxSubmit',
+                                sdate:sdate,
+                                edate:edate,
+                                reportname:reportname,
+                                email:email,
+                                filedir:responseDir,
+                                gid:gid,
+                                uid:uid, 
+                                step:2                                                    
+                        }
+				          });
+					    
+					   
+	  		}else if(id=='card-2'){
+	  							
+	  						Ext.MessageBox.show({
+				           msg: '报告生成中，这需要一段时间，您可以继续等待或者稍后察看结果',
+				           progressText: 'apply...',
+				           width:300,
+				           wait:true,
+				           waitConfig: {interval:500},
+				           icon:'ext-mb-download'
+				   			});
+				    		setTimeout(function(){
+				            Ext.MessageBox.hide();
+				        }, 10000); 	
+	  			
+		          	Ext.Ajax.request({
+				                method : 'POST',
+				                url:'/msa/main.xp',
+				                success: function(response,options){
+				                		if(response.responseText.length>0){	   
+															urlValue="/msadata/report/flowlinereport/"+response.responseText+"/page3.htm";
+															//card.maximize();
+															var frm=document.all('step4frm').contentWindow.document;
+															frm.location.href=urlValue;
+													    prev.setDisabled(false);
+													    next.setDisabled(false);
+													    card.getLayout().setActiveItem(3);
+													  }else{
+													  	Ext.MessageBox.alert("操作失败");
+													  }
+													   reportstore.load();
+												},
+												failure: function(response,options){
+															Ext.MessageBox.alert("操作失败");
+												},
+			                	 params:{Fun:'msaReportSrvLineAjaxSubmit',
+                                srvsdate:sdate,
+                                srvedate:edate,
+                                srvreportname:reportname,
+                                srvemail:email,
+                                filedir:responseDir,
+                                gid:gid,
+                                uid:uid,
+                                step:3                                                    
+                        }
+				          });
+					    
+	  		}else if(id=='card-3'){
+	  			
+	  						Ext.MessageBox.show({
+				           msg: '报告生成中，这需要一段时间，您可以继续等待或者稍后察看结果',
+				           progressText: 'apply...',
+				           width:300,
+				           wait:true,
+				           waitConfig: {interval:500},
+				           icon:'ext-mb-download'
+				   			});
+				    		setTimeout(function(){
+				            Ext.MessageBox.hide();
+				        }, 10000); 	
+	  			
+		          	Ext.Ajax.request({
+				                method : 'POST',
+				                url:'/msa/main.xp',
+				                success: function(response,options){
+				                		if(response.responseText.length>0){	   
+															urlValue="/msadata/report/flowlinereport/"+response.responseText+"/page4.htm";
+															//card.maximize();
+															var frm=document.all('step5frm').contentWindow.document;
+															frm.location.href=urlValue;
+													    prev.setDisabled(false);
+													    next.setDisabled(false);
+													    card.getLayout().setActiveItem(4);
+													  }else{
+													  	Ext.MessageBox.alert("操作失败");
+													  }
+													  reportstore.load();
+												},
+												failure: function(response,options){
+															Ext.MessageBox.alert("操作失败");
+												},
+		                	  params:{Fun:'msaReportFlowLineAjaxSubmit',
+                                sdate:sdate,
+                                edate:edate,
+                                reportname:reportname,
+                                email:email,
+                                filedir:responseDir,
+                                gid:gid,
+                                uid:uid, 
+                                step:4                                                    
+                        }		
+				          });
+					   
+	  		}else if(id=='card-4'){
+	  							
+	  						Ext.MessageBox.show({
+				           msg: '报告生成中，这需要一段时间，您可以继续等待或者稍后察看结果',
+				           progressText: 'apply...',
+				           width:300,
+				           wait:true,
+				           waitConfig: {interval:500},
+				           icon:'ext-mb-download'
+				   			});
+				    		setTimeout(function(){
+				            Ext.MessageBox.hide();
+				        }, 10000); 	
+	  			
+		          		Ext.Ajax.request({
+				                method : 'POST',
+				                url:'/msa/main.xp',
+				                success: function(response,options){
+				                		if(response.responseText.length>0){	   
+															urlValue="/msadata/report/flowlinereport/"+response.responseText+"/page5.htm";
+															myMask.hide();
+															card.maximize();
+															var frm=document.all('step6frm').contentWindow.document;
+															frm.location.href=urlValue;
+													    prev.setDisabled(false);
+													    next.setDisabled(false);
+													    card.getLayout().setActiveItem(5);
+													  }else{
+													  	Ext.MessageBox.alert("提示信息","操作失败");
+													  }
+													  reportstore.load();
+												},
+												failure: function(response,options){
+															Ext.MessageBox.alert("提示信息","操作失败");
+												},
+		                		params:{Fun:'msaReportFlowLineAjaxSubmit',
+		                            sdate:sdate,
+		                            edate:edate,
+		                            reportname:reportname,
+		                            email:email,
+		                            filedir:responseDir,
+		                            gid:gid,
+		                            uid:uid, 
+		                            step:5                                                    
+                        }	
+				          });
+				
+	  		}else{
+	  				  Ext.MessageBox.alert("提示信息","报告生成完毕");		
+	  		}
+		}
+		
+		var backTab = function backTab(){
+			  var id = card.getLayout().activeItem.id;
+			  var prev = Ext.getCmp('move-prev');
+			  var next = Ext.getCmp('move-next');
+			  if(id=='card-0'){
+			    prev.setDisabled(true);
+			    next.setDisabled(false);
+			  }
+			  if(id=='card-1'){
+			    prev.setDisabled(true);
+			    next.setDisabled(false);
+			    card.getLayout().setActiveItem(0);//返回上级页面
+			  }
+			  if(id=='card-2'){
+			    prev.setDisabled(false);
+			    next.setDisabled(false);
+			    card.getLayout().setActiveItem(1);//返回上级页面
+			  }
+			  if(id=='card-3'){
+			    prev.setDisabled(false);
+			    next.setDisabled(false);
+			    card.getLayout().setActiveItem(2);//返回上级页面
+			  }
+			  if(id=='card-4'){
+			    prev.setDisabled(false);
+			    next.setDisabled(false);
+			    card.getLayout().setActiveItem(3);//返回上级页面
+			  }
+			  if(id=='card-5'){
+			    prev.setDisabled(false);
+			    next.setDisabled(true);
+			    card.getLayout().setActiveItem(4);//返回上级页面
+			  }
+		}
+		
+		
+		var panel1 = new Ext.Panel({
+		  			id: 'card-0',
+						layout:'fit',
+	          split:false,
+	          frame:true,
+	          collapsible:true,
+	          autoScroll: true,
+	          margins:'0 0 0 0',
+	          contentEl:'north1'
+    });
+
+	 	var panel2 = new Ext.Panel({
+		    id:'card-1',
+		    iconCls: 'tabs',
+		    collapsible:true,
+				html :"<IFRAME  name='step2frm' width=100% height='"+(hgt-90)+"' SRC = ''  border='0' frameborder='0' scrolling='yes'></iframe>"
+		});
+		
+		var panel3 = new Ext.Panel({
+			  id: 'card-2',
+			  frame:true,
+		    iconCls: 'tabs',
+		    collapsible:true,
+				html :"<IFRAME  name='step3frm' width=100% height='"+(hgt-90)+"' SRC = ''  border='0' frameborder='0' scrolling='yes'></iframe>"
+	 	});
+		var panel4 = new Ext.Panel({
+			  id: 'card-3',
+			  frame:true,
+		    iconCls: 'tabs',
+		    collapsible:true,
+				html :"<IFRAME  name='step4frm' width=100% height='"+(hgt-90)+"' SRC = ''  border='0' frameborder='0' scrolling='yes'></iframe>"
+	 	});
+		var panel5 = new Ext.Panel({
+			  id: 'card-4',
+			  frame:true,
+		    iconCls: 'tabs',
+		    collapsible:true,
+				html :"<IFRAME  name='step5frm' width=100% height='"+(hgt-90)+"' SRC = ''  border='0' frameborder='0' scrolling='yes'></iframe>"
+	 	});
+	 	var panel6 = new Ext.Panel({
+			  id: 'card-5',
+			  frame:true,
+		    iconCls: 'tabs',
+		    collapsible:true,
+				html :"<IFRAME  name='step6frm' width=100% height='"+(hgt-90)+"' SRC = ''  border='0' frameborder='0' scrolling='yes'></iframe>"
+	 	});
+		
+		
+		
+    var mainPanel= {
+					id: 'main-panel',
+					region:'center',
+        	title :'流量主线分析报告',
+          collapsible: true,
+          split:true,
+          minSize: 125,
+          maxSize: 400,
+          layout:'fit',
+          margins:'0 5 0 0',
+          items:[reportgrid],
+          tbar    : [
+					'-',
+					{
+				   icon: '/msa/images/add16.gif',
+           cls: 'x-btn-text-icon details',
+           enableToggle:true,
+					 text    : '开始分析',
+					 handler : function() {
+										if(Ext.getCmp('wizard')){
+		                     Ext.getCmp('wizard').show();
+		                     return;
+					          }
+					          card =new  Ext.Window({
+											 		id:'wizard',
+				        					title: '流量分析',
+				        					resizable:true,
+											    layout:'card',
+							            closeAction:'close',
+							            maximizable:'true',
+							            maximized :'true',
+											    height:500,
+											    width:750,
+											    activeItem: 0,
+											    defaults: {
+											        border:false
+											    },
+											    bbar: ['->',
+												        {
+												            id: 'move-prev',
+												            text: '上一步',
+												            disabled: true,
+												            handler:backTab
+												        },{
+												            id: 'move-next',
+												            text: '下一步',
+												            handler:changeTab
+												        },{
+												            id: 'exit',
+												            text: '完成',
+												            handler:function(){card.hide();}
+												        }
+											    ],
+											    items: [panel1,panel2,panel3,panel4,panel5,panel6]
+
+							       });
+							       card.show();
+					 					}
+					 
+					},
+					'-']
+    }
+    new Ext.Viewport({
+					layout: 'border',
+					items: [
+					 mainPanel
+					],
+	        renderTo: Ext.getBody()
+	    });
+
+		myMask.hide();
+    
+    /*var task = {
+				run: function(){
+				   //xtzystore.load();
+				},
+				interval: 120000 // 每30秒一周期
+		};
+		var runner = new Ext.util.TaskRunner();
+		runner.start(task);*/
+});
+</script>
+
+<meta name="GENERATOR" content="MSHTML 8.00.6001.18702"></head>
+<body bgcolor="#F0f0f0" topmargin=0 leftmargin=0 style="SCROLLBAR-FACE-COLOR: #f0f0f0;  overflow-x:hidden;  OVERFLOW: scroll; SCROLLBAR-SHADOW-COLOR: #f0f0f0; SCROLLBAR-3DLIGHT-COLOR: #f0f0f0; SCROLLBAR-ARROW-COLOR: #f0f0f0; SCROLLBAR-DARKSHADOW-COLOR: #cccccc;" >
+	
+<DIV style="display:none">
+<table id="north1" width="100%" border="0" cellspacing="0" cellpadding="0" >
+  <tr> 
+    <td> 
+        <table width="100%" border="0" cellpadding="0" cellspacing="0">
+				<tr>
+				    <td width="50">  &nbsp;</td>
+				     <td>  &nbsp;</td>
+				  </tr>
+				<tr>
+				     <td width="50">  &nbsp;</td>
+				    <td> 第一步：选择你所需要的时间段</td>
+				  </tr>
+				</table>  
+        <table width="100%" border="0" cellspacing="0" cellpadding="0" >
+          <div id="plabel"> 
+            <tr> 
+               <td width="50" > 
+                <div align="center">&nbsp;</div>
+              </td>
+              <td  > 
+                <div align="left">
+                  开始日期:
+                  	<input type="text"  class=inputf0 name="sdate"  id="sdate" size="10" maxlength="10" value="" onClick=setday(sdate)>
+              </div>
+              </td>
+             </tr> 
+             
+            <tr> 
+             <td width="50" > 
+                <div align="center">&nbsp;</div>
+              </td>
+              <td> 
+                <div align="left">
+                  结束日期:
+                  <input type="text"  class=inputf0 name="edate" id="edate" size="10" maxlength="10" value="" onClick=setday(edate)>
+              </div>
+              </td>
+             </tr> 
+          
+        <tr> 
+			  <td width="50" > 
+                <div align="center">&nbsp;</div>
+              </td>
+		      <td height="20"> 
+                         部&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;门:
+		        		<div style="display:inline">
+						<input type="button" id="department" class=inputf0 border="0"  name="department" value="选择部门" >
+		    		 </div>
+		      </td>
+		     </tr>  
+	     
+         	<tr>
+	   	   <td width="50" > 
+              <div align="center">&nbsp;</div>
+            </td>
+	      <td height="20">
+	        用&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;户:&nbsp;<span id="combobox" style="display:inline-block"></span>  
+	      </td>  
+  	     </tr>
+            
+            
+             
+          <tr> 
+              <td width="50" height="20"> 
+                <div align="center">&nbsp;</div>
+              </td>
+              <td  height="20"> 
+                <div align="left"> 
+                 名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称:
+                 <input type="text" class=inputf0  name="reportname" id="reportname" size="20" maxlength="32" value=""  >
+                </div>
+              </td>
+           </tr> 
+
+		    <tr> 
+              <td width="50" height="20"> 
+                <div align="center">&nbsp;</div>
+              </td>
+              <td  height="20"> 
+                
+                <div align="left"> 
+                 邮件地址:
+                <input type="text"  class=inputf0 name="email" id="email" size="20" maxlength="32" value=""  >  
+				(填写邮件地址后生成的报告可自动发送到您的邮箱中！)
+                </div>
+              </td>
+              </tr> 
+          </div>
+        </table>       
+    </td>
+  </tr>
+</table>
+</div>
+
+<div id="north2" style="display:none">
+<p>第二步：部门流量排序</p>
+</div>
+
+
+<div id="north3" style="display:none">
+<p>第三步：人员流量排序</p>
+</div>
+
+<div id="north4" style="display:none">
+<p>第四步：网站流量排序</p>
+</div>
+
+<div id="north5" style="display:none">
+<p>第五步：目的地址流量排序</p>
+</div>
+	
+</body>
+</html>
+

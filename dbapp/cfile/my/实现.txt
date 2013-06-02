@@ -1,0 +1,213 @@
+1〉写入网口属性，通信端口为linkinfo,内核自分配内存
+
+struct net_device *in   
+
+unsigned int issniffer;       是否侦听数据
+
+unsigned int devtype;   
+
+1数据抛弃 ---     外网口   ip地址   
+
+2数据转发-      
+
+3数据镜像-
+
+4一般通信口--ip
+
+5nat外网口--ip
+
+0一般通信口--ip
+
+struct net_device *out;
+
+unsigned int vlink; 选择虚拟链路
+
+ 
+
+echo 'eth0-1-2-eth1-1' > /proc/baochuang/linkinfo
+
+ 
+
+echo 'eth1-1-2-eth0-1' > /proc/baochuang/linkinfo
+
+ 
+
+echo 'eth1-1-3-eth0-1' > /proc/baochuang/linkinfo
+
+ 
+
+同时设置命令外：
+
+1数据抛弃  ifconfig ethx 0.0.0.0 up
+
+2数据转发-  ifconfig ethx 0.0.0.0 up   <promisc> 
+
+3数据镜像-  ifconfig ethx 0.0.0.0 up   <promisc> 
+
+5nat外网口  ifconfig  ethx 0.0.0.0 netmask xx  up   <promisc> 
+
+iptables  -t nat -A    
+
+4一般通信口 
+
+ifconfig  ethx 0.0.0.0 netmask xx  up   <promisc> 
+
+ 
+
+ 
+
+删除单一通道
+
+ethx
+
+echo 'eth0' > /proc/baochuang/linkinfo
+
+ifconfig ethx 0.0.0.0 down
+
+ 
+
+reset全部复位
+
+echo 'r' > /proc/baochuang/linkinfo
+
+复位状态为全部一般通信口
+
+ifconfig ethx 0.0.0.0 down
+
+ 
+
+ 
+
+2>qos通道信息
+
+ 
+
+/proc/baochuang/rshaper接口
+link参数重置：17位
+/*s0x%08uownlink%0x08uuplink*/
+/*s 一位
+    下行带宽 8位
+    上行带宽 8位
+*/
+
+更新：
+
+_bcKernelHead4个参数   
+
+  unsigned long      banduplink;
+
+  unsigned long      banddownlink;
+
+  int                banddowndef;
+
+  int                bandupdef;
+
+ 
+
+/proc/baochuang/rshaper //删除单个通道
+
+/*d0x05cid*/
+
+         /*d 一位
+
+         通道id 5位
+
+*/
+
+_ltPubInfo->_QosList[_MAX_QOSSTATIC_CHANEL]设置
+
+ 
+
+ 
+
+//设置通道信息
+
+/proc/baochuang/rshaper
+
+/*0x05cid0x09down0x09up0x09downb0x09upb*/
+
+cid 5位 
+
+下行带宽 9位
+
+上行带宽 9位
+
+下行带宽保证 9位
+
+上行带宽保证 9位
+
+ 
+
+_ltPubInfo->_QosList[_MAX_QOSSTATIC_CHANEL]设置
+
+ 
+
+ 
+
+清空全部qos通道,复原原始状态
+
+c
+
+ 
+
+3>防火墙通信内核接口
+
+ 
+
+/proc/baochuang/firewall
+
+写入静态防火墙规则：最多 #define MAX_FIREWALL_NUM               64
+
+//  1   %1u       1标记占一位
+
+    eth0|eth1|  %s|  "0"全部
+
+    %02u         fprotocol  17udp 6tcp 0全部
+
+    %010u%010u    lips lipe  10位 源ip范围 
+
+    05u%05u      lportl lportu  5位  源端口范围  
+
+    010u%010u    rips ripe   10位 目的ip范围   
+
+    05u%05u      rportl rportu   5位  目的端口范围
+
+    02u          ruleaction   动作  1允许  0禁止
+
+    05u          qosid        qos通道 5位
+
+//清空全部规则c1
+
+c1
+
+ 
+
+/proc/baochuang/firewall
+
+写入表单关键字规则：最多 #define MAX_POSTKEY_NUM                 256
+
+//  2 %1u       2标记占一位
+
+    %010u       lip     10位 ip范围 可以是目的也可以是源 0是全部
+
+    关键字  %s    
+
+//清空表单关键字
+
+c2
+
+ 
+
+/proc/baochuang/firewall
+
+写入网页内容关键字规则：最多 256
+
+//  3 %1u       2标记占一位
+
+    %010u       lip     10位 ip范围 可以是目的也可以是源  0是全部
+
+    关键字      
+
+//清空网页关键字
+
+c3

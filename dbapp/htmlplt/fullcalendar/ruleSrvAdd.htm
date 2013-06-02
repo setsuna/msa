@@ -1,0 +1,240 @@
+﻿<HTML>
+<HEAD>
+<TITLE>网络7层管理和过滤的领导者</TITLE>
+<META content="text/html; charset=utf-8" http-equiv=Content-Type>
+<LINK rel=stylesheet type=text/css href="/msa/publiccss/pubcss.css">
+<LINK rel=stylesheet type=text/css href="/msa/extjs/resources/css/ext-all.css">
+<link rel="stylesheet" type="text/css" href="/msa/extjs/resources/css/feed-viewer.css" />
+<LINK rel=stylesheet type=text/css href="/msa/extjs/resources/css/xtheme-default.css" id="xthemecss" >
+<script type="text/javascript" src="/msa/extjs/adapter/ext/ext-base.js"></script>
+<SCRIPT type=text/javascript  src="/msa/extjs/ext-all.js"></SCRIPT>
+<script type=text/javascript  src="/msa/publicjs/exportexcel.js"></script>
+<SCRIPT type=text/javascript>
+		var pagesize=100;
+		var limit=100;
+		var start=0;
+    Ext.BLANK_IMAGE_URL = '/msa/extjs/resources/images/default/s.gif';
+    Ext.onReady(function(){
+	  		Ext.QuickTips.init();
+				var detailEl;
+				var topsrv=0;
+				var twoServiceTree;
+				var rulesrv;
+				var hheight=screen.height-460;
+				var myMask = new Ext.LoadMask(Ext.getBody(),{
+				        	msg:"Please wait..."
+				});
+				myMask.show();
+		/**
+		 *checkTree全选
+		 */
+		var treeCheckTrue = function(node)
+		{
+		    node.eachChild(function (child) {
+		        child.getUI().toggleCheck(true);
+		        child.attributes.checked = true;
+		        treeCheckTrue(child);
+		    });
+		}
+		/**
+		 *checkTree清空
+		 */
+		var treeCheckfalse = function(nodes)
+		{
+		    if(nodes && nodes.length){
+		     for(var i=0;i<nodes.length;i++){
+		      //设置UI状态为未选中状态
+		      nodes[i].getUI().toggleCheck(false);
+		      //设置节点属性为未选中状态
+		      nodes[i].attributes.checked=false;
+		     }
+		    }
+		}
+		var oneServiceTree=new Ext.tree.TreePanel({
+        split: true,
+        height:hheight,
+        title:'一级服务',
+        useArrows:true,
+        autoScroll: true,
+        rootVisible: false,
+        lines: true,
+        useArrows: true,
+        checkModel:false,
+        loader: new Ext.tree.TreeLoader({
+        	  dataUrl:'/msa/main.xp',
+						baseParams:{Fun:'msaOneServiceTree'}
+        }),
+        root: new Ext.tree.AsyncTreeNode(),
+        listeners: {
+							    click: function(node, e) {
+							    	    topsrv=node.id;
+								 		    twoServiceTree.getLoader().load(twoServiceTree.root);
+							    }
+				}
+		});
+	  twoServiceTree=new Ext.tree.TreePanel({
+        split: true,
+        height:hheight,
+        id:'servicetree',
+        title:'二级服务',
+        useArrows:true,
+        autoScroll: true,
+        rootVisible: false,
+        lines: false,
+        useArrows: true,
+        checkModel:false,
+        tbar : [{
+             	xtype : 'button',
+            	tooltip:{text:'<b>选择所有服务</b>'},
+            	text:'全选',
+            	//iconCls:'connect',
+            	handler:function(){
+            		var rootNode = Ext.getCmp('servicetree').getRootNode();
+            		treeCheckTrue(rootNode);
+            }},'-',{
+             	xtype : 'button',
+            	tooltip:{text:'<b>取消选择</b>'},
+            	text:'清空',
+            	//iconCls:'connect',
+            	handler:function(){
+            		var nodes = Ext.getCmp('servicetree').getChecked();
+				        treeCheckfalse(nodes);
+            }}
+				],
+        loader: new Ext.tree.TreeLoader({
+        	  dataUrl:'/msa/main.xp',
+						baseParams:{Fun:'msaltServiceTree'}
+        }),
+        root: new Ext.tree.AsyncTreeNode()
+		});
+		twoServiceTree.on('checkchange',function(node,checked){
+				rulesrv=document.getElementById('rulesrv').value;
+				if(checked){
+                if(node.leaf){
+                    if(node.id=='0'){
+                      rulesrv = '1' + rulesrv.substring(Number(node.id)+1);
+                    }else if(node.id=='499'){
+                      rulesrv = rulesrv.substring(0,Number(node.id)) +  '1';
+                    }else{
+                      rulesrv = rulesrv.substring(0,Number(node.id)) +  '1' + rulesrv.substring(Number(node.id)+1,500);
+                    }
+		            }
+								document.getElementById('rulesrv').value=rulesrv;
+				}else {
+								if(node.leaf){
+                    if(node.id=='0'){
+                      rulesrv = '0' + rulesrv.substring(Number(node.id)+1);
+                    }else if(node.id=='499'){
+                      rulesrv = rulesrv.substring(0,Number(node.id)) +  '0';
+                    }else{
+                      rulesrv = rulesrv.substring(0,Number(node.id)) +  '0' + rulesrv.substring(Number(node.id)+1,500);
+                    }
+		            }
+								document.getElementById('rulesrv').value=rulesrv;
+				}
+				//alert(document.getElementById('rulesrv').value);
+		});
+		twoServiceTree.loader.on("beforeload", function(loader, node) {
+	        loader.baseParams.topsrv=topsrv;
+	        loader.baseParams.rulesrv=document.getElementById('rulesrv').value;
+	  });
+		//添加 srvrulesrv
+		var srvrulesrv= new Ext.Panel({
+				region:'north',
+        split:true,
+        collapsible: true,
+        collapseMode: 'mini',
+        height:100,
+        frame:true,
+        minWidth: 150,
+        border: false,
+        //baseCls:'x-plain',
+        contentEl:'srvrulesrv'
+		});
+		var srvPanel = new Ext.TabPanel({
+        region:'center',
+        deferredRender:false,
+        autoScroll: true,
+        height:screen.height*0.7,
+        margins:'0 4 4 0',
+        activeTab:0,
+        items:[{
+            id:'srv-srv',
+            title: '对应以下服务',
+            closable:false,
+            autoScroll:false,
+        		layout:'column',
+						plain:true,
+						bbar:['->',
+							{icon: '/msa/images/saving.gif',
+							enableToggle:true,
+							cls: 'x-btn-text-icon details',
+            	tooltip:{text:'<b>保存该策略服务</b>'},
+            	text:'保存',
+            	//iconCls:'connect',
+            	handler:function(){
+            		Ext.Ajax.request({
+			          method : 'POST',
+			          url:'/msa/main.xp',
+			          success: function(response, options){
+			          		parent.xtzystore.load();
+			          		parent.addwin.close();
+			          },
+			          failure : function(){
+			          },
+			        	params:{Fun:'[$function$]',sname:document.getElementById('sname').value,ruleaction:document.getElementById('ruleaction').value,qosid:document.getElementById('qosid').value,rulesrv:document.getElementById('rulesrv').value,sid:document.getElementById('sid').value,ruleid:[$ruleid$]}
+							});
+            }}
+						],
+						items:[
+									{	columnWidth:.5,
+										items: [oneServiceTree]
+									},
+									{	columnWidth:.5,
+				   					items: [twoServiceTree]
+				   				}
+				    ]
+        }]
+    });
+    viewport = new Ext.Viewport({
+           layout:'border',
+           items:[srvrulesrv,srvPanel]});
+		myMask.hide();
+});
+	</SCRIPT>
+</HEAD>
+<body oncontextmenu="return true" topmargin=0 leftmargin=0 style="SCROLLBAR-FACE-COLOR: #f0f0f0;  overflow-x:hidden;  OVERFLOW: scroll; SCROLLBAR-SHADOW-COLOR: #f0f0f0; SCROLLBAR-3DLIGHT-COLOR: #f0f0f0; SCROLLBAR-ARROW-COLOR: #f0f0f0; SCROLLBAR-DARKSHADOW-COLOR: #cccccc;" >
+<div id="srvrulesrv" valign="top" align="center" STYLE="position:absolute; top=0;z-index:1;">
+<table width="90%" border="0" cellspacing="0" cellpadding="1" align="center" bordercolor="#B0BDD3" style="BORDER-COLLAPSE: collapse">
+	<input type="hidden" id="rulesrv" name="rulesrv" value="[$rulesrv$]">
+	<input type="hidden" id="sid" name="sid" value="[$sid$]">
+	<tr>
+		<TD VALIGN='middle'><font face='宋体' >名称： </font></TD>
+		<TD VALIGN='middle'>
+					<INPUT TYPE='text'  class="input"   id="sname" NAME="sname" VALUE="[$sname$]">
+		</TD>
+	</tr>
+	<tr>
+		<TD VALIGN='middle'><font face='宋体' >动作： </font></TD>
+		<TD VALIGN='middle'>
+			<select name="ruleaction" class="inputself0" id="ruleaction">
+				<option value="0">拒绝访问</option>
+				<option value="1" [$ruleaction1$]>允许访问</option>
+			</select>
+		</TD>
+	</tr>
+	<TR>
+		<TD VALIGN='middle'><FONT FACE='宋体' >选择通道: </font></TD>
+		<td>
+			<select name="qosid" class="inputself0" id="qosid">
+				<option value="0">不启动人员qos </option>
+			[$begintable qoslist$]
+				<option value="[$qosid$]" [$sel$]>[$qosname$]</option>
+			[$endtable$]
+			</select>
+		</td>
+	</TR>
+</table>
+</div>
+</BODY>
+</HTML>

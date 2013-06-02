@@ -1,0 +1,109 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>出口流量分析报告</title>
+<style type="text/css">
+<!--
+body {
+	margin-left: 0px;
+	margin-top: 0px;
+	margin-right: 0px;
+	margin-bottom: 0px;
+	font-family:"宋体", Arial;  
+	font-size:12px;
+	line-height:18px;
+}
+.titl {font-size:28px; line-height:48px; font-weight:bold;};
+.xiao {font-size:18px; line-height:36px; }
+-->
+</style></head>
+
+<body>
+<div style="width:815px; margin:auto;">
+  <img src="banner.jpg" width="815" height="136" />
+  <table width="100%" border="0" cellspacing="0" cellpadding="0">
+            <tr>
+              <td><table width="100%" border="0" cellpadding="0" cellspacing="0" bgcolor="#437fbe">
+                <tr>
+                  <td width="65"><img src="right-top.jpg" width="65" height="29" /></td>
+                  <td width="664" valign="bottom"><div style="margin-top:10px; margin-right:5px; float:left; color:#FFFFFF;">报告名称：[$reportname$]&nbsp;&nbsp;&nbsp;   报告时间：[[$lab$]] &nbsp;&nbsp;   报告种类：Daily Report &nbsp;&nbsp;  </a> </td>
+				  <td valign="bottom"> <div style="margin-top:10px; margin-right:5px;float:right; color:#FFFFFF;"><a  onclick='window.print();'>打印报告 </div></td>
+                </tr>
+              </table>
+
+  <table width="815" border="0" cellspacing="0">
+  <!--  <tr>
+      <td width="813"   colspan='4' align="center" valign="bottom" class="titl" >出口流量报告: [$reportname$]</td>
+    </tr>
+    <tr>
+      <td   colspan='4' align="center" valign="bottom" class="xiao" >[[$lab$]]</td>
+    </tr>   -->
+    <tr>
+      <td  height="20" colspan='4' valign="bottom" align="center" >&nbsp;</td>
+    </tr>
+    <tr>
+      <td><table width="100%" border="1" cellpadding="0" cellspacing="0" bordercolor="#d0d0d0" class="table" style="border-collapse:collapse; margin-top:3px; margin-bottom:3px; text-align:center;">
+          <tr>
+            <td width="239" height="32" bgcolor="#729ECB" class="bai">时间点[[$xunit$]]</td>
+            <td width="239" bgcolor="#729ECB" class="bai">平均上行速率[KB]</td>
+            <td width="239" bgcolor="#729ECB" class="bai">平均下行速率[KB]</td>
+            <td width="245" bgcolor="#729ECB" class="bai">平均总速率[KB]</td>
+          </tr>
+        [$begintable list2$]
+        <tr >
+          <td   >&nbsp;[$mytime$]</td>
+          <td  >&nbsp;[$ubyte$]</td>
+          <td   >&nbsp;[$dbyte$]</td>
+          <td  >&nbsp;[$abyte$]</td>
+        </tr>
+        [$endtable$]
+      </table></td>
+    </tr>
+  </table>
+</div>
+<div style="width:815px; margin:auto;"><table width="815" border="0" cellspacing="0" cellpadding="0">
+                <tr>
+                  <td width="815"><div style="margin-top:15px;">·当前出口流量访问的趋势图： </div></td>
+                </tr>
+                <tr>
+                  <td><div><table width="100%" border="0" cellpadding="0" cellspacing="0" bgcolor="#bfdae5">
+                    <tr>
+                      <td> 
+                          <div style="margin-bottom:20px; margin-right:20px; margin-left:20px; margin-top:35px; background-color:#FFFFFF; text-align:center">
+						  <img src="[$file1$]" width="623" height="349" /></div>                          
+					  </td>
+                    </tr>
+                  </table></div></td>
+                </tr>
+              </table>
+			  <br>
+			 <table width="815" border="0" cellspacing="0" cellpadding="0">
+                <tr>
+                  <td width="815"><div style="margin-top:15px;">·当前出口流量访问的趋势图： </div></td>
+                </tr>
+                <tr>
+                  <td><div><table width="100%" border="0" cellpadding="0" cellspacing="0" bgcolor="bfdae5">
+                    <tr>
+                      <td> 
+                          <div style="margin-bottom:20px; margin-left:20px; margin-right:20px; margin-top:35px; background-color:#FFFFFF; text-align:center">
+						  <img src="[$file2$]" width="623" height="349" /></div>                          
+					  </td>
+                    </tr>
+                  </table></div></td>
+                </tr>
+  </table>
+  
+  <table width="100%" border="0" cellspacing="0" cellpadding="0">
+      <tr>
+        <td width="13"><img src="up-1.jpg" width="13" height="68" /></td>
+        <td align="center" background="up-2.jpg" class="upfont"><br />
+          版权所有</td>
+        <td width="13"><img src="up-3.jpg" width="13" height="68" /></td>
+      </tr>
+    </table>
+  </div>   
+
+</body>
+</html>
+ 

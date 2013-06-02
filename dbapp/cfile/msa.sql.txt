@@ -1,0 +1,1067 @@
+create database msa;
+
+drop table msaVLanArea;
+create table msaVLanArea(
+ vlanid  int primary key,/* --端口号  */
+ intercept  int,/* --是否侦听*/
+ promisc    int,/* --混杂模式*/
+ switch    int, /*--数据传输方式*/
+ netvLan    int, /*--转发网口*/
+ IPAddress  varchar(19),/* --镜像IP*/
+ mask  varchar(15), /*--子网掩码mask*/
+ PassAway   varchar(12), /*--虚拟通道*/
+ apply     int /*--是否应用*/
+)
+
+
+drop table msaAdminArea;
+create table msaAdminArea (
+    id           int       primary key,      
+    ipstart      varchar(16),                  
+    ipend        varchar(16)
+);
+
+drop table msaadmuser;
+create table msaadmuser (
+    name       varchar(32)   primary key,  
+    password   varchar(32),    
+    lright     varchar(128), 
+    email      varchar(64),  
+    lasttime   int,     
+    bindip    varchar(32) default '',
+    grouplist1 char(201) default '00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000',
+    grouplist2 char(201) default '00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000',
+    grouplist3 char(201) default '00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000',
+    grouplist4 char(201) default '00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000',
+    grouplist5 char(201) default '00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000'
+);
+
+insert into msaadmuser (name,password,lright,email,lasttime,bindip) values('admin','qoQhDpRa4xOAwkBtuS0mq0','1111111111111111111111111111','',0,'');
+
+drop table msaadmlog;
+create table msaadmlog (
+    name       varchar(32),      
+    sdate      varchar(24),
+    subject    varchar(254),       /*  */
+    loglevel   int                 /*1,2,3,4,5*/
+);
+
+drop table msaGroup;
+create table msaGroup (
+    id             int   primary key, 
+    pid            int   default 0, 
+    name           varchar(64) default 'DefaultGroup',
+    mydesc         varchar(128) default '',
+    level          int   default 0
+);
+create index msagroup_index1 on msaGroup(id);
+create index msagroup_index2 on msaGroup(pid);
+create index msagroup_index3 on msaGroup(name);
+
+insert into msaGroup values('0','0','DefaultGroup','DefaultGroup','0');   
+
+
+drop table msaPolicy;
+create table msaPolicy (
+    pid     int  primary key ,
+    pname   varchar(48) not null,
+    pdesc   varchar(64) default ''
+);
+insert into msaPolicy (pid,pname,pdesc) values (0,'defaultPolicy','default policy');
+
+
+drop table msaUser;
+create table msaUser (
+    userid      int   primary key,
+    username    varchar(32),       
+    dispname    varchar(32), 
+    Certificate_type  smallint default 0,
+		Certificate_code  varchar(24)  default '',
+		sex               smallint default 0,
+    password    varchar(32),
+    groupid0    int default 0,      /*gid */
+    groupid1    int default 0,      /*gid */
+    groupid2    int default 0,      /*gid */
+    groupid3    int default 0,      /*gid */
+    groupid4    int default 0,      /*gid */
+    bindemail   varchar(64), 
+    bindip      varchar(16),
+    bindmac     varchar(32), 
+    useflags    smallint default 0,              /*10禁止访问 9免监控 0正常*/      
+    ratelimit   int  default 0,                  /*带宽*/
+    ratetype    int  default 0,                  /*0共享  1独享*/
+    topSrvNameList varchar(36) default '11111111111111111111111111111111111',
+    addtime     bigint default 0,       
+    locktime    bigint default 0,                /*该用户有效期限*/
+    lasttime    bigint default 0,                /*用户最后一次上线时间*/
+    lLimitBytes    bigint default 0,             /*每天最大的上网流量*/
+    lLimitTimes    int default 0,                /*每天最大的上网时间*/
+    lAllUpFlow     bigint default 0, 	           /*总的上行流量*/
+    lAllDownFlow   bigint default 0,             /*总的下行流量*/
+    lAllTime       int default 0,                /*总的上网时间*/
+    lLimitBytesw   bigint default 0,             /*每星期最大的上网流量*/
+    lLimitTimesw   int default 0,                /*每星期最大的上网时间*/
+    lAllUpFloww    bigint default 0, 	           /*星期的上行流量*/
+    lAllDownFloww  bigint default 0,             /*星期总的下行流量*/
+    lAllTimew    int default 0,                  /*星期总的上网时间*
+    lLimitBytesm   bigint default 0,             /*每月最大的上网流量*/
+    lLimitTimesm   int default 0,                /*每月最大的上网时间*/
+    lAllUpFlowm    bigint default 0, 	           /*月总的上行流量*/
+    lAllDownFlowm  bigint default 0,             /*月总的下行流量*/
+    lAllTimem    int default 0,                  /*月总的上网时间*/
+    moreflag     varchar(32) default '00000000000000000000000000000000',
+    policyid     varchar(128) default '00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000',
+    jftype      int    default 0,  
+    accountnum  float  default 0, 
+    maxpackage  int    default 0, 
+    maxBytes    bigint    default 0,
+		maxudp     int default 0,      /* 最多udp连接 */   
+    maxtcp     int default 0,      /*  最多tcp连接*/
+    maxudpp    int default 0,      /*  每分最多udp包速率*/ 
+    maxtcpp    int default 0,      /*  每分最多tcp包速率*/ 
+    maxupp     int default 0,      /*  每分up包速率*/ 
+    maxdownp   int default 0,      /*  每分down包速率*/  
+    maxsp      int default 0,      /*  每分128字节小包速率*/ 
+    maxnc      int default 0       /*  每分最多新建连接数目*/ 
+); 
+ 
+/* moreflag  1 noftp 2 nopost 3 nomsn 4 noqq*/  
+create UNIQUE index msaUser_index on msaUser (username);
+create  index msaUser_index2 on msaUser (bindip);
+
+
+drop table msaqos;
+create table msaqos(
+    sid            int      primary key,
+    level          int      default 0,
+    qosname        char(128) default '',
+    qosrated       int default 0,  /*下载带宽数值峰值*/
+    qosrateu       int default 0,  /*上传带宽数值峰值*/
+    qosmixd        int default 0, /*下载带宽保证*/
+    qosmixu        int default 0, /*上传带宽保证*/
+    prio          int default  0
+);
+create index msaqos_ind0 on msaqos (sid);
+
+drop table nassrv;
+create table nassrv(
+		srvid           int       primary key,  /*协议Id*/
+		topsrvid        int default 0,  /*协议Id*/
+		denytype        int default 0,  /*0:拒绝服务  1:拒绝dip 2:拒绝sip*/
+		srvname         varchar(32),            /*协议名称v*/
+		srvdesc         varchar(64),            /*协议名称*/
+		level           int  default 0,         /*网络危害程度*/
+		matchDirect     int   default 0,        /*匹配方向 0up 1down 2both*/
+		matchAgree      int   default 0,        /*匹配协议0 both 6 17*/
+		matchportl      varchar(16),            /*匹配端口下*/
+		matchportu      varchar(16),            /*匹配端口上*/
+		systemcheck     int   default 0,        /*系统保留使用,是不是做系统服务函数检查*/
+		matchload       int   default 0,        /*自定义服务 http内容匹配负载检查*/
+		srvdescmatch1   int   default 0,        /*自定义服务 顺序起始字节下标————类型3*/
+		srvdescmatch2   int   default 0,        /*自定义服务 顺序截取字节数目————类型3*/
+		srvdescmatch3   varchar(16) default '', /*自定义服务 顺序截取字符16进制————类型3 判断位必须为2倍，16进制*/
+		srvascmatchtype int   default 0,        /*自定义服务 0 and; 1or  */
+		srvascmatch1    int   default 0,        /*自定义服务 倒序起始字节下标————类型4 */ 
+		srvascmatch2    int   default 0,        /*自定义服务 倒序起始字节数目————类型4*/
+		srvascmatch3    varchar(16)  default '' /*自定义服务 倒序截取字符————类型4判断位必须为2倍，16进制*/
+);
+/*
+/app/msa/support/msasrvip/srvid
+		srvip           varchar(16),            /*服务器IP————类型1*/
+/app/msa/support/msasrdomain/srvid		
+		srvarea         varchar(16),            /*域名解析————类型2*/
+*/
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (0,0,0,'其他服务','其他服务,建议适当流控',3,0,0,0,0,1);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (1,1,0,'政府网站','政府类网站',0,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (2,1,0,'宗教网站','宗教团体网站',0,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (3,1,0,'军事网站','军事网站',0,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (4,1,0,'教育教程网站','教育教程网站',0,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (5,1,0,'法律网站','法律网站',0,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (6,1,0,'体育网站','体育网站',0,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (7,1,0,'艺术网站','艺术网站',0,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (8,1,0,'健康网站','健康网站',0,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (9,1,0,'交通网站','交通网站',0,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (10,1,0,'天气网站','天气网站',0,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (11,1,0,'公司企业网站','公司企业网站',0,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (12,1,0,'搜索网站','搜索引擎网站',1,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (13,1,0,'下载网站','下载网站可能会造成流量大增',3,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (14,1,0,'邮箱网站','邮箱网站',1,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (15,1,0,'人才职位网站','人才职位网站',2,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (16,1,0,'BT网站','BT网站,会造成流量大增',4,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (17,1,0,'IT综合网站','IT综合网站',0,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (18,1,0,'新闻与媒体网站','新闻与媒体网站',2,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (19,1,0,'博客网站','博客网站',1,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (20,1,0,'广播电视影视网站','广播电视影视网站',3,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (21,1,0,'网上电话网站','网上电话网站',3,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (22,1,0,'汽车网站','汽车相关网站',2,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (23,1,0,'手机网站','手机相关网站',2,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (24,1,0,'服装网站','服装相关网站',2,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (25,1,0,'宠物网站','宠物相关网站',2,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (26,1,0,'旅游网站','旅游相关网站',2,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (27,1,0,'购物网站','购物网站',3,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (28,1,0,'音乐网站','音乐网站',3,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (29,1,0,'动漫与Flash网站','动漫与Flash网站',3,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (30,1,0,'美食时尚生活网站','美食时尚生活网站',2,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (31,1,0,'文学网站','网上电话网站',2,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (32,1,0,'图铃图片网站','图铃图片网站',2,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (33,1,0,'聊天、交友网站','聊天、交友网站',3,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (34,1,0,'论坛、社区网站','论坛、社区网站',2,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (35,1,0,'同学录网站','同学录网站',2,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (36,1,0,'搞笑明星娱乐圈','搞笑明星娱乐圈',2,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (37,1,0,'星座网站','星座网站',2,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (38,1,0,'型男型女模特','型男型女模特',2,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (39,1,0,'网络广告','网络广告',3,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (40,1,0,'网络存储','网络存储',3,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (41,1,0,'IT资源服务商','IT资源服务商',0,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (42,1,0,'其他网站','其他网站',1,0,6,80,80,1);
+
+
+
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (43,2,0,'webmail提交','webmail表单提交',1,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (44,2,0,'webbbs提交','webbbs提交',2,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (45,2,0,'web聊天提交','web聊天提交',2,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (46,2,0,'HTTP-RAR文件上传','HTTP方式RAR压缩格式的文件上传',2,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (47,2,0,'HTTP-Zip文件上传','HTTP-Zip文件上传',2,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (48,2,0,'HTTP-TGZ文件上传','HTTP-TGZ文件上传',2,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (49,2,0,'HTTP-WORD文件上传','HTTP-WORD文件上传',2,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (50,2,0,'HTTP-Excel文件上传','HTTP-Excel文件上传',2,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (51,2,0,'HTTP-PDF文件上传','HTTP-PDF文件上传',2,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (52,2,0,'HTTP-PPT文件上传','HTTP-PPT文件上传',2,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (53,2,0,'HTTP-TXT文件上传','HTTP-TXT文件上传',1,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (54,2,0,'HTTP-Exe文件上传','HTTP-Exe文件上传',2,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (55,2,0,'HTTP-JPG文件上传','HTTP-JPG文件上传',2,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (56,2,0,'HTTP-Gif文件上传','HTTP-Gif文件上传',1,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (57,2,0,'HTTP-无拓展名名文件上传','HTTP-无拓展名名文件上传',3,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (58,2,0,'HTTP其他文件上传','HTTP其他文件上传',1,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (59,2,0,'其他HTTP-POST','其他HTTP-POST',1,0,6,0,0,0);
+
+
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (60,3,0,'优酷视频','优酷视频',3,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (61,3,0,'sohu视频','sohu视频',2,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (62,3,0,'酷6视频','酷6视频',3,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (63,3,0,'土豆视频','土豆视频',3,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (64,3,0,'sina视频','sina视频',2,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (65,3,0,'网易视频','网易视频',2,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (66,3,0,'中国网络电视台','中国网络电视台',2,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (67,3,0,'百度视频','百度视频',3,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (68,3,0,'搜狗视频','搜狗视频',3,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (69,3,0,'腾讯视频','腾讯视频',3,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (70,3,0,'芒果TV','芒果TV',3,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (71,3,0,'电影网','电影网',3,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (72,3,0,'56原创视频','56原创视频',3,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (73,3,0,'乐视网','乐视网',3,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (74,3,0,'youtube','youtube',3,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (75,3,0,'在线FLV播放','在线FLV播放',3,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (76,3,0,'在线FLASH播放','在线FLASH播放',3,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (77,3,0,'HTTP-MP3下载','HTTP-MP3下载',3,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (78,3,0,'HTTP-AVI下载','HTTP-AVI下载',3,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (79,3,0,'HTTP-RM下载','HTTP-RM下载',3,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (80,3,0,'HTTP-MP4下载','HTTP-MP4下载',3,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (81,3,0,'HTTP-3GP下载','HTTP-3GP下载',3,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (82,3,0,'HTTP音频文件数据流','HTTP音频文件数据流',2,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (83,3,0,'HTTP视频文件数据流','HTTP视频文件数据流',2,0,6,0,0,0);
+
+
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (84,4,0,'HTTP多进程下载','HTTP多进程下载',3,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (85,4,0,'HTTP-RAR压缩包','RAR格式文件压缩包通过http协议下载,系统智能识别',3,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (96,4,0,'HTTP-Zip压缩包','HTTP-Zip压缩包',3,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (87,4,0,'HTTP-TGZ压缩包','HTTP-TGZ压缩包',3,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (88,4,0,'HTTP-PDF下载','HTTP-PDF下载',3,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (89,4,0,'HTTP-word等office2003文件下载','HTTP-word等office2003文件下载',2,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (90,4,0,'HTTP-word等office2010文件下载','office2010等ooxml格式文件下载',2,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (91,4,0,'HTTP-EXE与DLL等执行类程序','HTTP-EXE与DLL等执行类程序',4,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (92,4,0,'HTTP-MSI安装程序下载','HTTP-MSI安装程序下载',3,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (93,4,0,'HTTP-batreg等不安全文件下载','安全性很差,建议禁止',5,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (94,4,0,'HTT其他二进制流下载','HTT其他二进制流下载',3,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (95,4,0,'HTTP-js脚本数据','HTTP-js脚本数据',1,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (96,4,0,'HTTP-XML数据','HTTP-XML数据',2,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (97,4,0,'其他应用数据流或下载','其他应用数据流或下载',2,0,6,0,0,0);
+
+
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (98,5,0,'非标准http数据访问','可能是通过80端口的其他应用数据流',2,0,6,0,0,0);
+
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (99,6,0,'BMP图片HTTP下载','BMP图片HTTP下载',1,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (100,6,0,'GIF图片HTTP下载','GIF图片HTTP下载',1,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (101,6,0,'JPEG图片HTTP下载','JPEG图片HTTP下载',1,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (102,6,0,'PNG图片HTTP下载','PNG图片HTTP下载',1,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (103,6,0,'其他HTTP-Image流','其他HTTP-Image流',1,0,6,0,0,0);
+
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (104,7,0,'rayfile文件传输','rayfile文件传输',3,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (105,7,0,'VDISK威盘','VDISK威盘',3,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (106,7,0,'纳米盘','纳米盘',3,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (107,7,0,'讯6网盘','讯6网盘',3,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (108,7,0,'YunFile网盘','YunFile网盘',3,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (109,7,0,'hotfile网盘','hotfile网盘',3,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (110,7,0,'oron网盘','oron网盘',3,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (111,7,0,'rapidshare','rapidshare',3,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (112,7,0,'DBank网盘','DBank网盘',3,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (113,7,0,'115网盘','115网盘',3,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (114,7,0,'千脑网盘','千脑网盘',3,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (115,7,0,'QQ硬盘','QQ硬盘',3,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (116,7,0,'金山快盘','金山快盘',3,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (117,7,0,'酷盘','酷盘',3,0,6,0,0,0);
+
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (118,8,0,'加密HTTPS协议','加密HTTPS协议',1,0,6,443,443,1);
+
+
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (119,9,0,'qq','qq',1,0,17,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (120,9,0,'msn','msn',1,0,6,1863,1863,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (121,9,0,'skype','skype',2,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (122,9,0,'IRC','IRC',1,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (123,9,0,'YahooMsg','YahooMsg',1,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (124,9,0,'Taobao旺旺','Taobao旺旺',2,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (125,9,0,'旺旺文件传输','旺旺文件传输',2,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (126,9,0,'gtalk','gtalk',1,0,6,5222,5222,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (127,9,0,'网易泡泡','网易泡泡',1,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (128,9,0,'新浪UC','新浪UC',1,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (129,9,0,'飞信','飞信',1,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (130,9,0,'webqq','webqq',1,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (131,9,0,'web雅虎通','web雅虎通',1,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (132,9,0,'webMSN','webMSN',1,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (133,9,0,'ICQ','ICQ',1,0,6,0,0,0);
+
+
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (134,10,0,'SIP协议数据','SIP协议数据',3,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (135,10,0,'RTP数据流','RTP数据流',3,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (136,10,0,'RTCP数据包','RTCP数据包',3,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (137,10,0,'RTSP数据流','RTSP数据流',3,0,6,5222,5222,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (138,10,0,'H323协议','H323协议',3,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (139,10,0,'UUCall网络电话','UUCall网络电话',3,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (140,10,0,'KC网络电话','KC网络电话',3,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (141,10,0,'net2phone','net2phone',3,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (142,10,0,'微软livemetting','微软livemetting',3,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (143,10,0,'MMS流媒体服务','MMS流媒体服务',3,0,6,0,0,0);
+
+
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (144,11,0,'迅雷协议','迅雷协议',4,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (145,11,0,'BT协议','BT协议',4,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (146,11,0,'电驴协议','电驴协议',4,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (147,11,0,'网际快车','网际快车',4,0,6,5222,5222,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (148,11,0,'KaZaA','KaZaA',4,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (149,11,0,'Gnutella','Gnutella',4,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (150,11,0,'WinMX','WinMX',4,0,6,0,0,0);
+
+
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (151,12,0,'PPTV','PPTV',4,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (152,12,0,'QQLive','QQLive',4,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (153,12,0,'PPS网络电视','PPS网络电视',4,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (154,12,0,'UUSee网络电视','UUSee网络电视',4,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (155,12,0,'风行网络电视','风行网络电视',4,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (156,12,0,'QVOD快播','QVOD快播',4,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (157,12,0,'CCTVLive','CCTVLive',4,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (158,12,0,'皮皮播放','皮皮播放',4,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (159,12,0,'暴风影音软件','暴风影音软件',4,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (160,12,0,'好易网视','好易网视',4,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (161,12,0,'流星网络电视','流星网络电视',4,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (162,12,0,'天天看高清影视','天天看高清影视',4,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (163,12,0,'ppmate','ppmate',4,0,6,0,0,0);
+
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (164,13,0,'FTP命令','FTP命令',3,0,6,21,21,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (165,13,0,'FTP数据流','FTP数据流',3,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (166,13,0,'SVN版本管理服务','SVN版本管理服务',3,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (167,13,0,'tftp服务','tftp服务',3,0,17,69,69,0);
+
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (168,14,0,'HTTP服务器','HTTP服务器',0,1,6,80,80,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (169,14,0,'SMTP服务器','SMTP服务器',0,1,6,25,25,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (170,14,0,'POP3服务器','POP3服务器',0,1,6,110,110,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (171,14,0,'HTTPS服务器','HTTPS服务器',0,1,6,443,443,0);
+
+
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (172,15,0,'DNS查询','DNS查询',0,0,17,53,53,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (173,15,0,'SNMP服务','SNMP服务',0,0,17,161,162,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (174,15,0,'NTP服务','NTP服务',0,0,0,123,123,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (175,15,0,'NETBIOS协议','NETBIOS协议',0,2,0,137,139,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (176,15,0,'DHCP协议','DHCP协议',0,2,17,67,68,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (177,15,0,'smb协议','smb协议',0,2,0,445,445,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (178,15,0,'NFS服务','NFS服务',0,0,17,2049,2049,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (179,15,0,'wins服务','wins服务',0,0,0,42,42,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (180,15,0,'RPC服务','RPC服务',0,0,0,135,135,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (181,15,0,'RPCoverHTTP服务','RPCoverHTTP服务',0,0,6,593,593,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (182,15,0,'NNTP','NNTP',0,0,6,119,119,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (183,15,0,'IP打印服务','IP打印服务',0,0,6,515,515,0);
+
+
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (184,16,0,'LDAP目录服务','LDAP目录服务',0,0,0,389,389,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (185,16,0,'kerberos认证','kerberos认证',0,0,0,88,88,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (186,16,0,'radiusServer','radiusServer',0,0,17,1812,1813,0);
+
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (187,17,0,'sqlserver服务','sqlserver服务',0,0,6,1433,1433,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (188,17,0,'oracle服务','oracle服务',0,0,6,1521,1521,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (189,17,0,'mysql服务','mysql服务',0,0,6,3306,3306,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (190,17,0,'postgres服务','postgres服务',0,0,6,0,0,0);
+
+
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (191,18,0,'SMTP邮件','SMTP邮件',0,0,6,25,25,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (192,18,0,'POP3邮件','POP3邮件',0,0,6,110,110,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (193,18,0,'IMAP4服务','IMAP4服务',0,0,6,143,143,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (194,18,0,'IMAP4加密服务','IMAP4加密服务',0,0,6,993,993,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (195,18,0,'X.400MTA','ExchageServerX400MTA',0,0,6,102,102,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (196,18,0,'POP3加密邮件服务','POP3加密邮件服务',0,0,6,995,995,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (197,18,0,'SMTP加密邮件服务','SMTP加密邮件服务',0,0,6,465,465,0);
+
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (198,19,0,'windows远程桌面','windows远程桌面',0,0,6,3389,3389,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (199,19,0,'SSH','加密的Shellprotocol',0,0,6,22,22,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (200,19,0,'Telnet','Telnet',0,0,6,23,23,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (201,19,0,'pcanywhere','pcanywhere',0,0,6,5631,5631,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (202,19,0,'VNC协议','VNC协议',0,0,6,5900,5900,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (203,19,0,'Xwindows','Xwindows',0,0,6,6000,6000,0);
+
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (204,20,0,'在线代理服务网站','在线代理服务网站',3,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (205,20,0,'HTTP代理','HTTP代理',3,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (206,20,0,'Socks5代理','Socks5代理',3,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (207,20,0,'自由门代理','自由门代理',4,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (208,20,0,'无界破网工具','无界破网工具',4,0,6,0,0,0);
+
+
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (209,21,0,'银行网站','银行网站',1,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (210,21,0,'证券与金融网站','证券与金融网站',2,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (211,21,0,'保险公司网站','保险公司网站',1,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (212,21,0,'房地产网站','房地产网站',2,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (213,21,0,'大智慧股票软件','大智慧股票软件',2,0,6,22223,22223,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (214,21,0,'同花顺股票软件','同花顺股票软件',2,0,6,8601,8601,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (215,21,0,'钱龙旗舰股票软件','钱龙旗舰股票软件',2,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (216,21,0,'指南针股票软件','指南针股票软件',2,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (217,21,0,'证券之星股票软件','证券之星股票软件',2,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (218,21,0,'行情眼股票软件','行情眼股票软件',2,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (219,21,0,'益盟操盘手软件','益盟操盘手软件',2,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (220,21,0,'炒股(盯盘)大师','炒股(盯盘)大师',2,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (221,21,0,'盘口王股票软件','盘口王股票软件',2,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (222,21,0,'海通委托交易','海通委托交易',2,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (223,21,0,'海通证券软件','海通证券软件',2,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (224,21,0,'东方财富通软件','东方财富通软件',2,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (225,21,0,'通达信软件','通达信软件',2,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (226,21,0,'安信行情软件','安信行情软件',2,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (227,21,0,'海通证券','海通证券',2,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (228,21,0,'申银万国','申银万国',2,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (229,21,0,'银河证券','银河证券',2,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (230,21,0,'国信证券','国信证券',2,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (231,21,0,'招商证券','招商证券',2,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (232,21,0,'国泰君安','国泰君安',2,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (233,21,0,'广发证券','广发证券',2,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (234,21,0,'中信证券','中信证券',2,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (235,21,0,'光大证券行情','光大证券行情',2,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (236,21,0,'建银投资','建银投资',2,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (237,21,0,'安信证券','安信证券',2,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (238,21,0,'东方证券','东方证券',2,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (239,21,0,'方正证券','方正证券',2,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (240,21,0,'华泰证券','华泰证券',2,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (241,21,0,'银泰证券','银泰证券',2,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (242,21,0,'金元证券','金元证券',2,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (243,21,0,'联合证券','联合证券',2,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (244,21,0,'齐鲁证券','齐鲁证券',2,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (245,21,0,'中信金通证券','中信金通证券',2,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (246,21,0,'兴业证券','兴业证券',2,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (247,21,0,'长江证券','长江证券',2,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (248,21,0,'中国银行相关网站与服务','中国银行相关网站与服务',2,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (249,21,0,'工商银行相关网站与服务','工商银行相关网站与服务',2,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (250,21,0,'建设银行相关网站与服务','建设银行相关网站与服务',2,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (251,21,0,'农业银行相关网站与服务','农业银行相关网站与服务',2,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (252,21,0,'交通银行相关网站与服务','交通银行相关网站与服务',2,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (253,21,0,'招商银行','招商银行',2,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (254,21,0,'华夏银行','华夏银行',2,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (255,21,0,'民生银行','民生银行',2,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (256,21,0,'光大银行','光大银行',2,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (257,21,0,'兴业银行','兴业银行',2,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (258,21,0,'广发银行','广发银行',2,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (259,21,0,'深圳发展银行','深圳发展银行',2,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (260,21,0,'北京银行','北京银行',2,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (261,21,0,'浦东发展银行','浦东发展银行',2,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (262,21,0,'中信银行','中信银行',2,0,6,0,0,0);
+
+
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (263,22,0,'边锋游戏平台','边锋游戏平台',3,0,6,5100,5100,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (264,22,0,'联众游戏大厅','联众游戏大厅',3,0,6,2000,2000,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (265,22,0,'QQ游戏大厅','QQ游戏大厅',3,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (266,22,0,'亿乐游戏','亿乐游戏',3,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (267,22,0,'浩方电竞平台','浩方电竞平台',3,0,6,1201,1201,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (268,22,0,'sina游戏','sina游戏',3,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (269,22,0,'sohu游戏','sohu游戏',3,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (270,22,0,'网易游戏','网易游戏',3,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (271,22,0,'盛大游戏','盛大游戏',3,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (272,22,0,'VS竞技游戏平台','VS竞技游戏平台',3,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (273,22,0,'百度游戏','百度游戏',3,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (274,22,0,'游戏网站','游戏网站',3,0,6,0,0,0);
+
+
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (275,23,0,'传奇3','传奇3',3,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (276,23,0,'穿越火线','穿越火线',3,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (277,23,0,'地下城与勇士','地下城与勇士',3,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (278,23,0,'天下2','天下2',3,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (279,23,0,'传奇外传','传奇外传',3,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (280,23,0,'剑侠情缘3','剑侠情缘3',3,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (281,23,0,'征途','征途',3,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (282,23,0,'跑跑卡丁车','跑跑卡丁车',3,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (283,23,0,'魔兽世界','魔兽世界',3,0,6,5100,5100,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (284,23,0,'泡泡堂','泡泡堂',3,0,6,2000,2000,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (285,23,0,'热血江湖','热血江湖',3,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (286,23,0,'问道','问道',3,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (287,23,0,'大话西游II','大话西游II',3,0,6,1201,1201,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (288,23,0,'梦幻西游','梦幻西游',3,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (289,23,0,'劲舞团','劲舞团',3,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (290,23,0,'龙之谷','龙之谷',3,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (291,23,0,'星辰变','星辰变',3,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (292,23,0,'大唐无双','大唐无双',3,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (293,23,0,'凡人修仙传','凡人修仙传',3,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (294,23,0,'成吉思汗2','成吉思汗2',3,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (295,23,0,'倩女幽魂','倩女幽魂',3,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (296,23,0,'梦三国','梦三国',3,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (297,23,0,'永恒之塔','永恒之塔',3,0,6,1201,1201,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (298,23,0,'龙之谷','龙之谷',3,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (299,23,0,'洛奇英雄传','洛奇英雄传',3,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (300,23,0,'神魔大陆','神魔大陆',3,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (301,23,0,'热血传奇','热血传奇',3,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (302,23,0,'降龙之剑','降龙之剑',3,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (303,23,0,'大明龙权','大明龙权',3,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (304,23,0,'坦克世界','坦克世界',3,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (305,23,0,'反恐精英','反恐精英',3,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (306,23,0,'鹿鼎记','鹿鼎记',3,0,6,0,0,0);
+
+
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (307,24,0,'网易音乐盒','网易音乐盒',3,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (308,24,0,'咪咕音乐','咪咕音乐',3,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (309,24,0,'谷歌音乐盒','谷歌音乐盒',3,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (310,24,0,'MVBOX','MVBOX',3,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (311,24,0,'多米音乐','多米音乐',3,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (312,24,0,'百度音乐盒','百度音乐盒',3,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (313,24,0,'QQ音乐','QQ音乐',3,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (314,24,0,'倾听网络收音机','倾听网络收音机',3,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (315,24,0,'酷吧音乐盒','酷吧音乐盒',3,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (316,24,0,'酷狗音乐','酷狗音乐',3,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (317,24,0,'酷我音乐盒','酷我音乐盒',3,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (318,24,0,'搜狗音乐盒','搜狗音乐盒',3,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (319,24,0,'有道音乐盒','有道音乐盒',3,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (320,24,0,'千千静听','千千静听',3,0,6,0,0,0);
+
+
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (321,25,0,'间谍钓鱼网站','间谍钓鱼网站',5,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (322,25,0,'感染病毒的网站','感染病毒的网站',5,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (323,25,0,'其他攻击流量','其他攻击流量',5,0,6,0,0,0);
+
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (324,26,0,'政治与理念网站','政治与理念网站',2,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (325,26,0,'具有侵略性内容网站','具有侵略性内容网站',4,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (326,26,0,'色情网站','色情网站',4,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (327,26,0,'裸体或暴露','裸体或暴露',3,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (328,26,0,'盗版和破解网站','盗版和破解网站',3,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (329,26,0,'枪支武器网站','枪支武器网站',4,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (330,26,0,'宣扬暴力网站','宣扬暴力网站',4,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (331,26,0,'博彩类网站','博彩类网站',3,0,6,0,0,0);
+
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (332,27,0,'反病毒反间谍网站','反病毒反间谍网站',0,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (333,27,0,'升级站点与服务','升级站点与服务',0,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (334,27,0,'360升级服务','360升级服务',0,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (335,27,0,'microsoft升级服务','microsoft升级服务',0,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (336,27,0,'金山毒霸update','金山毒霸update',0,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (337,27,0,'卡巴斯基升级服务','卡巴斯基升级服务',0,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (338,27,0,'赛门铁克升级','赛门铁克升级',0,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (339,27,0,'苹果iTunes下载与同步服务','苹果iTunes下载与同步服务',2,0,6,0,0,0);
+
+
+
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (451,28,0,'自定义服务1','自定义服务1',1,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (452,28,0,'自定义服务2','自定义服务2',1,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (453,28,0,'自定义服务3','自定义服务3',1,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (454,28,0,'自定义服务4','自定义服务4',1,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (455,28,0,'自定义服务5','自定义服务5',1,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (456,28,0,'自定义服务6','自定义服务6',1,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (457,28,0,'自定义服务7','自定义服务7',1,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (458,28,0,'自定义服务8','自定义服务8',1,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (459,28,0,'自定义服务9','自定义服务9',1,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (460,28,0,'自定义服务10','自定义服务10',1,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (461,28,0,'自定义服务11','自定义服务11',1,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (462,28,0,'自定义服务12','自定义服务12',1,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (463,28,0,'自定义服务13','自定义服务13',1,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (464,28,0,'自定义服务14','自定义服务14',1,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (465,28,0,'自定义服务15','自定义服务15',1,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (466,28,0,'自定义服务16','自定义服务16',1,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (467,28,0,'自定义服务17','自定义服务17',1,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (468,28,0,'自定义服务18','自定义服务18',1,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (469,28,0,'自定义服务19','自定义服务19',1,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (470,28,0,'自定义服务20','自定义服务20',1,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (471,28,0,'自定义服务21','自定义服务21',1,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (472,28,0,'自定义服务22','自定义服务22',1,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (473,28,0,'自定义服务23','自定义服务23',1,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (474,28,0,'自定义服务24','自定义服务24',1,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (475,28,0,'自定义服务25','自定义服务25',1,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (476,28,0,'自定义服务26','自定义服务26',1,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (477,28,0,'自定义服务27','自定义服务27',1,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (478,28,0,'自定义服务28','自定义服务28',1,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (479,28,0,'自定义服务29','自定义服务29',1,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (480,28,0,'自定义服务30','自定义服务30',1,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (481,28,0,'自定义服务31','自定义服务31',1,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (482,28,0,'自定义服务32','自定义服务32',1,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (483,28,0,'自定义服务33','自定义服务33',1,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (484,28,0,'自定义服务34','自定义服务34',1,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (485,28,0,'自定义服务35','自定义服务35',1,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (486,28,0,'自定义服务36','自定义服务36',1,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (487,28,0,'自定义服务37','自定义服务37',1,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (488,28,0,'自定义服务38','自定义服务38',1,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (489,28,0,'自定义服务39','自定义服务39',1,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (490,28,0,'自定义服务40','自定义服务40',1,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (491,28,0,'自定义服务41','自定义服务41',1,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (492,28,0,'自定义服务42','自定义服务42',1,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (493,28,0,'自定义服务43','自定义服务43',1,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (494,28,0,'自定义服务44','自定义服务44',1,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (495,28,0,'自定义服务45','自定义服务45',1,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (496,28,0,'自定义服务46','自定义服务46',1,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (497,28,0,'自定义服务47','自定义服务47',1,0,6,0,0,0);
+insert into nassrv (srvid,topsrvid,denytype,srvname,srvdesc,level,matchDirect,matchAgree,matchportl,matchportu,systemcheck) values (498,28,0,'自定义服务48','自定义服务48',1,0,6,0,0,0);
+
+
+
+
+drop table nasschedule;
+create table nasschedule (
+    schid      int   primary key,
+    schname    varchar(32) not null, 
+    schdesc    varchar(64) default '',
+    schtime    varchar(200) default '0',
+    schtime1    varchar(200) default '0'
+);
+insert into nasschedule values (1,'WorkDay','WorkDay','000000000000000000000000000000000111111111000000000000000111111111000000000000000111111111000000000000000111111111000000000000000111111111000000000000000000000000000000','000000000000000000000000000000000111111111000000000000000111111111000000000000000111111111000000000000000111111111000000000000000111111111000000000000000000000000000000'); 
+
+drop table nasjjr;
+create table nasjjr (
+    jjrid      int   primary key,
+    jjrname    varchar(32) not null, 
+    jjrdesc    varchar(64) default '',
+    jjrtime    varchar(200) default '0',
+    jjrtime1   varchar(200) default '0'
+);
+insert into nasjjr values (1,'2011工作日','2011工作日','000000000000000000000000000000000111111111000000000000000111111111000000000000000111111111000000000000000111111111000000000000000111111111000000000000000000000000000000','000000000000000000000000000000000111111111000000000000000111111111000000000000000111111111000000000000000111111111000000000000000111111111000000000000000000000000000000'); 
+
+
+
+drop table nasNetArea;
+create table nasNetArea (
+    id            int   primary key,       /* 记录标识     */
+    ipstart       varchar(16),             /* 起始IP地址   */
+    ipend         varchar(16),             /* 终止IP地址   */
+    netflag       smallint,      	         /* 网络标识  1--基于ip帮定   2mac帮定 3主机帮定 5NT域验证   8本地严整  99--免监控 100禁止访问 */
+    ipdesp        varchar(64),
+    snmpnum       int default 0,
+    nohashcheck   int default 0,
+    homeurl       varchar(250),
+    groupid       int default 0, 
+    policyid      int default 0 
+);
+
+drop table nasPortInfo;
+create table nasPortInfo (
+  id         int   primary key,       /* 记录标识     */	
+	lPortStart int not null,
+	lPortEnd   int not null,
+	lFlag      int default 0, /* 该tcp端口是否被记录  3：仅仅监控 2:监控并记录  9：免监控 10 禁止访问*/
+	lProp      int default 1, /* 1 tcp  2 udp */
+	isLocal     int default 0  /*1 local 0 remote 2 both*/  
+);
+
+
+drop table msatimereport;
+create table msatimereport (
+    rtime       int,
+		sdate       char(10),               /* 日期      */
+		hours	    int,                      /* hours      */
+		mintue	    int,                    /* mintue     */
+    ubytes      bigint,                 /* 上行总流量  */
+		dbytes      bigint,                 /* 下行总流量   */
+		tcpconnect   int,                   /* tcp  */
+    udpconnect  int,                    /* udp  */
+		onlineuser   int                    /* onlineuser  */
+);
+
+
+drop table msatimesrvreport;
+create table msatimesrvreport (
+		sdate       char(10),               /* 日期      */
+    hours	      int,                    /* 用户ID */
+    service     int,                    /* 服务代码  */
+    ubytes      bigint,                 /* 上行流量  */
+    dbytes      bigint,                 /* 下行流量  */
+    onlinetime  int default 0           /* 连接时间  */
+);
+create index msatimesrvreport_ind0 on msatimesrvreport(sdate);
+
+drop table msaAccountReport;
+create table msaAccountReport (
+	userid	    int,                    /* 用户ID */
+	sdate       char(10),               /* 日期      */
+  ubytes       bigint,                /* 上行流量  */
+  dbytes       bigint,                /* 下行流量  */
+  ctime        int,                   /* 连接次数  */
+	onlinetime    int default 0,        /* 连接时间  */
+	Online_time     bigint   default  0,
+	Offline_time     bigint   default  0,
+	Net_ending_ip    bigint   default  0,
+	Net_ending_mac  char(20)  default  '',
+	account   float,
+	nowaccount   float
+);
+create index msaAccountReport_index0 on msaAccountReport (userid);
+
+drop table msasrvreport;
+create table msasrvreport (
+    userid	    int,                   /* 用户ID */
+    sdate       char(10),              /* 日期      */
+    service     int,                   /* 服务代码  */
+		ubytes      bigint,                /* 上行流量  */
+		dbytes      bigint,                /* 上行流量  */
+		ctime       int default 0,
+    onlinetime  int default 0          /* 连接时间  */
+);
+create index msasrvreport_index0 on msasrvreport (userid);
+create index msasrvreport_index1 on msasrvreport (sdate);
+
+
+drop table msahttpreport;
+create table msahttpreport (
+    sdate       char(10),           /* 日期      */
+    host        varchar(64),        /* 网址      */
+    bytes       bigint default 0,     /* 流量      */
+    lcount      int default 0,        /* 点击次数  */
+    ctime       int default 0,        /* 连接时间  */
+    urlsort      int default 0
+);
+create index msahttpreport_index2 on msahttpreport(sdate);
+
+
+drop table msauserhttpreport;
+create table msauserhttpreport (
+    userid	    int,               /* 用户ID */
+    sdate       char(10),           /* 日期      */
+    host        varchar(64),        /* 网址      */
+    bytes       bigint default 0,     /* 流量      */
+    lcount      int default 0,        /* 点击次数  */
+    ctime       int default 0,        /* 连接时间  */
+    urlsort      int default 0
+);
+create index msauserhttpreport_index2 on msauserhttpreport(sdate);
+
+
+drop table msaDipReport;
+create table msaDipReport (
+		sdate       char(10),               /* 日期      */
+    dip         bigint,                /* 上行流量  */
+    bytes       bigint,                 /* 流量  */
+    ctime        int,                  /* 连接次数  */
+onlinetime    int default 0          /* 连接时间  */
+);
+create index msaClientList_index0 on msaDipReport (dip);
+
+
+
+drop table msauserpolicy;
+create table msauserpolicy(
+    sid           int      primary key,
+    policyname    char(64) default '',
+    prio          float default 0,
+    ratelimit   int  default 0,                  /*带宽*/
+    ratetype    int  default 0,                  /*0共享  1独享*/
+    topSrvNameList varchar(36) default '11111111111111111111111111111111111',
+    lLimitBytes    bigint default 0,             /*每天最大的上网流量*/
+    lLimitTimes    int default 0,                /*每天最大的上网时间*/
+    lLimitBytesw   bigint default 0,             /*每星期最大的上网流量*/
+    lLimitTimesw   int default 0,                /*每星期最大的上网时间*/
+    lLimitBytesm   bigint default 0,             /*每月最大的上网流量*/
+    lLimitTimesm   int default 0,                /*每月最大的上网时间*/
+    moreflag     varchar(32) default '00000000000000000000000000000000',
+    jftype      int    default 0,  
+    accountnum  float  default 0, 
+    maxpackage  int    default 0, 
+    maxBytes    bigint    default 0,
+		maxudp     int default 0,      /* 最多udp连接 */   
+    maxtcp     int default 0,      /*  最多tcp连接*/
+    maxudpp    int default 0,      /*  每分最多udp包速率*/ 
+    maxtcpp    int default 0,      /*  每分最多tcp包速率*/ 
+    maxupp     int default 0,      /*  每分up包速率*/ 
+    maxdownp   int default 0,      /*  每分down包速率*/  
+    maxsp      int default 0,      /*  每分128字节小包速率*/ 
+    maxnc      int default 0,       /*  每分最多新建连接数目*/
+    group0        varchar(255) default '0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000',
+    group1        varchar(255) default '0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000',
+    group2        varchar(255) default '0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000',
+    group3        varchar(255) default '0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000',
+    policyid      varchar(129) default '00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000' 
+);
+create index msauserpolicy_ind0 on msauserpolicy (sid);
+
+/*服务控制规则*/
+drop table nasfirewall;
+create table nasfirewall (
+    ruleid     int ,   /*规则id*/
+    rulename   varchar(32) not null,
+    ruleflag   smallint default 1,  /*0不启动  1：启动*/
+    ruleaction smallint default 0,  /*1允许    0：拒绝 */
+    qosid       int default 0 ,     /*qosid 0或cid*/
+    rulerate    float default 0,    /*rate优先级别*/
+    ruleurl     char(128),
+    finputdev   char(20)  default '',   /*输入设备 eth0 eth1.....*/
+    foutputdev  char(20) default '',    /*输入设备 eth0 eth1.....*/
+    fprotocol   int default 0,	        /* 其他:自定, 6:tcp 17:udp 0:all*/
+    lips        char(20)  default '0.0.0.0', /*本地ip*/
+    lipe        char(20)  default '0.0.0.0',
+    lportl      int default 0,           /*local port */
+    lportu      int default 0,           /*local port */
+    rips        char(20)  default '0.0.0.0', /*远端ip*/
+    ripe        char(20)  default '0.0.0.0',
+    rportl      int default 0,           /*remote port */
+    rportu      int default 0,           /*remote port */
+);
+
+/*虚拟身份控制规则*/
+drop table nasvidrule;
+create table nasvidrule (
+    ruleid     int ,   /*规则id*/
+    rulevid    varchar(32) not null,
+    ruletype   smallint default 1  /*1qq 2 msn 3ftp 4pop3 5smtp收件人 */
+);
+
+
+/*服务控制规则*/
+drop table nassrvrule;
+create table nassrvrule (
+    ruleid     int ,   /*规则id*/
+    rulename   varchar(32) not null,
+    ruleflag   smallint default 1,  /*0不启动  1：启动*/
+    ruleaction smallint default 0,  /*1允许    0：拒绝 */
+    ruleschedule  int   default 0,  /*0 全部时间  其他在schedule中查找*/
+    rulejjr       int   default 0,  /*0 全部时间  其他在schedule中查找*/
+    rulesrv0      varchar(255) default '0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000',
+    rulesrv1      varchar(255) default '0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000',
+    group0        varchar(255) default '0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000',
+    group1        varchar(255) default '0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000',
+    group2        varchar(255) default '0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000',
+    group3        varchar(255) default '0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000',
+    policyid      varchar(129) default '00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000',
+    qosid       int default 0 ,   /*qosid 0或cid*/
+    logaction   int default 1 ,   /*记录匹配的连接*/
+    conaction   int default 1 ,   /*记录匹配的内容*/
+    rulerate    float default 0,    /*rate优先级别*/
+    ruleurl     char(128)
+);
+
+
+/*服务控制规则针对目标ip段的部分*/
+drop table nassrvruledip;
+create table nassrvruledip (
+    ruleid     int ,   /*规则id*/
+    ipstart    char(20),   /*ip段开始地址*/
+    ipend      char(20)   /*ip段结束地址*/
+);
+
+/*服务控制规则针对用户的部分*/
+drop table nasruleuser;
+create table nasruleuser (
+    ruleid     int ,   /*规则id*/
+    userid     int     /*用户的id */
+);
+
+
+/*服务控制规则针对ip段的部分*/
+drop table nasruleip;
+create table nasruleip (
+    ruleid     int ,   /*规则id*/
+    ipstart    char(20),   /*ip段开始地址*/
+    ipend      char(20)    /*ip段结束地址*/
+);
+
+
+/*web控制规则的url*/
+drop table nasruleurl;
+create table nasruleurl (
+    ruleid     int ,   /*规则id*/
+    utf8flag   int ,   /*是否gb2312*/
+    typeflag   int ,   /*0:匹配webGET动作  1:匹配webPOST动作 2:全部*/
+    caUrl      varchar(64)   /*url列表*/
+);
+
+/*web控制规则的type*/
+drop table nasruletype;
+create table nasruletype (
+    ruleid     int ,   /*规则id*/
+    caUrl      varchar(64)   /*url列表*/
+);
+
+/*每天一个表结构，方便存储*/
+drop table msaloglist;
+create table msaloglist (
+    sdate      varchar(12), 
+		tabname    varchar(64),
+		tabtype    int 
+);
+/* tabtype    1 msaimlog 2 msavclog 3 msafilelog 4msawebmaillog 5msamaillog 6msaformlog  7搜索关键字 */
+
+
+drop table msaimlog; 
+create table msaimlog (
+    userid     int,
+    sdate      varchar(12),  
+    stime      varchar(8), 
+    imfrom     varchar(48),
+    imto       varchar(48),
+    imcon      varchar(254),  
+    flags      int      /* 状态   1--Msn  2Yahoo  4 QQ 5:淘宝旺旺 6:飞信  6:skype */
+);
+
+create index msaimlog_ind1 on msaimlog (userid);
+create index msaimlog_ind2 on msaimlog (sdate);
+
+
+drop table msavclog; 
+create table msavclog (
+    userid     int,
+    sdate      varchar(12),  
+    stime      varchar(8), 
+    vctype     int,               /*虚拟身份类型 1smtp 2pop3 3qq 4msn 5ftp 6webmail  7飞信 8web账号…*/
+    vccon      varchar(48),        /*虚拟身份特征号码*
+		vcaction   int,               /*虚拟身份动作 1logon 2logoff 3sendmsg 4sendfile 5视频 6音频 7应用 …*/
+		vcatt      varchar(128)       /*虚拟身份附加特征*
+);
+
+create index msavclog_ind1 on msavclog (userid);
+create index msavclog_ind2 on msavclog (sdate);
+
+
+drop table msafilelog20101022;
+create table msafilelog20101022 (
+    userid     int,
+    tantype    int,     /*0:upload 1:http download 2:smtp file 3:pop3 file  4:msn file 5:ftp */
+    stime      varchar(8), 
+    filename   varchar(64),
+    fileurl    varchar(128),
+		contenttype  varchar(64),  
+		tranatt    varchar(64),
+    flags      int     /* 状态   1--Msn  2Yahoo 3AOL 4 QQ 5:taobao 6:feixin  */
+);
+
+create index msafilelog20101022_ind1 on msaimlog (userid);
+
+
+
+drop table msamaillog20101022;
+create table msamaillog20101022 (
+    userid     int,
+    sdate      varchar(16),
+    stime      varchar(16),
+    mailfile   varchar(128),        /* 邮件文件名      */
+    mailfrom   varchar(128),        /* 发件人          */
+    mailto     varchar(128),        /* 收件人          */
+    mailsub    varchar(128),        /* 主题            */
+    mailasize  bigint,              /* 附件            */
+    mailsize   bigint,              /* 邮件大小 大于   */
+    flags      int,                 /* 邮件状态 0--pop3  1-smtp*/
+    mtype      varchar(64),         /* 邮件分类        */
+    rback      int  default 0,      /* key*/
+    dip        varchar(24) default '0.0.0.0',
+    fstart     int  default 0,
+    flen       int  default 0
+);
+
+create index msamaillog20101022_ind0 on msamaillog20101022 (sid);
+create index msamaillog20101022_ind1 on msamaillog20101022 (userid);
+create index msamaillog20101022_ind2 on msamaillog20101022 (sdate);
+
+
+drop table msawebmaillog20101022;
+create table msawebmaillog20101022 (
+    userid     int,
+    sdate      varchar(16),
+    stime      varchar(16),
+    mailfile   varchar(128),        /* 邮件文件名      */
+    mailfrom   varchar(128),        /* 发件人          */
+    mailto     varchar(128),        /* 收件人          */
+    mailsub    varchar(128),        /* 主题            */
+    mailasize  bigint,              /* 附件            */
+    mailsize   bigint,              /* 邮件大小 大于   */
+    flags      int,                 /* 邮件状态 0--pop3  1-smtp*/
+    mtype      varchar(64),         /* 邮件分类        */
+    rback      int  default 0,      /* key*/
+    dip        varchar(24) default '0.0.0.0',
+    fstart     int  default 0,
+    flen       int  default 0
+);
+
+create index msamaillog20101022_ind0 on msamaillog20101022 (sid);
+create index msamaillog20101022_ind1 on msamaillog20101022 (userid);
+create index msamaillog20101022_ind2 on msamaillog20101022 (sdate);
+
+drop table msaformlog20101022;
+create table msaformlog20101022 (
+    userid     int,
+    sdate      varchar(16),
+    stime      varchar(16),
+    formfile   varchar(128),        
+    formhost   varchar(128),
+    formurl    varchar(128),
+    formasize  bigint,           /* 附件            */
+    formsize   bigint,           /* 大小 大于   */
+    mtype      varchar(64),      /* 分类        */
+    rback      int  default 0,   /* key*/
+    dip        varchar(24) default '0.0.0.0',
+    fstart     int  default 0,
+    flen       int  default 0
+);
+create index msaformlog20101022_ind0 on msaformlog20101022 (sid);
+create index msaformlog20101022_ind1 on msaformlog20101022 (userid);
+
+drop table msasearchkey;  
+create table msasearchkey(
+    userid      int,                
+    ltime       bigint,          
+    host        varchar(64),        
+    searchkey   varchar(128)
+);
+
+create index msasearchkey_index1 on msasearchkey(userid);
+create index msasearchkey_index2 on msasearchkey(ltime);
+
+
+
+/* 邮件监控过滤条件  */
+drop table msamailfilter;
+create table msamailfilter (  
+    rid        int,                        /* 规则ID          */
+    num        float,                      /* 执行序号  或  布控ID    */
+    rname      varchar(63) not null,       /* 规则名称        */
+    mailfrom   varchar(63) default '',     /* 发件人          */
+    mailto     varchar(63)  default '',    /* 收件人          */
+    mailsub    varchar(63)  default '',    /* 主题            */
+    mailcont   varchar(63)  default '',    /* 内容            */
+    mailsize   int default 0,              /* 邮件大小 大于   */
+    attname    varchar(63)  default '',    /* 附件名称        */
+    attsize    int default 0,              /* 附件大小 大于   */
+    flags      smallint default 0,         /* 类别 0:发送  1:接收 */
+    sflags     smallint default 0,   	     /* 通知方式 0--不通知  1--通知  2--转发  */
+    smail      varchar(63)   default '',   /* 转发邮箱        */
+    rnum       int   default 0,            /*收件人数目*/
+    maction    int   default 1             /*监控动作1：监控  0：不监控*/
+);
+
+/* 邮件监控过滤条件  */
+drop table msaformfilter;
+create table msaformfilter (  
+    rid        int,             /* 规则ID          */
+    num        float default 0,            /* 执行序号  或  布控ID    */
+    rname      varchar(63) not null,       /* 规则名称        */
+    formfrom   varchar(63) default '',     /* 用户名称包括          */
+    formhost   varchar(63)  default '',    /* 主机名称包括          */
+    formurl    varchar(63)  default '',    /* url包括            */
+    formlcont  varchar(63)  default '',    /* 内容            */
+    formsize   int default 0,              /* 大小 大于   */
+    attname    varchar(63)  default '',    /* 附件名称包括        */
+    attsize    int default 0,              /* 附件大小 大于   */
+    flags      smallint default 0,         /* 类别 0:手工建立  1:中心自动派发 */
+    sflags     smallint default 0,   	     /* 通知方式 0--不通知  1--通知  2--转发  */
+    smail      varchar(63)   default '',   /* 转发邮箱        */
+    maction    int   default 1             /*监控动作1：监控  0：不监控*/
+);
+
+drop table naskeyword;
+create table naskeyword(
+    kid    int   primary key,
+    hostkeyword   varchar(50),
+    keyword   varchar(50),
+    utf8  smallint    default 0,      /*0-非勾选   1- 勾选*/ 
+    web   smallint    default 0,      /*0-非勾选   1- 勾选 */
+    type  smallint    default 0        /*0-表单 1-网页*/ 
+);
+

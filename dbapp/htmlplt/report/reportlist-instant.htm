@@ -1,0 +1,239 @@
+<html>   
+<head>
+<title>报告管理</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="/msa/publiccss/pubcss.css" type="text/css">  
+<LINK rel=stylesheet type=text/css href="/msa/extjs/resources/css/ext-all.css">
+<link rel="stylesheet" type="text/css" href="/msa/publiccss/feed-viewer.css" />
+<LINK rel=stylesheet type=text/css href="/msa/extjs/resources/css/xtheme-default.css">
+<SCRIPT type=text/javascript src="/msa/extjs/adapter/ext/ext-base.js"></SCRIPT>
+<SCRIPT type=text/javascript  src="/msa/extjs/ext-all.js"></SCRIPT>
+<script language = "Javascript" src = "/msa/publicjs/selecttime.js"></script>
+
+<STYLE type=text/css>HTML {
+	BORDER-BOTTOM: 0px; BORDER-LEFT: 0px; PADDING-BOTTOM: 0px; MARGIN: 0px; PADDING-LEFT: 0px; PADDING-RIGHT: 0px; FONT: 12px verdana; HEIGHT: 100%; OVERFLOW: hidden; BORDER-TOP: 0px; BORDER-RIGHT: 0px; PADDING-TOP: 0px
+}
+BODY {
+	BORDER-BOTTOM: 0px; BORDER-LEFT: 0px; PADDING-BOTTOM: 0px; MARGIN: 0px; PADDING-LEFT: 0px; PADDING-RIGHT: 0px; FONT: 12px verdana; HEIGHT: 100%; OVERFLOW: hidden; BORDER-TOP: 0px; BORDER-RIGHT: 0px; PADDING-TOP: 0px
+}
+P {
+	MARGIN: 5px
+}   
+.settings {
+	BACKGROUND-IMAGE: url(/msa/extjs/shared/icons/fam/folder_wrench.png)
+}
+.nav {
+	BACKGROUND-IMAGE: url(/msa/extjs/shared/icons/fam/folder_go.png)
+}
+</STYLE>
+<script>
+function sub(var1,var2){//alert(var1+" "+var2);
+	var r=confirm("确定删除此项吗？");
+	if(r==true){
+         location.href="/msa/main.xp?Fun=inreportdels+typ=3+file="+var1+"+reportdir="+var2;
+    }else{
+    	 return ;
+    }
+}
+</script>     <SCRIPT type=text/javascript>
+
+function downloadFile(url){  
+      var elemIF = document.createElement("iframe");  
+      elemIF.src = url;  
+      elemIF.style.display = "none";  
+      document.body.appendChild(elemIF);  
+}
+
+    Ext.BLANK_IMAGE_URL = '/msa/extjs/resources/images/default/s.gif';
+     
+       Ext.onReady(function(){
+	
+	  		Ext.QuickTips.init();
+
+				var detailEl;
+				
+				var myMask = new Ext.LoadMask(Ext.getBody(), 
+				    {
+				        	msg:"Please wait..."
+				    });
+				myMask.show();
+				 
+		
+		 	
+			var cm=new Ext.grid.ColumnModel([
+				{header:'报告名称',dataIndex:'reportname',sortable:true,width:350},
+				{header:'报告状态',dataIndex:'reportstate',sortable:true,width:280}, 
+				{header:'报告生成日期 ',dataIndex:'dates',sortable:true,width:280}
+			//{header:'  ',dataIndex:'bfile',width:70,renderer:scan}
+			]);
+	  
+	 		var reportstore=new Ext.data.SimpleStore({
+			 url:'/msa/main.xp?Fun=toautoreportlist+reportdir=instantreport',
+             fields: [
+              {name: 'reportname'},
+              {name: 'dates'},
+              {name: 'reportdir'},
+		          {name: 'bfile'},
+		          {name: 'reportstate'}
+              ] 
+			});   
+			reportstore.load();
+		
+			var reportgrid=new Ext.grid.GridPanel({
+				el:'reportgrid',
+				ds:reportstore,
+				cm:cm ,
+				title:"报告列表",
+				frame:true,
+				autoScroll:true,
+				collapsible:true,
+				height:screen.height-225,
+				loadMask:{msg:'正在加载数据，请稍侯……'},
+				width:screen.width-200
+			});
+			reportgrid.render();
+
+			 function showsysdelrule(btn){
+					        if(btn=='yes'){  
+		       	        var record = reportgrid.getStore().getAt(detailEl);
+                        var files=record.get("bfile");
+                        var reportdirs="instantreport/"+record.get("reportdir"); 
+                        reportstore.load({params:{Fun:'toautoreportlist',file:files,reportdird:reportdirs,reportdir:'instantreport'}});  
+				    }
+					        
+			 };
+					    
+			 var rightClick  = new Ext.menu.Menu({
+                id:'feeds-ctx',
+                items: [{
+                    id:'shanchubaogao',
+                    iconCls:'load-icon',
+                    text:'删除报告',
+                    scope: this,
+                    handler:function(){
+                         Ext.MessageBox.confirm('Confirm', '您确认要删除吗?', showsysdelrule);
+                    }
+                },{
+                    id:'liulanbaogao',
+                    iconCls:'load-icon',
+                    text:'浏览报告',
+                    scope: this,
+                    handler:function(){
+                        var record = reportgrid.getStore().getAt(detailEl);
+                        var files=record.get("bfile");
+                        var reportdirs=record.get("reportdir"); 
+                        var usrl="/msadata/report/instantreport/"+reportdirs+"/"+files+"/index.htm";
+                       
+							window.open(usrl,'');
+					   // alert(usrl);
+                     /*   var mywin =new  Ext.Window(
+							                {
+							                    id: 'east-panel',
+							                    title: '结果浏览',
+							                    height: 750,
+							                    width: 400,
+							                    closeAction: 'close',
+							                    modal: 'true',
+							                    maximizable:'true',
+							                    margins:'0 5 0 0',
+							                    html: "<IFRAME  name='menufrm' width=100% height='640' SRC = '"+usrl+"'  border='0' frameborder='0' scrolling='yes'></iframe>" 
+							          }); 
+							          mywin.show(); 
+							          mywin.maximize(); */
+					   }
+                    },{
+                    id:'xiazaibaogao',
+                    iconCls:'load-icon',
+                    text:'下载报告',
+                    scope: this,
+                    handler:function(){
+                        var record = reportgrid.getStore().getAt(detailEl);
+                        var files=record.get("bfile");
+                        var reportdirs=record.get("reportdir"); 
+                        var usrl="/datacenter/msa/report/instantreport/"+reportdirs+"/"+files+"/report.tar";
+                        downloadFile(usrl);                        							         
+                    } 
+                }]});
+                
+				reportgrid.addListener('rowclick', rightClickFn);
+				function rightClickFn(client, rowIndex, e) {
+					                rightClick.showAt(e.getXY()); 
+					                detailEl=  rowIndex;
+				 }   
+
+		  
+						// Finally, build the main layout once all the pieces are ready.  This is also a good
+						// example of putting together a full-screen BorderLayout within a Viewport.
+					  new Ext.Viewport({
+								  id:'tree-xtzy-panel',
+								  layout:'table',
+								  defaults: {
+										bodyStyle:'padding:5px 5px 5px,valign:top'
+									},
+								  items: [
+								     reportgrid 
+								  ],
+								  height:screen.height-200,
+								  autoScroll:true,
+					        renderTo: Ext.getBody()
+					    });
+            
+          myMask.hide();
+       
+          var task = {
+								run: function(){	
+								   //xtzystore.load();
+								},
+								interval: 120000 // 每30秒一周期
+						};
+						var runner = new Ext.util.TaskRunner();
+						runner.start(task);
+						
+});
+</SCRIPT>
+</head>
+
+
+<body bgcolor="white" text="#000000" oncontextmenu="return false"  topmargin="0" leftmargin="0"  style="SCROLLBAR-FACE-COLOR: #f0f0f0;  overflow-x:hidden;  OVERFLOW: scroll; SCROLLBAR-SHADOW-COLOR: #f0f0f0; SCROLLBAR-3DLIGHT-COLOR: #f0f0f0; SCROLLBAR-ARROW-COLOR: #f0f0f0; SCROLLBAR-DARKSHADOW-COLOR: #cccccc;" 
+>
+
+<div id="reportgrid">   
+</div>
+<!--
+
+<table border=0 cellspacing=2 width="100%" cellpadding=0 align="center">
+  <tbody> 
+  <tr> 
+    <td id=clearStart height="530" valign="top" width="85%" > 
+    <div id="Layer1" style="position:absolute; width:100%; height:540; z-index:1; overflow: scroll;">
+      <table border="1" align="center" cellpadding="3" cellspacing="0" width="90%" bordercolor="#999999" style="BORDER-COLLAPSE: collapse">
+        <tr > 
+          <td width="23%"  height="20" valign="bottom" background="/images/barbg.gif">&nbsp;报告名称 
+          </td>
+          <td width="43%"  height="20" valign="bottom" background="/images/barbg.gif">&nbsp;报告状态 
+
+          <td width="27%"  height="20" valign="bottom" background="/images/barbg.gif">&nbsp;动作 
+          </td>
+        </tr>
+        [$begintable list$] 
+        <tr> 
+          <td width="23%"  bgcolor="white">&nbsp;[$reportname$]</td>
+          <td width="23%" bgcolor="white">&nbsp;[$reportstate$]</td>
+          <td width="27%"  bgcolor="white">
+          &nbsp;<a onclick="sub('[$bfile$]','[$reportdir$]')"><img border=0 src="/images/deleteIcon.gif"  alt="删除报告" ></a>
+          &nbsp;<a href="/report/[$reportdir$]/[$bfile$]/index.htm" target=_blank><img border=0 src="/images/onlineview.png"  alt="在线浏览" ></a>
+          &nbsp;<a href="/report/[$reportdir$]/[$bfile$]/report.tgz"  target=_blank  ><img  border=0  src="/images/zipview.png" alt="下载压缩包"  ></a>
+          </td>
+        </tr>
+        [$endtable$] 
+      </table>
+      </div>
+    </td>
+    
+  </tr>
+  </tbody> 
+</table>
+            
+-->
+</body>
+</html>

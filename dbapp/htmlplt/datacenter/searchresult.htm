@@ -1,0 +1,317 @@
+<HTML><HEAD><TITLE>搜索结果页面</TITLE>
+<META content="text/html; charset=utf-8" http-equiv=Content-Type>
+<LINK rel=stylesheet type=text/css href="/msa/extjs/resources/css/ext-all.css">
+<link rel="stylesheet" type="text/css" href="/msa/extjs/resources/css/feed-viewer.css" />
+<LINK rel=stylesheet type=text/css href="/msa/extjs/resources/css/xtheme-default.css" id="xthemecss" >
+<script type="text/javascript" src="/msa/extjs/adapter/ext/ext-base.js"></script>
+<SCRIPT type=text/javascript  src="/msa/extjs/ext-all.js"></SCRIPT>
+<link rel="stylesheet" href="/msa/publiccss/css.css" type="text/css">
+<link rel="stylesheet" href="/msa/publiccss/forum.css" type="text/css">
+
+<STYLE type=text/css>HTML {
+	BORDER-BOTTOM: 0px; BORDER-LEFT: 0px; PADDING-BOTTOM: 0px; MARGIN: 0px; PADDING-LEFT: 0px; PADDING-RIGHT: 0px; FONT: 12px verdana; HEIGHT: 100%; OVERFLOW: hidden; BORDER-TOP: 0px; BORDER-RIGHT: 0px; PADDING-TOP: 0px
+}
+BODY {
+	BORDER-BOTTOM: 0px; BORDER-LEFT: 0px; PADDING-BOTTOM: 0px; MARGIN: 0px; PADDING-LEFT: 0px; PADDING-RIGHT: 0px; FONT: 12px verdana; HEIGHT: 100%; OVERFLOW: hidden; BORDER-TOP: 0px; BORDER-RIGHT: 0px; PADDING-TOP: 0px
+}
+P {
+	MARGIN: 5px
+}
+
+</STYLE>
+
+<SCRIPT type=text/javascript>
+
+Ext.BLANK_IMAGE_URL = '/msa/extjs/resources/images/default/s.gif';
+var Forum = {};
+var pagesize;
+var searchdate="";
+pagesize=100;
+///////////////////////////////////////////////////////////////////////////////////////////
+Forum.Renderers = {
+    topic : function(value, p, record){
+        return String.format(
+                '<div class="topic"><b>{0}</b><span class="author">{1}</span></div>',value);
+    }
+};
+//////////////////////////////////////////////////////////////////////////////////////////////
+
+  Ext.onReady(function(){
+
+	  Ext.QuickTips.init();
+
+	  var ds = new Ext.data.JsonStore({
+				      root: 'Results',
+			        totalProperty: 'totalCount',
+			        url:"/msa/main.xp",
+			        baseParams:{Fun:'msaShowContentJson',searchkey:'[$searchkey$]'},
+				      fields: [
+				         {name: 'id'},
+				         {name: 'subject'},
+				         {name: 'sdate'},
+				         {name: 'content'}
+				    ]
+		});
+
+	  ds.load();
+
+	  var searchStore = new Ext.data.JsonStore({
+				      root: 'Results',
+			        totalProperty: 'totalCount',
+			        url:'/msa/main.xp',
+			        baseParams:{Fun:'msaConKeywordJson'},
+				      fields: [
+				         {name: 'kid'},
+					       {name: 'kname'}
+				      ]
+		});
+
+   // searchStore.load();
+
+    var datePanel = new Ext.tree.TreePanel({
+    	  id:'forum-tree',
+    	  title:'日期选择',
+        region:'west',
+        height:screen.height-180,
+        width: 100,
+        minSize: 175,
+        maxSize: 400,
+        margins:'0 0 5 5',
+        useArrows:true,
+        autoScroll:true,
+        animate:true,
+        rootVisible: false,
+        root: {
+            nodeType: 'async'
+        },
+        loader: new Ext.tree.TreeLoader({
+						dataUrl:'/msa/main.xp?Fun=msaSearchkeyDateTree',
+  	  			baseParams:{Fun:'msaSearchkeyDateTree'}
+				}),
+				listeners: {
+				    click: function(node, e){
+				    	
+				    }
+			  }
+    });
+
+     var cm = new Ext.grid.ColumnModel([{
+           id: 'topic',
+           header: "主题",
+           dataIndex: 'subject',
+           width: 420,
+           align: 'left',
+           renderer: Forum.Renderers.topic
+        },{
+           header: "日期",
+           dataIndex: 'sdate',
+           width: 200,
+           align: 'center'
+        }]);
+
+    cm.defaultSortable = true;
+
+
+    var northPanelTop = new Ext.BoxComponent({
+                region:'north',
+                el: 'header',
+                height:32
+    })
+
+    HlPagingToolbar = Ext.extend(Ext.PagingToolbar, {
+    displayInfo: true,
+    displayMsg: '显示第 {0} 条到 {1} 条记录，共 {2} 条',
+    emptyMsg: "无记录",
+    initComponent : function(){
+        var pageSizeItems = [
+                     '-','每页',
+                     this.inputItem = new Ext.form.NumberField({
+									    cls: 'x-tbar-page-number',
+									    allowDecimals: false,
+									    allowNegative: false,
+									    enableKeyEvents: true,
+									    maxValue: 500,
+									    maxText: '每页不允许超过500条',
+									    selectOnFocus: true,
+									    value: this.pageSize,
+									    submitValue: false,
+									    listeners: {
+									        scope: this,
+									        keydown: this.onHlPagingKeyDown,
+									        blur: this.onHlPagingBlur
+									    }
+                     }),'条','-',{
+						            //pressed: true,
+						            icon: '/msa/images/grid.png',
+						            enableToggle:true,
+						            text: '导出本页数据到Excel',
+						            cls: 'x-btn-text-icon details',
+						            toggleHandler: function(btn, pressed){
+						                downloadViewDataActive(xtzygrid);
+						            }
+						        },'-'];
+         var userItems = this.items || [];
+         this.items = userItems.concat(pageSizeItems);
+         HlPagingToolbar.superclass.initComponent.call(this);
+    },
+    onHlPagingKeyDown: function(field, e){
+        if(field.isValid()){
+            var k = e.getKey();
+             if (k == e.RETURN) {
+                    e.stopEvent();
+                    this.pageSize = field.getValue();
+                    pagesize=this.pageSize;
+                    this.doRefresh();
+             }
+        }
+    },
+    onHlPagingBlur: function(field){
+        if(field.isValid()){
+            this.pageSize = field.getValue();
+            pagesize=this.pageSize;
+            this.doRefresh();
+        }
+    }
+    });
+    var pagingBar= new HlPagingToolbar({
+        store: ds,
+        pageSize: pagesize,
+        displayInfo: true});
+
+
+    var mypreview = new Ext.Panel({
+    	  id:'preview',
+        region:'south',
+        renderTo:"panel",
+        height:250,
+        title:'结果详情',
+        split:true,
+        bodyStyle: 'padding: 10px; font-family: Arial; font-size: 12px;'
+    });
+
+    var mygrid=new Ext.grid.GridPanel({
+                            region:'center',
+                            id:'topic-grid',
+                            title:'搜索结果',
+                            store: ds,
+                            cm: cm,
+                            sm:new Ext.grid.RowSelectionModel({
+                                singleSelect:true,
+                                listeners: {
+                                    selectionchange: function(sel){
+                                        var rec = sel.getSelected();
+                                        if(rec){
+                                            Ext.getCmp("preview").body.update('<b><u>' + rec.get('content') + '</u></b><br /><br />Post details here.');
+                                        }
+                                    }
+                                }
+                            }),
+                            trackMouseOver:false,
+                            loadMask: {msg:'Loading Topics...'},
+                            viewConfig: {
+                                forceFit:true,
+                                enableRowBody:true,
+                                showPreview:true,
+                                getRowClass : function(record, rowIndex, p, ds){
+                                    if(this.showPreview){
+                                        p.body = '<p>'+record.data.content+'</p>';
+                                        return 'x-grid3-row-expanded';
+                                    }
+                                    return 'x-grid3-row-collapsed';
+                                }
+                            },
+                            tbar: pagingBar
+                         });
+
+    new Ext.Viewport({
+								  layout:'border',
+								  //margins:'0 5 0 0',
+								  items:[
+								      northPanelTop,
+				              datePanel,
+				              new Ext.TabPanel({
+			                id:'main-tabs',
+                      title:'搜索',
+			                activeTab:0,
+			                region:'center',
+			                margins:'0 5 0 0',
+			                width:300,
+			                resizeTabs:true,
+			                items:[mygrid,mypreview]
+			                })
+				            ],
+					        renderTo: Ext.getBody()
+	  });
+
+
+    var search = new Ext.form.ComboBox({
+        store: searchStore,
+        applyTo: 'search',
+        valueField:'kid',
+	      hiddenName:'kname',
+	      displayField:'kname',
+        width: 200,
+        id:'mysearch',
+        emptyText:'Quick Search',
+        fieldLabel: '下拉框',
+	      blankText:'所有用户',
+	      maxHeight:400,
+	      minHeight:200,
+	      anchor:'95.2%',
+	      selectOnFocus:true,
+	      triggerAction:'all',
+	      typeAhead:true,
+	      typeAheadDelay:250,
+	      editable:true,
+	      forceSelection:true,
+	      mode: 'local',
+        listeners:{
+        	 "keyup": function(textfield, e){
+				      var valueEdit = textfield.getRawValue(); //使用getValue()取不到用户输入的值
+				      searchStore.baseParams={Fun:'msaConKeywordJson',
+				     	                      searchkey:valueEdit
+				     	                     };
+				      searchStore.load({params:{Fun:'msaConKeywordJson',
+													    searchkey:valueEdit
+											}
+		          });
+				      ds.baseParams={Fun:'msaShowContentJson',searchkey:valueEdit};
+				      ds.load({params:{Fun:'msaShowContentJson',
+													  searchkey:valueEdit,
+													  date:searchdate,
+												    start:0,
+												    limit:pagesize
+											}
+		          });
+
+
+				    },
+	          "select":function(combo,record,number){
+			       var keyword=Ext.get("search").dom.value;
+			       ds.baseParams={Fun:'msaShowContentJson',searchkey:keyword};
+			       ds.load({params:{Fun:'msaShowContentJson',
+													  searchkey:keyword,
+													  date:searchdate,
+												    start:0,
+												    limit:pagesize
+											}
+		          });
+	          }
+
+           }
+    });
+
+
+
+  });
+	</SCRIPT>
+
+</HEAD>
+<BODY>
+<div id="header"><div style="float:right;margin:5px;" class="x-small-editor"><input type="text" id="search" /></div></div>
+<div id="panel" style="display:none"></div>
+ <input type="hidden" name="sdate" value="[$sdate$]">
+ <input type="hidden" name="edate" value="[$edate$]">
+ <input type="hidden" name="type" value="[$type$]">
+ <input type="hidden" name="dirid" value="[$dirid$]">
+</BODY></HTML>

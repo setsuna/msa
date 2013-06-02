@@ -1,0 +1,27 @@
+lturlsortlist
+dbPtr=lt_dbinit();
+lt_db_htmlpage(dbPtr,"utf-8");
+sprintf(sqlBuf,"select sortid,sortname,sortdesc,topsortname,level from nasurlsort a,nastopurlsort b where a.topsid=b.topsortid order by sortid asc");
+   
+设置时区
+
+虚拟身份过滤
+/*虚拟身份控制规则*/
+drop table nasvidrule;
+create table nasvidrule (
+    ruleid     int ,   /*规则id*/
+    rulevid    varchar(32) not null,
+    ruletype   smallint default 1 //1qq 2 msn 3ftp 4pop3 5smtp收件人 
+);
+
+静态防火墙规则：
+id  名称 进口  出口  tcp/udp  源ip-ip 源端口p-p   目的ip-ip  目的端口p-p 流控通道 动作
+
+
+系统安全
+关闭ping
+系统默认为禁止访问
+管理员密码强化安全
+用户密码强化安全
+不启动验证服务
+关闭ssh服务

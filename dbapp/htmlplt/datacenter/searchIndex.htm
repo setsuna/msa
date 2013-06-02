@@ -1,0 +1,182 @@
+<html>   
+<head>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+<title>
+搜索
+</title>        
+<link rel="stylesheet" type="text/css" href="/msa/extjs/resources/css/ext-all.css">
+<link rel="stylesheet" type="text/css" href="/msa/extjs/resources/css/feed-viewer.css">
+<link rel="stylesheet" type="text/css" href="/msa/publiccss/pubcss.css">
+<link rel="stylesheet" type="text/css" href="/msa/extjs/resources/css/xtheme-default.css">
+<script type="text/javascript" src="/msa/extjs/adapter/ext/ext-base.js">
+<script type="text/javascript" src="/msa/extjs/ext-all.js"></script>
+<link rel="stylesheet" href="/msa/publiccss/css.css" type="text/css">
+<SCRIPT type="text/javascript" src="/msa/publicjs/exportexcel.js"></SCRIPT>
+<style type="text/css">
+HTML { BORDER-BOTTOM: 0px; BORDER-LEFT: 0px; PADDING-BOTTOM: 0px; MARGIN:
+0px; PADDING-LEFT: 0px; PADDING-RIGHT: 0px; FONT: 12px verdana; HEIGHT:
+100%; OVERFLOW: hidden; BORDER-TOP: 0px; BORDER-RIGHT: 0px; PADDING-TOP:
+0px } BODY { BORDER-BOTTOM: 0px; BORDER-LEFT: 0px; PADDING-BOTTOM: 0px;
+MARGIN: 0px; PADDING-LEFT: 0px; PADDING-RIGHT: 0px; FONT: 12px verdana;
+HEIGHT: 100%; OVERFLOW: hidden; BORDER-TOP: 0px; BORDER-RIGHT: 0px; PADDING-TOP:
+0px } P { MARGIN: 5px } .settings { BACKGROUND-IMAGE: url(/msa/extjs/shared/icons/fam/folder_wrench.png)
+} .nav { BACKGROUND-IMAGE: url(/msa/extjs/shared/icons/fam/folder_go.png)
+}
+</style>
+
+<style type="text/css">
+<!--
+.STYLE4 {color: #0000FF; font-size: 18px; font-weight: bold; }
+.STYLE5 {
+	color: #FF0000;
+	font-weight: bold;
+}
+.STYLE6 {
+	font-size: 28px;
+	color: #000000;
+}
+.STYLE7 {font-size: 15px}
+-->
+</style>
+
+<script language="JavaScript">
+
+	Ext.BLANK_IMAGE_URL = '/msa/extjs/resources/images/default/s.gif';
+  Ext.onReady(function(){
+	  
+	
+	 var localStore = new Ext.data.JsonStore({//构建用户列表数据存储器
+				      root: 'Results',
+			        totalProperty: 'totalCount',
+			        url:'/msa/main.xp',
+			        baseParams:{Fun:'msaConKeywordJson'},
+				      fields: [
+				         {name: 'kid'},
+					       {name: 'kname'}
+				      ]
+	 });
+	 localStore.load();
+	 
+  
+   var Cb = new Ext.form.ComboBox({
+	         fieldLabel: '下拉框',  
+	         valueField:'kid',
+	         hiddenName:'kname', 
+	         displayField:'kname',     
+	         id:'CbId',      
+	         blankText:'所有用户',               
+	         emptyText:'请输入关键字', 
+	         renderTo: 'combobox',
+	         width:380,  
+	         maxHeight:400, 
+	         minHeight:200,           
+	         anchor:'95.2%',   
+	         selectOnFocus:true,      
+	         triggerAction:'all',     
+	         store:localStore,    
+	         typeAhead:true,      
+	         typeAheadDelay:250,    
+	         editable:true,       
+	         forceSelection:true,   
+	         mode: 'local',
+	         listeners:{
+	         	"keyup": function(textfield, e) {
+				     var valueEdit = textfield.getRawValue(); //使用getValue()取不到用户输入的值
+				      document.getElementById("searchkey").value=valueEdit;		 
+				     	localStore.baseParams={Fun:'msaConKeywordJson',
+			     	                      searchkey:valueEdit                   
+			     	                };
+					    localStore.load({params:{Fun:'msaConKeywordJson',
+														    searchkey:valueEdit							    
+												}
+				      });    
+		
+				    },
+	          "select":function(combo,record,number){
+			       document.getElementById("searchkey").value=Ext.get("CbId").dom.value;  	             	                                 
+	          }
+           }        
+	     }); 
+	
+		var configKey= Ext.get('config');     
+		configKey.on('click', function(){
+			 var mywin =new  Ext.Window({
+            id: 'confkey',
+            title: '设置关键字',
+            height: 450,
+            width: 600,
+            closeAction: 'close',
+            modal: 'true',
+            maximizable:'true',
+            margins:'0 5 0 0',
+            html: "<IFRAME  name='menufrm' width=100% height=100% SRC = '/msa/main.xp?Fun=msaConfigKeyword'></iframe>"
+	    }); 
+			mywin.show();		
+		});
+		
+		var Search= Ext.get('ok');       
+		Search.on('click', function(){
+			if(document.getElementById("searchkey").value==""){			
+				 return false;
+			}
+		 	 localStore.baseParams={Fun:'msaConKeywordJson',
+			     	                      searchkey:document.getElementById("searchkey").value                    
+			     	                };
+	     localStore.load({params:{Fun:'msaConKeywordJson',
+										    searchkey:document.getElementById("searchkey").value								    
+								}
+       });
+			listform.submit();	
+		});
+	
+	
+  });
+
+</script>
+
+</head>   
+<body  bgcolor="#FFFFFF" topmargin="0"   marginheight=0 leftmargin=0  marginwidth=0 topMargin="0"  text="#000000" leftmargin="0">
+       <form name="listform" action="/msa/main.xp" method="POST">
+       <input type="hidden" name="Fun" value="msaSearchKeyWord">
+       <input type="hidden" name="searchkey" id="searchkey" value="">
+        <div align="center" >
+                <table align="center">
+                	<tr>
+                	    <td  height="160">&nbsp;&nbsp;</td>
+                	    <td  height="160" colspan="2" ><div align="center" class="STYLE5 STYLE6">内&nbsp;容&nbsp;关&nbsp;键&nbsp;字&nbsp;检&nbsp;索</div></td>
+					            <td  height="160">&nbsp;&nbsp;</td>
+					        </tr>
+                	<!--tr>
+                	  <td height="22">&nbsp;&nbsp;</td>	
+                	  <td height="22"><div align="center" class="STYLE4">&nbsp;&nbsp;<span class="STYLE7 STYLE8">邮&nbsp;件</span></div></td>	
+                	  <td height="22"><div align="center" class="STYLE4">&nbsp;&nbsp;<span class="STYLE7 STYLE8"><a href="searchIndex1.htm">表&nbsp;单</a></span></div></td>	
+                	  <td height="22">&nbsp;&nbsp;</td>	
+                	</tr--> 
+                	 
+	                 <tr>
+	                    <td height="35">&nbsp;&nbsp;</td>
+	                    <td height="35" colspan="2">
+	                      <div id="combobox"></div>
+		                 		<!--div align="center">		                 		
+		                 		  <input name="searchkey" type="text" id="searchkey" size="40" maxlength="100" style="border-bottom:#cdcdcd 1px solid;border-left:#9a9a9a 1px solid;padding-bottom:2px;padding-left:7px;padding-right:7px;width:360px;height:26px;font:16px arial;vertical-align:top;border-top:#9a9a9a 1px solid;border-right:#cdcdcd 1px solid;padding-top:6px;_background-attachment:fixed">
+		               		  </div-->
+	               	    </td>
+	               	    <td height="35">&nbsp;&nbsp;</td>
+	               	  </tr>
+	               	 <tr>
+	                 <td height="35" colspan="2">
+		                   <div align="center">
+		                 	  <input type="button" name="ok" id="ok"  class=inputf0 value="搜&nbsp;&nbsp;索" >          
+		               	   </div>
+	               	 </td>
+	               	 <td height="35" colspan="2">
+		                   <div align="center">
+		                 	  <input type="button" name="config" id="config" class=inputf0 value="设置关键字">          
+		               	   </div>
+	               	 </td>
+	                <tr>             
+                <table>                    
+				</div>
+				 </form>
+</body>
+</html>

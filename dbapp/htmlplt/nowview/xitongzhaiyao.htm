@@ -1,0 +1,332 @@
+<HTML><HEAD><TITLE>网络7层管理和过滤的领导者</TITLE>
+<META content="text/html; charset=utf-8" http-equiv=Content-Type>
+<LINK rel=stylesheet type=text/css href="/msa/extjs/resources/css/ext-all.css">
+<link rel="stylesheet" type="text/css" href="/msa/extjs/resources/css/feed-viewer.css" />
+<LINK rel=stylesheet type=text/css href="/msa/extjs/resources/css/xtheme-default.css" id="xthemecss" >
+<script type="text/javascript" src="/msa/extjs/adapter/ext/ext-base.js"></script>
+<SCRIPT type=text/javascript  src="/msa/extjs/ext-all.js"></SCRIPT>
+
+<STYLE type=text/css>HTML {
+	BORDER-BOTTOM: 0px; BORDER-LEFT: 0px; PADDING-BOTTOM: 0px; MARGIN: 0px; PADDING-LEFT: 0px; PADDING-RIGHT: 0px; FONT: 12px verdana; HEIGHT: 100%; OVERFLOW: hidden; BORDER-TOP: 0px; BORDER-RIGHT: 0px; PADDING-TOP: 0px
+}
+BODY {
+	BORDER-BOTTOM: 0px; BORDER-LEFT: 0px; PADDING-BOTTOM: 0px; MARGIN: 0px; PADDING-LEFT: 0px; PADDING-RIGHT: 0px; FONT: 12px verdana; HEIGHT: 100%; OVERFLOW: hidden; BORDER-TOP: 0px; BORDER-RIGHT: 0px; PADDING-TOP: 0px
+}
+P {
+	MARGIN: 5px
+}
+
+</STYLE>
+
+<SCRIPT type=text/javascript>
+    Ext.BLANK_IMAGE_URL = '/msa/extjs/resources/images/default/s.gif';
+    
+    
+    
+    Ext.onReady(function(){
+	
+	  		Ext.QuickTips.init();
+        var intervaltime;
+				var detailEl;
+				var xtzystoretop;
+				var runner = new Ext.util.TaskRunner();
+				intervaltime=20;
+				var myMask = new Ext.LoadMask(Ext.getBody(), 
+				    {
+				        	msg:"Please wait..."
+				    });
+				myMask.show();
+						
+   
+
+    // create the data store
+    
+    var xtzystore = new Ext.data.SimpleStore({
+        url:'/msa/main.xp?Fun=msashowxtzy',
+        fields: [
+           {name: 'itemn'},
+           {name: 'itemv'}
+        ]
+    });
+
+    xtzystore.load();
+    
+    HlPagingToolbar = Ext.extend(Ext.PagingToolbar, { 
+    displayMsg: '', 
+    emptyMsg: "无记录", 
+    initComponent : function(){ 
+    	   var pageSizeItems = [ 
+                     '-', 
+                     this.inputItem = new Ext.form.NumberField({ 
+									    cls: 'x-tbar-page-number', 
+									    allowDecimals: false, 
+									    allowNegative: false, 
+									    enableKeyEvents: true, 
+									    maxValue: 300, 
+									    maxText: '不允许超过300秒', 
+									    selectOnFocus: true, 
+									    value: intervaltime, 
+									    submitValue: false, 
+									    listeners: { 
+									        scope: this, 
+									        keydown: this.onHlTimeKeyDown, 
+									        blur: this.onHlTimeBlur 
+									    } 
+                     }),'秒刷新']; 
+		         var userItems = this.items || []; 
+		         this.items = userItems.concat(pageSizeItems); 
+		         HlPagingToolbar.superclass.initComponent.call(this); 
+		    }, 
+		    onHlTimeKeyDown: function(field, e){ 
+		        if(field.isValid()){ 
+		            var k = e.getKey(); 
+		             if (k == e.RETURN) { 
+		                    e.stopEvent(); 
+		                    intervaltime = field.getValue(); 
+		                    runner.stopAll();
+												var task = {
+														run: function(){
+															 xtzystore.load();
+															 xtzystoretop.load();
+														},
+														interval: intervaltime*1000 // 每30秒一周期
+												};
+												runner.start(task);
+		             } 
+		        } 
+		    }, 
+		    onHlTimeBlur: function(field){ 
+		        if(field.isValid()){ 
+		            intervaltime = field.getValue(); 
+		            runner.stopAll();
+                var task = {
+														run: function(){
+															 xtzystore.load();
+															 xtzystoretop.load();
+														},
+														interval: intervaltime*1000 // 每30秒一周期
+								};
+								runner.start(task);
+		        } 
+		    }  
+		});
+    
+    var pagingBar= new HlPagingToolbar({
+        store: xtzystore,
+        pageSize: 100});
+    
+    // create the Grid
+    var xtzygrid = new Ext.grid.GridPanel({
+        store: xtzystore,
+        tbar: pagingBar,
+        columns: [
+            {id:'itemn',header: "项目", width: 180, sortable: true, dataIndex: 'itemn'},
+            {header: "数值", width: 140, sortable: true,   dataIndex: 'itemv'}
+        ],
+        stripeRows: true,
+        autoExpandColumn: 'itemn',
+        width:300,
+        height:screen.height-210,
+        title:'实时摘要',
+		    collapsible:true,
+		    draggable:true
+    });
+    
+  
+    
+			var xtzyPanel1 = new Ext.Panel({
+			        id:'xtzyPanel1id',
+			        title: '24小时连接趋势',
+			        height:(screen.height-220)/3,
+			        el:'xtzyPanel1div',
+			        frame:true,
+					    collapsible:true,
+					    draggable:true
+			    });
+			var xtzyPanel2 = new Ext.Panel({
+			        title: '24小时流量趋势',
+			        height:(screen.height-220)/3,
+			        el:'xtzyPanel2div',
+			        frame:true,
+					    collapsible:true,
+					    draggable:true
+			    });
+			
+			
+			
+		
+		var xtzystoretop = new Ext.data.JsonStore({
+        root: 'Results',
+        totalProperty: 'totalCount',
+        url:'/msa/main.xp',
+        baseParams:{Fun:'msaNowSrvList'},
+        fields: [
+           {name: 'srvname'},
+           {name: 'srvflowu', type: 'int'},
+           {name: 'flowbps'},
+           {name: 'flowp' },
+           {name: 'hourtime'},
+           {name: 'hourflowu', type: 'int'},
+           {name: 'hourflow'},
+           {name: 'daytime'},
+           {name: 'dayflowu', type: 'int'},
+           {name: 'dayflow'}
+        ]
+    });
+ 
+
+    
+    xtzystoretop.sort('flowp', 'DESC');
+    xtzystoretop.load();
+
+    var xtzygridtop = new Ext.grid.GridPanel({
+        store: xtzystoretop,
+        columns: [
+            {id:'srvname',header: "服务名称", width: 100, sortable: true, dataIndex: 'srvname'},
+            {header: "速率bps", width: 60, sortable: true,   dataIndex: 'flowbps'},
+            {header: "占比", width: 50, sortable: true,   dataIndex: 'flowp'}
+        ],
+        stripeRows: true,
+        autoExpandColumn: 'srvname',
+        width:(screen.width-500)/2,
+        height:(screen.height-220)/3,
+        title:'服务流量速率概况',
+		    collapsible:true,
+		    draggable:true
+    });
+    
+    xtzygridtop.addListener('dblclick', rightxtzygridtopClickFn);
+    function rightxtzygridtopClickFn(client, rowIndex, e) {
+       location.href= "syssrvlistnow.htm";
+    }
+    
+    var xtzystoreusertop = new Ext.data.JsonStore({
+        root: 'Results',
+        totalProperty: 'totalCount',
+        url:'/msa/main.xp',
+        baseParams:{Fun:'msaonlineuser',sortby:'-1',orderby:"9",start:0,limit:20},
+        fields: [
+           {name: 'uid'},
+		       {name: 'uname'},
+				   {name: 'dep'},
+			     {name: 'ipadd'},
+			     {name: 'macadd'},
+				   {name: 'tcpnum', type: 'int'},
+		       {name: 'udpnum', type: 'int'},
+		       {name: 'bs'},
+		       {name: 'ps', type: 'int'},
+		       {name: 'bsp', type: 'float'},
+		       {name: 'netfx'},
+		       {name: 'sTime'},
+				   {name: 'dTime'},
+		       {name: 'flowday'},
+		       {name: 'timeday'},
+		       {name: 'flowweek'},
+		       {name: 'timeweek'},
+		       {name: 'flowmonth'},
+		       {name: 'timemonth'}
+        ]
+    });
+ 
+
+    
+    //xtzystoreusertop.sort('flowp', 'DESC');
+    xtzystoreusertop.load();
+    function bspChange(val){
+          return val + '%';
+    }
+    var xtzygridusertop = new Ext.grid.GridPanel({
+        store: xtzystoreusertop,
+        columns: [
+            {id:'uname',header: "用户", width: 100, sortable: true, dataIndex: 'uname'},
+            {header: "速率bps", width: 60, sortable: true,   dataIndex: 'bs'},
+            {header: "占比", width: 50, sortable: true, renderer: bspChange,  dataIndex: 'bsp'}
+        ],
+        stripeRows: true,
+        autoExpandColumn: 'uname',
+        width:(screen.width-500)/2,
+        height:(screen.height-220)/3,
+        title:'当前用户-速率Top20',
+		    collapsible:true,
+		    draggable:true
+    });
+    
+    xtzygridusertop.addListener('dblclick', rightxtzygridusertopClickFn);
+    function rightxtzygridusertopClickFn(client, rowIndex, e) {
+       location.href= "/msa/main.xp?Fun=msaShowOnlineUser";
+    }
+    
+						// Finally, build the main layout once all the pieces are ready.  This is also a good
+						// example of putting together a full-screen BorderLayout within a Viewport.
+					  new Ext.Viewport({
+									id:'tree-xtzy-panel',
+								  layout:'table',
+									layoutConfig: {
+										columns: 3
+									},
+									defaults: {
+										bodyStyle:'valign:top'
+									},
+								  items: [{
+								        items:xtzygrid,
+								        height:screen.height-210,
+												rowspan: 3
+								    },
+								    {
+								        height:(screen.height-220)/3,
+								        width:(screen.width-500)/2,
+								        items:xtzygridtop
+								    },{
+								        height:(screen.height-220)/3,
+								        width:(screen.width-500)/2,
+								        items:xtzygridusertop
+								    },{
+								        height:(screen.height-220)/3,
+								        width:(screen.width-500),
+								        items:xtzyPanel1,
+								        colspan: 2
+								    },{
+								    	height:(screen.height-220)/3,
+								    	width:(screen.width-500),
+										  items:xtzyPanel2,
+								      colspan: 2
+									}],
+					        renderTo: Ext.getBody()
+					    });
+            
+
+						myMask.hide();
+						 
+            var task = {
+								run: function(){
+									 xtzystore.load();
+									 xtzystoretop.load();
+									 xtzystoreusertop.load();
+								},
+								interval: intervaltime*1000 // 每30秒一周期
+						};
+						runner.start(task);
+  
+            
+  });
+  
+
+	
+		  
+	</SCRIPT>
+
+</HEAD>
+<BODY  oncontextmenu="return false" >
+<div style="display:none;">
+        <div id="xtzyPanel2div">
+<iframe frameborder="no"  scrolling="no"  width="100%"  height="100%"  src='/msa/nowview/zaixianflow.htm'></iframe>
+        </div>
+        <div id="xtzyPanel1div">
+<iframe frameborder="no"  scrolling="no"  width="100%"  height="100%"  src='/msa/nowview/zaixiancon.htm'></iframe>
+        </div>
+<div id="xtzyPaneltdiv">
+<iframe frameborder="no"  scrolling="no"  width="100%"  height="100%"  src='/msa/nowview/servicepie1.htm'></iframe>
+        </div>
+</div>
+
+</BODY></HTML>

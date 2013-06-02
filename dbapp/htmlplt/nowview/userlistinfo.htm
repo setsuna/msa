@@ -1,0 +1,611 @@
+<HTML><HEAD><TITLE>网络7层管理和过滤的领导者</TITLE>
+<META content="text/html; charset=utf-8" http-equiv=Content-Type>
+<LINK rel=stylesheet type=text/css href="/msa/extjs/resources/css/ext-all.css">
+<link rel="stylesheet" type="text/css" href="/msa/extjs/resources/css/feed-viewer.css" />
+<LINK rel=stylesheet type=text/css href="/msa/extjs/resources/css/xtheme-default.css" id="xthemecss" >
+<script type="text/javascript" src="/msa/extjs/adapter/ext/ext-base.js"></script>
+<SCRIPT type=text/javascript  src="/msa/extjs/ext-all.js"></SCRIPT>
+<script type=text/javascript  src="/msa/publicjs/exportexcel.js"></script>
+<LINK rel=stylesheet type=text/css href="/msa/publiccss/pubcss.css">
+
+<STYLE type=text/css>
+HTML {
+	BORDER-BOTTOM: 0px; BORDER-LEFT: 0px; PADDING-BOTTOM: 0px; MARGIN: 0px; PADDING-LEFT: 0px; PADDING-RIGHT: 0px; FONT: 9px verdana; HEIGHT: 100%; OVERFLOW: hidden; BORDER-TOP: 0px; BORDER-RIGHT: 0px; PADDING-TOP: 0px}
+BODY {
+	BORDER-BOTTOM: 0px; BORDER-LEFT: 0px; PADDING-BOTTOM: 0px; MARGIN: 0px; PADDING-LEFT: 0px; PADDING-RIGHT: 0px; FONT: 9px verdana; HEIGHT: 100%; OVERFLOW: hidden; BORDER-TOP: 0px; BORDER-RIGHT: 0px; PADDING-TOP: 0px
+}
+P {
+	MARGIN: 5px
+}
+</STYLE>
+
+<SCRIPT type=text/javascript>
+    Ext.BLANK_IMAGE_URL = '/msa/extjs/resources/images/default/s.gif';
+    var pagesize;
+    var intervaltime;
+		pagesize=100;
+    intervaltime=60;
+    var xtzystore;
+    function sub(){
+		  var conds,curpg,sortby,order,srvids,groups;
+			cond=form1.cond.value;
+		  sortby=form1.sortby.value;
+		  order=form1.orderby.value;
+    	xtzystore.load();
+		}
+    Ext.onReady(function(){
+
+		Ext.QuickTips.init();
+
+		var detailEl;
+
+
+		var myMask = new Ext.LoadMask(Ext.getBody(),
+		{
+		        	msg:"Please wait..."
+		});
+		myMask.show();
+    var runner = new Ext.util.TaskRunner();
+    // create the data store
+    xtzystore = new Ext.data.JsonStore({
+        root: 'Results',
+        totalProperty: 'totalCount',
+        url:'/msa/main.xp',
+        baseParams:{Fun:'msaonlineuser'},
+        fields: [
+           {name: 'uid'},
+		       {name: 'uname'},
+				   {name: 'dep'},
+			     {name: 'ipadd'},
+			     {name: 'macadd'},
+				   {name: 'tcpnum', type: 'int'},
+		       {name: 'udpnum', type: 'int'},
+		       {name: 'bs'},
+		       {name: 'ps', type: 'int'},
+		       {name: 'bsp', type: 'float'},
+		       {name: 'netfx'},
+		       {name: 'sTime'},
+				   {name: 'dTime'},
+		       {name: 'flowday'},
+		       {name: 'timeday'},
+		       {name: 'flowweek'},
+		       {name: 'timeweek'},
+		       {name: 'flowmonth'},
+		       {name: 'timemonth'}
+        ]
+    });
+    xtzystore.load();
+    xtzystore.on('beforeload',function(){
+		    Ext.apply( xtzystore.baseParams, {
+		        sortby: Ext.getDom('sortby').value,
+		        orderby: Ext.getDom('orderby').value,
+		        cond: Ext.getDom('cond').value,
+		        groupid:Ext.getDom('groupid').value
+		    });
+		}, xtzystore);
+
+    //xtzystore.load({params:{Fun:'ltwebonlineuser', CurPg:[$CurPg$],cond:'[$cond$]',sortby:[$sortby$],orderby:[$orderby$],srvid:[$srvid$],group:[$groupid$]}});
+    // create the Grid
+
+    HlPagingToolbar = Ext.extend(Ext.PagingToolbar, {
+    displayInfo: true,
+    displayMsg: '共{2}条',
+    emptyMsg: "无记录",
+    initComponent : function(){
+    	   var pageSizeItems = [
+                     '-','每',
+                     this.inputItem = new Ext.form.NumberField({
+									    cls: 'x-tbar-page-number',
+									    allowDecimals: false,
+									    allowNegative: false,
+									    enableKeyEvents: true,
+									    maxValue: 300,
+									    maxText: '不允许超过300秒',
+									    selectOnFocus: true,
+									    value: intervaltime,
+									    submitValue: false,
+									    listeners: {
+									        scope: this,
+									        keydown: this.onHlTimeKeyDown,
+									        blur: this.onHlTimeBlur
+									    }
+                     }),'秒刷新','-','每页',
+                     this.inputItem = new Ext.form.NumberField({
+									    cls: 'x-tbar-page-number',
+									    allowDecimals: false,
+									    allowNegative: false,
+									    enableKeyEvents: true,
+									    maxValue: 500,
+									    maxText: '每页不允许超过500条',
+									    selectOnFocus: true,
+									    value: this.pageSize,
+									    submitValue: false,
+									    listeners: {
+									        scope: this,
+									        keydown: this.onHlPagingKeyDown,
+									        blur: this.onHlPagingBlur
+									    }
+                     }),'条','-',{
+						            //pressed: true,
+						            icon: '/msa/images/grid.png',
+						            enableToggle:true,
+						            text: '导出数据到Excel',
+						            cls: 'x-btn-text-icon details',
+						            toggleHandler: function(btn, pressed){
+						                downloadViewDataActive(xtzygrid);
+						            }
+						        }
+						        ];
+		         var userItems = this.items || [];
+		         this.items = userItems.concat(pageSizeItems);
+		         HlPagingToolbar.superclass.initComponent.call(this);
+		    },
+		    onHlPagingKeyDown: function(field, e){
+		        if(field.isValid()){
+		            var k = e.getKey();
+		             if (k == e.RETURN) {
+		                    e.stopEvent();
+		                    this.pageSize = field.getValue();
+		                    pagesize=this.pageSize;
+		                    //alert(this.pageSize);
+		                    this.doRefresh();
+		             }
+		        }
+		    },
+		    onHlPagingBlur: function(field){
+		        if(field.isValid()){
+		            this.pageSize = field.getValue();
+		            //alert(this.pageSize);
+		            pagesize=this.pageSize;
+		            this.doRefresh();
+		        }
+		    },
+		    onHlTimeKeyDown: function(field, e){
+		        if(field.isValid()){
+		            var k = e.getKey();
+		             if (k == e.RETURN) {
+		                    e.stopEvent();
+		                    intervaltime = field.getValue();
+		                    runner.stopAll();
+												var task = {
+														run: function(){
+    													 xtzystore.load();
+														},
+														interval: intervaltime*1000 // 每30秒一周期
+												};
+												runner.start(task);
+		             }
+		        }
+		    },
+		    onHlTimeBlur: function(field){
+		        if(field.isValid()){
+		            intervaltime = field.getValue();
+		            runner.stopAll();
+                var task = {
+														run: function(){
+															xtzystore.load();
+														},
+														interval: intervaltime*1000 // 每30秒一周期
+								};
+								runner.start(task);
+		        }
+		    }
+		});
+
+    var pagingBar= new HlPagingToolbar({
+        store: xtzystore,
+        pageSize: pagesize,
+        displayInfo: true});
+
+    function macChange(val){
+          return '<font szie=1 >' + val + '</font>';
+    }
+
+    function bspChange(val){
+          return val + '%';
+    }
+
+    function netfxChange(val){
+        if(val == 0){
+            return '<font color=green >&nbsp;&nbsp</font>';
+        }else if(val ==1){
+            return '<font color=#cc0000;>&#164;</font>';
+        }else if(val ==2){
+            return '<font color=#cc0000;>&#164;&#164;</font>';
+        }else if(val ==3){
+            return '<font color=#cc0000;>&#164;&#164;&#164;</font>';
+        }else if(val ==4){
+            return '<font color=#cc0000;>&#164;&#164;&#164;&#164;</font>';
+        }else if(val ==5){
+            return '<font color=#cc0000;>&#164;&#164;&#164;&#164;&#164;</font>';
+        }
+        return val;
+    }
+
+
+    var xtzygrid = new Ext.grid.GridPanel({
+        region:'center',
+        store: xtzystore,
+        tbar: pagingBar,
+        columns: [
+            {id:'uname',header: "用户", width: 80, sortable: true,  dataIndex: 'uname'},
+            {header: "部门", width: 80, sortable: true,  dataIndex: 'dep'},
+            {header: "IP",   width: 80, sortable: true,  dataIndex: 'ipadd'},
+            {header: "MAC",   width: 100, sortable: true, renderer: macChange, dataIndex: 'macadd'},
+            {header: "TCP连接",  width: 60, sortable: true,  dataIndex: 'tcpnum'},
+            {header: "UDP连接", width: 60, sortable: true, dataIndex: 'udpnum'},
+            {header: "速率bps",  width: 60, sortable: true,  dataIndex: 'bs'},
+            {header: "封包率",  width: 60, sortable: true,  dataIndex: 'ps'},
+            {header: "占比",  width: 60, sortable: true,renderer: bspChange,  dataIndex: 'bsp'},
+            {header: "风险指数", width: 60, sortable: true, renderer: netfxChange, dataIndex: 'netfx'},
+            {header: "上线时间",   width: 80, sortable: true,  dataIndex: 'sTime'},
+            {header: "最后访问",   width: 80, sortable: true,  dataIndex: 'dTime'},
+            {header: "当天总流量", width: 60, sortable: true,  dataIndex: 'flowday'},
+            {header: "当天时长",   width: 60, sortable: true,  dataIndex: 'timeday'},
+            {header: "当周总流量", width: 60, sortable: true,  dataIndex: 'flowweek'},
+            {header: "当周时长",   width: 60, sortable: true,  dataIndex: 'timeweek'},
+            {header: "当月总流量", width: 60, sortable: true,  dataIndex: 'flowmonth'},
+            {header: "当月时长",   width: 60, sortable: true,  dataIndex: 'timemonth'}
+        ],
+        stripeRows: true,
+        height:screen.height-210,
+        title:'在线用户列表',
+        frame:true,
+		    collapsible:true,
+		    draggable:true
+    });
+
+    var rightClick  = new Ext.menu.Menu({
+                id:'feeds-ctx',
+                items: [{
+                    id:'tichuyonghu',
+                    iconCls:'load-icon',
+                    text:'踢出用户',
+                    scope: this,
+                    handler:function(){
+
+                        var record = xtzygrid.getStore().getAt(detailEl);
+                        var userid=record.get("uid");
+                        var cip=record.get("ipadd"); 
+                        xtzystore.load({params:{Fun:'msaonlineuser',outflag:1,userid:userid,clientip:cip}});                  
+                    }
+                },
+                {
+                    id:'bianjiyonghu',
+                    iconCls:'load-icon',
+                    text:'编辑用户',
+                    scope: this,
+                    handler:function(){
+
+                        var record = xtzygrid.getStore().getAt(detailEl);
+                        var userid=record.get("uid");
+                        // var l = Ext.getCmp('card-wizard-panel').getLayout();
+
+												//l.setActiveItem(1);
+
+												//Ext.getCmp('card-prev').setDisabled(0);
+												//Ext.getCmp('card-next').setDisabled(1);
+
+                        //open('/msa/main.xp?Fun=msaTermInfoView+uid='+ userid ,'userinfofrm') ;
+
+                         var mywin =new  Ext.Window(
+							                {
+							                    id: 'east-panel',
+							                    title: '编辑用户',
+							                    height: 550,
+							                    width: 400,
+							                    closeAction: 'close',
+							                    modal: 'true',
+							                    maximizable:'true',
+							                    margins:'0 5 0 0',
+							                    tools:[{
+																	    id:'refresh',
+																	    qtip: 'Refresh form Data',
+																	    handler: function(event, toolEl, panel){
+																	       open("/msa/main.xp?Fun=msaTermInfoView+uid=" + userid ,"menufrm");
+																	    }
+																	}],
+							                    html: "<IFRAME  name='menufrm' width=100% height='100%' SRC = '/msa/main.xp?Fun=msaTermInfoView+uid="+ userid  + "'  border='0' frameborder='0' scrolling='yes'   ></iframe>"
+							                });
+							          mywin.show();
+							          mywin.maximize();
+
+
+                    }
+                },
+                {
+                    id:'fuwufenxi',
+                    iconCls:'load-icon',
+                    text:'服务分析',
+                    scope: this,
+                    handler:function(){
+
+                        var record = xtzygrid.getStore().getAt(detailEl);
+                        var ipadd=record.get("ipadd");
+                        var uid=record.get("uid");
+                        //alert(uid);
+                        var mywin =new  Ext.Window(
+							                {
+							                    id: 'east-panel',
+							                    title: '服务分析',
+							                    height: 450,
+							                    width: 400,
+							                    closeAction: 'close',
+							                    modal: 'true',
+							                    maximizable:'true',
+							                    margins:'0 5 0 0',
+							                    tools:[{
+																	    id:'refresh',
+																	    qtip: 'Refresh form Data',
+																	    handler: function(event, toolEl, panel){
+																	       open("/msa/main.xp?Fun=msaUsersrvPage+pagetype=2+ipadd=" + ipadd ,"menufrm");
+																	    }
+																	}],
+							                    html: "<IFRAME  name='menufrm' width=100% height='100%' SRC = '/msa/main.xp?Fun=msaUsersrvPage+ipadd="+ ipadd + "'  border='0' frameborder='0' scrolling='yes'   ></iframe>"
+							          			});
+							          mywin.show();
+							          mywin.maximize();
+
+
+
+                    }
+                },
+                 {
+                    id:'useripcon',
+                    iconCls:'load-icon',
+                    text:'察看正常连接',
+                    scope: this,
+                    handler:function(){
+
+                        var record = xtzygrid.getStore().getAt(detailEl);
+                        var cip=record.get("ipadd");
+                        var mywin =new  Ext.Window(
+							                {
+							                    id: 'east-panel',
+							                    title: '察看正常连接',
+							                    height: 450,
+							                    width: 400,
+							                    closeAction: 'close',
+							                    modal: 'true',
+							                    maximizable:'true',
+							                    margins:'0 5 0 0',
+							                    tools:[{
+																	    id:'refresh',
+																	    qtip: 'Refresh form Data',
+																	    handler: function(event, toolEl, panel){
+																	     //alert("/msa/main.xp?Fun=ltconquery+showtype=1+sip=" + cip);
+																	     open("/msa/main.xp?Fun=ltconquery+showtype=1+sip=" + cip ,"menufrm");
+																	    }
+																	}],
+							                  //  html: "<IFRAME  name='menufrm' width=100% height='100%' SRC = '/msa/main.xp?Fun=ltwebonlinenewip+showtype=1+srvid=-1++group=-1+user="+ userid + "'  border='0' frameborder='0' scrolling='yes'   ></iframe>"
+							                  html: "<IFRAME  name='menufrm' width=100% height='100%' SRC = '/msa/main.xp?Fun=ltconquery+showtype=1+sip=" + cip + "'  border='0' frameborder='0' scrolling='yes'   ></iframe>"
+							          });
+							          mywin.show();
+							          mywin.maximize();
+
+                    }
+                },                 
+                 {
+                    id:'userqoscon',
+                    iconCls:'load-icon',
+                    text:'察看流控连接',
+                    scope: this,
+                    handler:function(){
+
+                        var record = xtzygrid.getStore().getAt(detailEl);
+                        var cip=record.get("ipadd");
+                        var mywin =new  Ext.Window(
+							                {
+							                    id: 'east-panel',
+							                    title: '察看流控连接',
+							                    height: 450,
+							                    width: 400,
+							                    closeAction: 'close',
+							                    modal: 'true',
+							                    maximizable:'true',
+							                    margins:'0 5 0 0',
+							                    tools:[{
+																	    id:'refresh',
+																	    qtip: 'Refresh form Data',
+																	    handler: function(event, toolEl, panel){
+																	      // open("/msa/main.xp?Fun=ltwebonlinenewip+showtype=3+srvid=-1++group=-1+user=" + userid ,"menufrm");
+																	      open("/msa/main.xp?Fun=ltconquery+showtype=2+srvid=-1+sip=" + cip ,"menufrm");
+																	    }
+																	}],
+							                   // html: "<IFRAME  name='menufrm' width=100% height='100%' SRC = '/msa/main.xp?Fun=ltwebonlinenewip+showtype=3+srvid=-1++group=-1+user=" + userid + "'  border='0' frameborder='0' scrolling='yes'   ></iframe>"
+							                   html: "<IFRAME  name='menufrm' width=100% height='100%' SRC = '/msa/main.xp?Fun=ltconquery+showtype=2+sip=" + cip + "'  border='0' frameborder='0' scrolling='yes'   ></iframe>"
+
+							          });
+							          mywin.show();
+							          mywin.maximize();
+
+                    }
+                },{
+                    id:'userblockcon',
+                    iconCls:'load-icon',
+                    text:'察看阻断连接',
+                    scope: this,
+                    handler:function(){
+
+                        var record = xtzygrid.getStore().getAt(detailEl);
+                        var cip=record.get("ipadd");
+                         var mywin =new  Ext.Window(
+							                {
+							                    id: 'east-panel',
+							                    title: '察看阻断连接',
+							                    height: 450,
+							                    width: 400,
+							                    closeAction: 'close',
+							                    modal: 'true',
+							                    maximizable:'true',
+							                    margins:'0 5 0 0',
+							                    tools:[{
+																	    id:'refresh',
+																	    qtip: 'Refresh form Data',
+																	    handler: function(event, toolEl, panel){
+																	       //open("/msa/main.xp?Fun=ltwebonlinenewip+showtype=2+srvid=-1++group=-1+user=" + userid ,"menufrm");
+																	       open("/msa/main.xp?Fun=ltconquery+showtype=3+sip=" + cip ,"menufrm");
+																	    }
+																	}],
+							                   // html: "<IFRAME  name='menufrm' width=100% height='100%' SRC = '/msa/main.xp?Fun=ltwebonlinenewip+showtype=2+srvid=-1+group=-1+user=" + userid + "'  border='0' frameborder='0' scrolling='yes'   ></iframe>"
+							                    html: "<IFRAME  name='menufrm' width=100% height='100%' SRC = '/msa/main.xp?Fun=ltconquery+showtype=3+sip=" + cip + "'  border='0' frameborder='0' scrolling='yes'   ></iframe>"
+							          });
+							          mywin.show();
+							          mywin.maximize();
+
+
+                    }
+                }]});
+
+    xtzygrid.addListener('rowcontextmenu', rightClickFn);
+    xtzygrid.addListener('rowclick', rightClickFn);
+    function rightClickFn(client, rowIndex, e) {
+                rightClick.showAt(e.getXY());
+                detailEl=  rowIndex;
+    }
+    var treepan;
+     var groupwin;
+		var groupbutton= Ext.get('group');
+		groupbutton.on('click', function(){
+						if(!groupwin){
+							treepan=new Ext.tree.TreePanel({
+						    	  id: 'tree-panel',
+						        region:'center',
+						        split: true,
+						        useArrows:true,
+						        autoScroll: true,
+						        animate:true,
+				            enableDD:true,
+						        rootVisible: false,
+						        selModel : new Ext.tree.MultiSelectionModel(),
+						        lines: false,
+						        useArrows: true,
+						        loader: new Ext.tree.TreeLoader({
+						        dataUrl:'/msa/main.xp?Fun=msaGroupTreeView',
+						        baseParams:{Fun:'msaGroupTreeView'}
+						        }),
+						        root: new Ext.tree.AsyncTreeNode(),
+						        listeners: {
+						             click: function(node, e){
+										           document.getElementById('groupid').value=node.id;
+										     }
+										}
+									  });
+									  var loader = treepan.getLoader(); 
+										loader.on("load", setNode);  
+										 
+										function setNode(){      
+											treepan.getSelectionModel().select(treepan.getNodeById(document.getElementById('groupid').value));     
+										} 
+									  groupwin = new Ext.Window({
+										      layout:'fit',
+								          title: '选择部门',
+								          width :300,
+								          height:350,
+								          closeAction :'hide',
+								          plain:true,
+								          items:treepan,
+								          buttons: [{
+										            text: '确定',
+										            handler  : function(){             
+										            groupwin.hide();           
+										          }
+										      }]
+								    });
+						}
+						groupwin.show();
+		});
+
+
+    var northPanelTop =new Ext.BoxComponent({
+			                    region:'north',
+			                    height:24,
+			                    el: 'north'
+		});
+
+						// Finally, build the main layout once all the pieces are ready.  This is also a good
+						// example of putting together a full-screen BorderLayout within a Viewport.
+		new Ext.Viewport({
+									layout: 'border',
+									items: [
+									 northPanelTop, xtzygrid
+									],
+					        renderTo: Ext.getBody()
+		});
+
+
+		myMask.hide();
+
+    var task = {
+								run: function(){
+									xtzystore.load();
+								},
+								interval: intervaltime*1000 // 每30秒一周期
+		};
+
+		runner.start(task);
+
+
+  });
+
+</SCRIPT>
+
+</HEAD>
+<BODY oncontextmenu="return false" style="SCROLLBAR-FACE-COLOR: #f0f0f0;  overflow-x:hidden;  OVERFLOW: scroll; SCROLLBAR-SHADOW-COLOR: #f0f0f0; SCROLLBAR-3DLIGHT-COLOR: #f0f0f0; SCROLLBAR-ARROW-COLOR: #f0f0f0; SCROLLBAR-DARKSHADOW-COLOR: #cccccc;">
+
+<DIV id=north >
+
+<form id="form1"  name="form1" method="post" action="/msa/main.xp">
+<table border="0" width=100% height=100% cellspacing="0" cellpadding="0" align=center bgcolor='#ffffff'>
+  <tr>
+      <td width="100%"  valign=middle align=center height="25" bgcolor="f0f0f9" >
+        <table width="100%" border="0" cellspacing="0">
+        <tr>
+          <td>
+          	 关键字:
+              <input type="text" name="cond"  class=input size="10" maxlength="31" value="">
+              <select name="sortby" class="inputself0" >
+								<option value="-1" >全部服务
+								<option value="-2" >可能NAT主机
+	              <option value="-3" >可能的HTTP代理
+								[$begintable srvlist$]
+								<option value="[$srvid$]" [$srvselected$] >[$srvname$]
+								[$endtable$]
+							  </option>
+							</select>
+              <select id="orderby" name="orderby"  class=inputsel>
+	              <option value="0" >无序
+	              <option value="1" >开始访问升序
+	              <option value="2" >开始访问降序
+	              <option value="3" >最后访问升序
+	              <option value="4" >最后访问降序
+	              <option value="5" >当天上流量排序
+	              <option value="6" >当天下流量排序
+	              <option value="7" >在线时间排序
+	              <option value="8" >人员封包排序
+	              <option value="9" >人员速率排序
+	              <option value="10" >IP地址排序
+	              <option value="11" >用户名称排序
+	              <option value="12" >当天流量排序
+	              <option value="13" >当周流量排序
+	              <option value="14" >当月流量排序
+              </select>							
+						 <input type="button" id="group" class=inputf0 border="0" name="group" value="选择部门">
+             <input type="button" border="0" id="imageField" name="imageField" value="确定" class=input onclick="sub();">
+			  	   <input type="hidden" id="groupid" value="[$groupid$]">
+          </td>
+
+        </tr>
+
+      </table>
+
+    </td>
+
+  </tr>
+  </table>
+  </form>
+
+</DIV>
+
+
+</BODY></HTML>

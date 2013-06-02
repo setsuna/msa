@@ -1,0 +1,814 @@
+<html>
+<head>
+<link rel='stylesheet' type='text/css' href='/msa/extjs/fullcalendar/fullcalendar/fullcalendar.css' />
+<link rel='stylesheet' type='text/css' href='/msa/extjs/fullcalendar/fullcalendar/fullcalendar.print.css' media='print' />
+<script type='text/javascript' src='/msa/extjs/fullcalendar/jquery/jquery-1.5.2.min.js'></script>
+<script type='text/javascript' src='/msa/extjs/fullcalendar/jquery/jquery-ui-1.8.11.custom.min.js'></script>
+<script type='text/javascript' src='/msa/extjs/fullcalendar/fullcalendar/fullcalendar.min.js'></script>
+
+<LINK rel=stylesheet type=text/css href="/msa/extjs/resources/css/ext-all.css">
+<link rel="stylesheet" type="text/css" href="/msa/extjs/resources/css/feed-viewer.css" />
+<LINK rel=stylesheet type=text/css href="/msa/extjs/resources/css/xtheme-default.css" id="xthemecss" >
+<script type="text/javascript" src="/msa/extjs/adapter/ext/ext-base.js"></script>
+<SCRIPT type=text/javascript  src="/msa/extjs/ext-all.js"></SCRIPT>
+<script type='text/javascript'>
+		$(document).ready(function() {
+		var date = new Date();
+		var d = date.getDate();
+		var m = date.getMonth();
+		var y = date.getFullYear();
+		
+		$(".fc-state-default").hover(
+    function(){
+        $(this).addClass("calendar_hover");
+    },
+    function(){
+        $(this).removeClass("calendar_hover");
+    }
+		);
+		$('#calendar').fullCalendar({
+			theme: false,
+			editable:false,
+//			dayClick: function() {
+//        $('#calendar').fullCalendar('next');
+//    	},
+			events: [{
+					title: '表单记录：共2条',
+					start: new Date(y, m, 28),
+					end: new Date(y, m, 28),
+					color:'#EFEFEF',
+					textColor: 'black',
+					url: 'https://192.168.0.60/msa/'
+				},{
+					title: 'MSN记录：共2条',
+					start: new Date(y, m, 28),
+					end: new Date(y, m, 28),
+					color:'#EFEFEF',
+					textColor: 'black',
+					url: 'https://192.168.0.60/msa/'
+				},{
+					title: '邮件记录：共2条',
+					start: new Date(y, m, 28),
+					end: new Date(y, m, 28),
+					color:'#EFEFEF',
+					textColor: 'black',
+					url: 'https://192.168.0.60/msa/'
+				},{
+					title: 'QQ记录：共2条',
+					start: new Date(y, m, 28),
+					end: new Date(y, m, 28),
+					color:'#EFEFEF',
+					textColor: 'black',
+					url: 'https://192.168.0.60/msa/'
+				},{
+					title: 'WEB记录：共2条',
+					start: new Date(y, m, 28),
+					end: new Date(y, m, 28),
+					color:'#EFEFEF',
+					textColor: 'black',
+					url: 'https://192.168.0.60/msa/'
+				},{
+					title: 'HTTP记录：共2条',
+					start: new Date(y, m, 28),
+					end: new Date(y, m, 28),
+					color:'#EFEFEF',
+					textColor: 'black',
+					url: 'https://192.168.0.60/msa/'
+				},{
+					title: 'MSN记录：共2条',
+					start: new Date(y, m, 28),
+					end: new Date(y, m, 28),
+					color:'#EFEFEF',
+					textColor: 'black',
+					url: 'https://192.168.0.60/msa/'
+				},{
+					title: 'FTP记录：共2条',
+					start: new Date(y, m, 28),
+					end: new Date(y, m, 28),
+					color:'#EFEFEF',
+					textColor: 'black',
+					url: 'https://192.168.0.60/msa/'
+				},{
+					title: '表单记录：共2条',
+					start: new Date(y, m, 27),
+					end: new Date(y, m, 27),
+					color: '#C0C0C0',
+					textColor: 'black',
+					url: 'https://192.168.0.60/msa/'
+				},{
+					title: 'MSN记录：共2条',
+					start: new Date(y, m, 27),
+					end: new Date(y, m, 27),
+					color: '#C0C0C0',
+					textColor: 'black',
+					url: 'https://192.168.0.60/msa/'
+				},{
+					title: '邮件记录：共2条',
+					start: new Date(y, m, 27),
+					end: new Date(y, m, 27),
+					color: '#C0C0C0',
+					textColor: 'black',
+					url: 'https://192.168.0.60/msa/'
+				},{
+					title: 'QQ记录：共2条',
+					start: new Date(y, m, 27),
+					end: new Date(y, m, 27),
+					color: '#C0C0C0',
+					textColor: 'black',
+					url: 'https://192.168.0.60/msa/'
+				},{
+					title: 'WEB记录：共2条',
+					start: new Date(y, m, 27),
+					end: new Date(y, m, 27),
+					color: '#C0C0C0',
+					textColor: 'black',
+					url: 'https://192.168.0.60/msa/'
+				},{
+					title: 'HTTP记录：共2条',
+					start: new Date(y, m, 27),
+					end: new Date(y, m, 27),
+					color: '#C0C0C0',
+					textColor: 'black',
+					url: 'https://192.168.0.60/msa/'
+				},{
+					title: 'MSN记录：共2条',
+					start: new Date(y, m, 27),
+					end: new Date(y, m, 27),
+					color: '#C0C0C0',
+					textColor: 'black',
+					url: 'https://192.168.0.60/msa/'
+				},{
+					title: 'FTP记录：共2条',
+					start: new Date(y, m, 27),
+					end: new Date(y, m, 27),
+					color: '#C0C0C0',
+					textColor: 'black',
+					url: 'https://192.168.0.60/msa/'
+				},{
+					title: '表单记录：共2条',
+					start: new Date(y, m, 21),
+					end: new Date(y, m, 21),
+					color: '#808080',
+					url: 'https://192.168.0.60/msa/'
+				},{
+					title: 'MSN记录：共2条',
+					start: new Date(y, m, 21),
+					end: new Date(y, m, 21),
+					color: '#808080',
+					url: 'https://192.168.0.60/msa/'
+				},{
+					title: '邮件记录：共2条',
+					start: new Date(y, m, 21),
+					end: new Date(y, m, 21),
+					color: '#808080',
+					url: 'https://192.168.0.60/msa/'
+				},{
+					title: 'QQ记录：共2条',
+					start: new Date(y, m, 21),
+					end: new Date(y, m, 21),
+					color: '#808080',
+					url: 'https://192.168.0.60/msa/'
+				},{
+					title: 'WEB记录：共2条',
+					start: new Date(y, m, 21),
+					end: new Date(y, m, 21),
+					color: '#808080',
+					url: 'https://192.168.0.60/msa/'
+				},{
+					title: 'HTTP记录：共2条',
+					start: new Date(y, m, 21),
+					end: new Date(y, m, 21),
+					color: '#808080',
+					url: 'https://192.168.0.60/msa/'
+				},{
+					title: 'MSN记录：共2条',
+					start: new Date(y, m, 21),
+					end: new Date(y, m, 21),
+					color: '#808080',
+					url: 'https://192.168.0.60/msa/'
+				},{
+					title: 'FTP记录：共2条',
+					start: new Date(y, m, 21),
+					end: new Date(y, m, 21),
+					color: '#808080',
+					url: 'https://192.168.0.60/msa/'
+				},{
+					title: '表单记录：共2条',
+					start: new Date(y, m, 22),
+					end: new Date(y, m, 22),
+					color: '#C0C0C0',
+					textColor:'#000000',
+					url: 'https://192.168.0.60/msa/'
+				},{
+					title: 'MSN记录：共2条',
+					start: new Date(y, m, 22),
+					end: new Date(y, m, 22),
+					color: '#C0C0C0',
+					textColor:'#000000',
+					url: 'https://192.168.0.60/msa/'
+				},{
+					title: '邮件记录：共2条',
+					start: new Date(y, m, 22),
+					end: new Date(y, m, 22),
+					color: '#C0C0C0',
+					textColor:'#000000',
+					url: 'https://192.168.0.60/msa/'
+				},{
+					title: 'QQ记录：共2条',
+					start: new Date(y, m, 22),
+					end: new Date(y, m, 22),
+					color: '#C0C0C0',
+					textColor:'#000000',
+					url: 'https://192.168.0.60/msa/'
+				},{
+					title: 'WEB记录：共2条',
+					start: new Date(y, m, 22),
+					end: new Date(y, m, 22),
+					color: '#C0C0C0',
+					textColor:'#000000',
+					url: 'https://192.168.0.60/msa/'
+				},{
+					title: 'HTTP记录：共2条',
+					start: new Date(y, m, 22),
+					end: new Date(y, m, 22),
+					color: '#C0C0C0',
+					textColor:'#000000',
+					url: 'https://192.168.0.60/msa/'
+				},{
+					title: 'MSN记录：共2条',
+					start: new Date(y, m, 22),
+					end: new Date(y, m, 22),
+					color: '#C0C0C0',
+					textColor:'#000000',
+					url: 'https://192.168.0.60/msa/'
+				},{
+					title: 'FTP记录：共2条',
+					start: new Date(y, m, 22),
+					end: new Date(y, m, 22),
+					color: '#C0C0C0',
+					textColor:'#000000',
+					url: 'https://192.168.0.60/msa/'
+				},{
+					title: '表单记录：共2条',
+					start: new Date(y, m, 29),
+					end: new Date(y, m, 29),
+					color: '#808080',
+					url: 'https://192.168.0.60/msa/'
+				},{
+					title: 'MSN记录：共2条',
+					start: new Date(y, m, 29),
+					end: new Date(y, m, 29),
+					color: '#808080',
+					url: 'https://192.168.0.60/msa/'
+				},{
+					title: '邮件记录：共2条',
+					start: new Date(y, m, 29),
+					end: new Date(y, m, 29),
+					color: '#808080',
+					url: 'https://192.168.0.60/msa/'
+				},{
+					title: 'QQ记录：共2条',
+					start: new Date(y, m, 29),
+					end: new Date(y, m, 29),
+					color: '#808080',
+					url: 'https://192.168.0.60/msa/'
+				},{
+					title: 'WEB记录：共2条',
+					start: new Date(y, m, 29),
+					end: new Date(y, m, 29),
+					color: '#808080',
+					url: 'https://192.168.0.60/msa/'
+				},{
+					title: 'HTTP记录：共2条',
+					start: new Date(y, m, 29),
+					end: new Date(y, m, 29),
+					color: '#808080',
+					url: 'https://192.168.0.60/msa/'
+				},{
+					title: 'MSN记录：共2条',
+					start: new Date(y, m, 29),
+					end: new Date(y, m, 29),
+					color: '#808080',
+					url: 'https://192.168.0.60/msa/'
+				},{
+					title: 'FTP记录：共2条',
+					start: new Date(y, m, 29),
+					end: new Date(y, m, 29),
+					color: '#808080',
+					url: 'https://192.168.0.60/msa/'
+				},{
+					title: '表单记录：共2条',
+					start: new Date(y, m, 30),
+					end: new Date(y, m, 30),
+					color:'#EFEFEF',
+					textColor: 'black',
+					url: 'https://192.168.0.60/msa/'
+				},{
+					title: 'MSN记录：共2条',
+					start: new Date(y, m, 30),
+					end: new Date(y, m, 30),
+					color:'#EFEFEF',
+					textColor: 'black',
+					url: 'https://192.168.0.60/msa/'
+				},{
+					title: '邮件记录：共2条',
+					start: new Date(y, m, 30),
+					end: new Date(y, m, 30),
+					color:'#EFEFEF',
+					textColor: 'black',
+					url: 'https://192.168.0.60/msa/'
+				},{
+					title: 'QQ记录：共2条',
+					start: new Date(y, m, 30),
+					end: new Date(y, m, 30),
+					color:'#EFEFEF',
+					textColor: 'black',
+					url: 'https://192.168.0.60/msa/'
+				},{
+					title: 'WEB记录：共2条',
+					start: new Date(y, m, 30),
+					end: new Date(y, m, 30),
+					color:'#EFEFEF',
+					textColor: 'black',
+					url: 'https://192.168.0.60/msa/'
+				},{
+					title: 'HTTP记录：共2条',
+					start: new Date(y, m, 30),
+					end: new Date(y, m, 30),
+					color:'#EFEFEF',
+					textColor: 'black',
+					url: 'https://192.168.0.60/msa/'
+				},{
+					title: 'MSN记录：共2条',
+					start: new Date(y, m, 30),
+					end: new Date(y, m, 30),
+					color:'#EFEFEF',
+					textColor: 'black',
+					url: 'https://192.168.0.60/msa/'
+				},{
+					title: 'FTP记录：共2条',
+					start: new Date(y, m, 30),
+					end: new Date(y, m, 30),
+					color:'#EFEFEF',
+					textColor: 'black',
+					url: 'https://192.168.0.60/msa/'
+				},{
+					title: '表单记录：共2条',
+					start: new Date(y, m, 26),
+					end: new Date(y, m, 26),
+					color:'#EFEFEF',
+					textColor: 'black',
+					url: 'https://192.168.0.60/msa/'
+				},{
+					title: 'MSN记录：共2条',
+					start: new Date(y, m, 26),
+					end: new Date(y, m, 26),
+					color:'#EFEFEF',
+					textColor: 'black',
+					url: 'https://192.168.0.60/msa/'
+				},{
+					title: '邮件记录：共2条',
+					start: new Date(y, m, 26),
+					end: new Date(y, m, 26),
+					color:'#EFEFEF',
+					textColor: 'black',
+					url: 'https://192.168.0.60/msa/'
+				},{
+					title: 'QQ记录：共2条',
+					start: new Date(y, m, 26),
+					end: new Date(y, m, 26),
+					color:'#EFEFEF',
+					textColor: 'black',
+					url: 'https://192.168.0.60/msa/'
+				},{
+					title: 'WEB记录：共2条',
+					start: new Date(y, m, 26),
+					end: new Date(y, m, 26),
+					color:'#EFEFEF',
+					textColor: 'black',
+					url: 'https://192.168.0.60/msa/'
+				},{
+					title: 'HTTP记录：共2条',
+					start: new Date(y, m, 26),
+					end: new Date(y, m, 26),
+					color:'#EFEFEF',
+					textColor: 'black',
+					url: 'https://192.168.0.60/msa/'
+				},{
+					title: 'MSN记录：共2条',
+					start: new Date(y, m, 26),
+					end: new Date(y, m, 26),
+					color:'#EFEFEF',
+					textColor: 'black',
+					url: 'https://192.168.0.60/msa/'
+				},{
+					title: 'FTP记录：共2条',
+					start: new Date(y, m, 26),
+					end: new Date(y, m, 26),
+					color:'#EFEFEF',
+					textColor: 'black',
+					url: 'https://192.168.0.60/msa/'
+				},{
+					title: '表单记录：共2条',
+					start: new Date(y, m, 25),
+					end: new Date(y, m, 25),
+					color: '#808080',
+					url: 'https://192.168.0.60/msa/'
+				},{
+					title: 'MSN记录：共2条',
+					start: new Date(y, m, 25),
+					end: new Date(y, m, 25),
+					color: '#808080',
+					url: 'https://192.168.0.60/msa/'
+				},{
+					title: '邮件记录：共2条',
+					start: new Date(y, m, 25),
+					end: new Date(y, m, 25),
+					color: '#808080',
+					url: 'https://192.168.0.60/msa/'
+				},{
+					title: 'QQ记录：共2条',
+					start: new Date(y, m, 25),
+					end: new Date(y, m, 25),
+					color: '#808080',
+					url: 'https://192.168.0.60/msa/'
+				},{
+					title: 'WEB记录：共2条',
+					start: new Date(y, m, 25),
+					end: new Date(y, m, 25),
+					color: '#808080',
+					url: 'https://192.168.0.60/msa/'
+				},{
+					title: 'HTTP记录：共2条',
+					start: new Date(y, m, 25),
+					end: new Date(y, m, 25),
+					color: '#808080',
+					url: 'https://192.168.0.60/msa/'
+				},{
+					title: 'MSN记录：共2条',
+					start: new Date(y, m, 25),
+					end: new Date(y, m, 25),
+					color: '#808080',
+					url: 'https://192.168.0.60/msa/'
+				},{
+					title: '表单记录：共2条',
+					start: new Date(y, m, 24),
+					end: new Date(y, m, 24),
+					color: '#C0C0C0',
+					textColor:'#000000',
+					url: 'https://192.168.0.60/msa/'
+				},{
+					title: 'MSN记录：共2条',
+					start: new Date(y, m, 24),
+					end: new Date(y, m, 24),
+					color: '#C0C0C0',
+					textColor:'#000000',
+					url: 'https://192.168.0.60/msa/'
+				},{
+					title: '邮件记录：共2条',
+					start: new Date(y, m, 24),
+					end: new Date(y, m, 24),
+					color: '#C0C0C0',
+					textColor:'#000000',
+					url: 'https://192.168.0.60/msa/'
+				},{
+					title: 'QQ记录：共2条',
+					start: new Date(y, m, 24),
+					end: new Date(y, m, 24),
+					color: '#C0C0C0',
+					textColor:'#000000',
+					url: 'https://192.168.0.60/msa/'
+				},{
+					title: 'WEB记录：共2条',
+					start: new Date(y, m, 24),
+					end: new Date(y, m, 24),
+					color: '#C0C0C0',
+					textColor:'#000000',
+					url: 'https://192.168.0.60/msa/'
+				},{
+					title: 'HTTP记录：共2条',
+					start: new Date(y, m, 24),
+					end: new Date(y, m, 24),
+					color: '#C0C0C0',
+					textColor:'#000000',
+					url: 'https://192.168.0.60/msa/'
+				},{
+					title: 'MSN记录：共2条',
+					start: new Date(y, m, 24),
+					end: new Date(y, m, 24),
+					color: '#C0C0C0',
+					textColor:'#000000',
+					url: 'https://192.168.0.60/msa/'
+				},{
+					title: 'FTP记录：共2条',
+					start: new Date(y, m, 24),
+					end: new Date(y, m, 24),
+					color: '#C0C0C0',
+					textColor:'#000000',
+					url: 'https://192.168.0.60/msa/'
+				},{
+					title: 'FTP记录：共2条',
+					start: new Date(y, m, 25),
+					end: new Date(y, m, 25),
+					color: '#808080',
+					url: 'https://192.168.0.60/msa/'
+				},{
+					title: '表单记录：共2条',
+					start: new Date(y, m, 23),
+					end: new Date(y, m, 23),
+					color:'#EFEFEF',
+					textColor: 'black',
+					url: 'https://192.168.0.60/msa/'
+				},{
+					title: 'MSN记录：共2条',
+					start: new Date(y, m, 23),
+					end: new Date(y, m, 23),
+					color:'#EFEFEF',
+					textColor: 'black',
+					url: 'https://192.168.0.60/msa/'
+				},{
+					title: '邮件记录：共2条',
+					start: new Date(y, m, 23),
+					end: new Date(y, m, 23),
+					color:'#EFEFEF',
+					textColor: 'black',
+					url: 'https://192.168.0.60/msa/'
+				},{
+					title: 'QQ记录：共2条',
+					start: new Date(y, m, 23),
+					end: new Date(y, m, 23),
+					color:'#EFEFEF',
+					textColor: 'black',
+					url: 'https://192.168.0.60/msa/'
+				},{
+					title: 'WEB记录：共2条',
+					start: new Date(y, m, 23),
+					end: new Date(y, m, 23),
+					color:'#EFEFEF',
+					textColor: 'black',
+					url: 'https://192.168.0.60/msa/'
+				},{
+					title: 'HTTP记录：共2条',
+					start: new Date(y, m, 23),
+					end: new Date(y, m, 23),
+					color:'#EFEFEF',
+					textColor: 'black',
+					url: 'https://192.168.0.60/msa/'
+				},{
+					title: 'MSN记录：共2条',
+					start: new Date(y, m, 23),
+					end: new Date(y, m, 23),
+					color:'#EFEFEF',
+					textColor: 'black',
+					url: 'https://192.168.0.60/msa/'
+				},{
+					title: 'FTP记录：共2条',
+					start: new Date(y, m, 23),
+					end: new Date(y, m, 23),
+					color:'#EFEFEF',
+					textColor: 'black',
+					url: 'https://192.168.0.60/msa/'
+				},{
+					title: '表单记录：共2条',
+					start: new Date(y, m, 18),
+					end: new Date(y, m, 18),
+					color: '#808080',
+					url: 'https://192.168.0.60/msa/'
+				},{
+					title: 'MSN记录：共2条',
+					start: new Date(y, m, 18),
+					end: new Date(y, m, 18),
+					color: '#808080',
+					url: 'https://192.168.0.60/msa/'
+				},{
+					title: '邮件记录：共2条',
+					start: new Date(y, m, 18),
+					end: new Date(y, m, 18),
+					color: '#808080',
+					url: 'https://192.168.0.60/msa/'
+				},{
+					title: 'QQ记录：共2条',
+					start: new Date(y, m, 18),
+					end: new Date(y, m, 18),
+					color: '#808080',
+					url: 'https://192.168.0.60/msa/'
+				},{
+					title: 'WEB记录：共2条',
+					start: new Date(y, m, 18),
+					end: new Date(y, m, 18),
+					color: '#808080',
+					url: 'https://192.168.0.60/msa/'
+				},{
+					title: 'HTTP记录：共2条',
+					start: new Date(y, m, 18),
+					end: new Date(y, m, 18),
+					color: '#808080',
+					url: 'https://192.168.0.60/msa/'
+				},{
+					title: 'MSN记录：共2条',
+					start: new Date(y, m, 18),
+					end: new Date(y, m, 18),
+					color: '#808080',
+					url: 'https://192.168.0.60/msa/'
+				},{
+					title: 'FTP记录：共2条',
+					start: new Date(y, m, 18),
+					end: new Date(y, m, 18),
+					color: '#808080',
+					url: 'https://192.168.0.60/msa/'
+				},{
+					title: '表单记录：共2条',
+					start: new Date(y, m, 19),
+					end: new Date(y, m, 19),
+					color: '#C0C0C0',
+					textColor: 'black',
+					url: 'https://192.168.0.60/msa/'
+				},{
+					title: 'MSN记录：共2条',
+					start: new Date(y, m, 19),
+					end: new Date(y, m, 19),
+					color: '#C0C0C0',
+					textColor: 'black',
+					url: 'https://192.168.0.60/msa/'
+				},{
+					title: '邮件记录：共2条',
+					start: new Date(y, m, 19),
+					end: new Date(y, m, 19),
+					color: '#C0C0C0',
+					textColor: 'black',
+					url: 'https://192.168.0.60/msa/'
+				},{
+					title: 'QQ记录：共2条',
+					start: new Date(y, m, 19),
+					end: new Date(y, m, 19),
+					color: '#C0C0C0',
+					textColor: 'black',
+					url: 'https://192.168.0.60/msa/'
+				},{
+					title: 'WEB记录：共2条',
+					start: new Date(y, m, 19),
+					end: new Date(y, m, 19),
+					color: '#C0C0C0',
+					textColor: 'black',
+					url: 'https://192.168.0.60/msa/'
+				},{
+					title: 'HTTP记录：共2条',
+					start: new Date(y, m, 19),
+					end: new Date(y, m, 19),
+					color: '#C0C0C0',
+					textColor: 'black',
+					url: 'https://192.168.0.60/msa/'
+				},{
+					title: 'MSN记录：共2条',
+					start: new Date(y, m, 19),
+					end: new Date(y, m, 19),
+					color: '#C0C0C0',
+					textColor: 'black',
+					url: 'https://192.168.0.60/msa/'
+				},{
+					title: 'FTP记录：共2条',
+					start: new Date(y, m, 19),
+					end: new Date(y, m, 19),
+					color: '#C0C0C0',
+					textColor: 'black',
+					url: 'https://192.168.0.60/msa/'
+				},{
+					title: '表单记录：共2条',
+					start: new Date(y, m, 20),
+					end: new Date(y, m, 20),
+					color:'#EFEFEF',
+					textColor: 'black',
+					url: 'https://192.168.0.60/msa/'
+				},{
+					title: 'MSN记录：共2条',
+					start: new Date(y, m, 20),
+					end: new Date(y, m, 20),
+					color:'#EFEFEF',
+					textColor: 'black',
+					url: 'https://192.168.0.60/msa/'
+				},{
+					title: '邮件记录：共2条',
+					start: new Date(y, m, 20),
+					end: new Date(y, m, 20),
+					color:'#EFEFEF',
+					textColor: 'black',
+					url: 'https://192.168.0.60/msa/'
+				},{
+					title: 'QQ记录：共2条',
+					start: new Date(y, m, 20),
+					end: new Date(y, m, 20),
+					color:'#EFEFEF',
+					textColor: 'black',
+					url: 'https://192.168.0.60/msa/'
+				},{
+					title: 'WEB记录：共2条',
+					start: new Date(y, m, 20),
+					end: new Date(y, m, 20),
+					color:'#EFEFEF',
+					textColor: 'black',
+					url: 'https://192.168.0.60/msa/'
+				},{
+					title: 'HTTP记录：共2条',
+					start: new Date(y, m, 20),
+					end: new Date(y, m, 20),
+					color:'#EFEFEF',
+					textColor: 'black',
+					url: 'https://192.168.0.60/msa/'
+				},{
+					title: 'MSN记录：共2条',
+					start: new Date(y, m, 20),
+					end: new Date(y, m, 20),
+					color:'#EFEFEF',
+					textColor: 'black',
+					url: 'https://192.168.0.60/msa/'
+				},{
+					title: 'FTP记录：共2条',
+					start: new Date(y, m, 20),
+					end: new Date(y, m, 20),
+					color:'#EFEFEF',
+					textColor: 'black',
+					url: 'https://192.168.0.60/msa/'
+				},{
+        url:'/msa/main.xp',
+        type: 'POST',
+        error: function(){
+            alert('there was an error while fetching events!');
+        },
+        color: 'yellow',   // a non-ajax option
+        textColor: 'black' // a non-ajax option
+    		}]
+		});
+		
+	});
+	Ext.onReady(function(){
+				new Ext.Viewport({
+					layout: 'border',
+					items: [{
+						id:'date-center',
+		        title:'数据中心',
+	          region:'center',
+	          layout:'fit',
+	          split:true,
+		        height:screen.height,
+	          collapsible:false,
+	          autoScroll: true,
+	          //margins:'0 0 0 0',
+	          contentEl:'calendar'
+	         }
+					],
+	        renderTo: Ext.getBody()
+	      });
+	})
+</script>
+</head>
+<body>
+<div id="tableFrame">
+    <div id="tableFrameTitle">
+        <ul>
+            <li>ID</li>
+        </ul>
+
+    </div>
+
+    <div id="tableCase">
+    <!--此处开始循环 -->
+        <ul>
+            <li class="tableCaseOne">0001</li>
+            <li class="tableCaseTwo">1234</li>
+            <li class="tableCaseThree">&uarr; 200</li>
+            <li class="tableCaseFour">1856</li>
+            <li class="tableCaseFive">&darr; 56</li>
+            <li class="tableCaseSix">1650</li>
+            <li class="tableCaseSeven">&darr; 156</li>
+        </ul>
+    <!--到此循环结束 -->
+     <ul>
+            <li class="tableCaseOne">0002</li>
+            <li class="tableCaseTwo">1234</li>
+            <li class="tableCaseThree">&uarr; 200</li>
+            <li class="tableCaseFour">1856</li>
+            <li class="tableCaseFive">&darr; 56</li>
+            <li class="tableCaseSix">1650</li>
+            <li class="tableCaseSeven">&darr; 156</li>
+        </ul>
+        <ul>
+            <li class="tableCaseOne">0003</li>
+            <li class="tableCaseTwo">1234</li>
+            <li class="tableCaseThree">&uarr; 200</li>
+            <li class="tableCaseFour">1856</li>
+            <li class="tableCaseFive">&darr; 56</li>
+            <li class="tableCaseSix">1650</li>
+            <li class="tableCaseSeven">&darr; 156</li>
+        </ul>
+        <ul>
+            <li class="tableCaseOne">0004</li>
+            <li class="tableCaseTwo">1234</li>
+            <li class="tableCaseThree">&uarr; 200</li>
+            <li class="tableCaseFour">1856</li>
+            <li class="tableCaseFive">&darr; 56</li>
+            <li class="tableCaseSix">1650</li>
+            <li class="tableCaseSeven">&darr; 156</li>
+        </ul>
+    </div>
+</body>
+</html>

@@ -1,0 +1,274 @@
+﻿<HTML><HEAD><TITLE>网络7层管理和过滤的领导者</TITLE>
+<META content="text/html; charset=utf-8" http-equiv=Content-Type>
+<LINK rel=stylesheet type=text/css href="/msa/publiccss/pubcss.css">
+<LINK rel=stylesheet type=text/css href="/msa/extjs/resources/css/ext-all.css">
+<link rel="stylesheet" type="text/css" href="/msa/extjs/resources/css/feed-viewer.css" />
+<LINK rel=stylesheet type=text/css href="/msa/extjs/resources/css/xtheme-default.css" id="xthemecss" >
+<script type="text/javascript" src="/msa/extjs/adapter/ext/ext-base.js"></script>
+<script language = "Javascript" src = "/msa/publicjs/select_time.js"></script>
+<SCRIPT type=text/javascript  src="/msa/extjs/ext-all.js"></SCRIPT>
+<STYLE type=text/css>
+HTML {
+	BORDER-BOTTOM: 0px; BORDER-LEFT: 0px; PADDING-BOTTOM: 0px; MARGIN: 0px; PADDING-LEFT: 0px; PADDING-RIGHT: 0px; FONT: 12px verdana; HEIGHT: 100%; OVERFLOW: hidden; BORDER-TOP: 0px; BORDER-RIGHT: 0px; PADDING-TOP: 0px
+}
+BODY {
+	MARGIN: 0px; BORDER-BOTTOM: 0px; BORDER-LEFT: 0px; PADDING-BOTTOM: 0px; MARGIN: 0px; PADDING-LEFT: 0px; PADDING-RIGHT: 0px; FONT: 12px verdana; HEIGHT: 100%; OVERFLOW: hidden; BORDER-TOP: 0px; BORDER-RIGHT: 0px; PADDING-TOP: 0px
+}
+P {
+	MARGIN: 0px
+}
+</STYLE>
+<SCRIPT type=text/javascript>
+Ext.BLANK_IMAGE_URL = '/msa/extjs/resources/images/default/s.gif';
+Ext.onReady(function(){	    
+	var uid;
+	var gid;
+	var level;
+	
+	var gtreepan=new Ext.tree.TreePanel({
+	    	  height:400,
+					split: true,
+					useArrows:true,
+					autoScroll: true,
+					rootVisible: false,
+					lines: false,
+					useArrows: true,
+					root:   new Ext.tree.AsyncTreeNode(),
+					loader: new Ext.tree.TreeLoader({
+							dataUrl:'/msa/main.xp?Fun=msaGroupTree',
+							baseParams:{Fun:'msaGroupTree',type:5} 
+					}),
+					listeners: {
+		            click: function(node, e){
+					       gid=node.id;
+						    }
+					}
+
+	});
+
+    var wing;
+    var button_1 = Ext.get('department');
+		button_1.on('click', function(){
+				if(!wing){
+				var wing = new Ext.Window({
+								layout      : 'fit',
+                title: '选择部门',
+                width       : 500,
+                height      : 300,
+                closeAction :'hide',
+                plain       : true,
+                items       : gtreepan,
+								buttons: [{
+                    text     : '确定',
+                    handler  : function(){
+                     if(gid=="-1" || gid==""){
+									 		return;
+							       }else{		
+							       	   document.getElementById("gid").value=gid;		
+								         localStore.load({params:{Fun:'msalocalStore',groupid:gid}});  
+				             }
+
+				              wing.hide();
+                    }
+                  }] 
+							});
+				}
+				wing.show();
+
+		});	
+		
+		  localStore = new Ext.data.JsonStore({//构建用户列表数据存储器
+						      root: 'Results',
+					        totalProperty: 'totalCount',
+					        url:'/msa/main.xp',
+					        baseParams:{Fun:'msalocalStore'},
+						      fields: [
+						         {name: 'uid'},
+							       {name: 'uname'}
+						      ]
+			});
+						
+		
+      var Cb = new Ext.form.ComboBox({ 
+	         fieldLabel: '下拉框',  
+	         valueField:'uid',
+	         hiddenName:'uid',
+	         displayField:'uname',     
+	         id:'CbId',      
+	         blankText:'所有用户',               
+	         emptyText:'所有用户', 
+	         renderTo: 'combobox', 
+	         width:100,              
+	         anchor:'95.2%',   
+	         selectOnFocus:true,      
+	         triggerAction:'all',     
+	         store:localStore,    
+	         typeAhead:true,      
+	         typeAheadDelay:250,    
+	         editable:false,       
+	         forceSelection:true,   
+	         mode: 'local',
+	         listeners:{
+                "select":function(combo,record,number){
+		                	    var alluser1;
+		                	    alluser1=combo.getValue();                
+		                      if(typeof(alluser1)=="所有用户"){
+		                           uid=-1;	
+		                      }else{
+		                      	   uid=combo.getValue();//取得ComboBox0的选择值  
+		                      }
+		                      
+		                      document.getElementById("uid").value=uid;                                    
+                     }
+            }        
+	     }); 
+
+
+	        new Ext.Viewport({
+					layout: 'border',
+					items: [{
+						region:'center',
+						layout:'fit',
+	          split:false,
+	          minSize: 100,
+	          maxSize: 300,
+	          frame:true,
+	          collapsible:true,
+	          autoScroll: true,
+	          margins:'0 0 0 0',
+	          contentEl:'north'
+	        }],
+	        renderTo: Ext.getBody()
+	    });
+
+	    
+	    
+});
+</SCRIPT>
+<style>
+    .complete .x-tree-node-anchor span {
+        text-decoration: line-through;
+        color: #777;
+    }
+</style>
+</head>
+<body>
+<DIV id="north">	
+<DIV id="north1">
+<table width="100%" border="0" cellspacing="0" cellpadding="0" >
+  <tr> 
+    <td> 
+        <table width="100%" border="0" cellpadding="0" cellspacing="0">
+				<tr>
+				    <td width="50">  &nbsp;</td>
+				     <td>  &nbsp;</td>
+				  </tr>
+				<tr>
+				     <td width="50">  &nbsp;</td>
+				    <td> 第一步：选择你所需要的时间段</td>
+				  </tr>
+				</table>  
+        <table width="100%" border="0" cellspacing="0" cellpadding="0" >
+          <div id="plabel"> 
+            <tr> 
+               <td width="50" > 
+                <div align="center">&nbsp;</div>
+              </td>
+              <td  > 
+                <div align="left">
+                  开始日期:
+                  	<input type="text"  class=inputf0 name="sdate"  id="sdate" size="10" maxlength="10" value="" onClick=setday(sdate)>
+              </div>
+              </td>
+             </tr> 
+             
+            <tr> 
+             <td width="50" > 
+                <div align="center">&nbsp;</div>
+              </td>
+              <td> 
+                <div align="left">
+                  结束日期:
+                  <input type="text"  class=inputf0 name="edate" id="edate" size="10" maxlength="10" value="" onClick=setday(edate)>
+              </div>
+              </td>
+             </tr> 
+          
+        <tr> 
+			  <td width="50" > 
+                <div align="center">&nbsp;</div>
+              </td>
+		      <td height="20"> 
+                         部&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;门:
+		        		<div style="display:inline">
+						<input type="button" id="department" class=inputf0 border="0"  name="department" value="选择部门" >
+		    		 </div>
+		      </td>
+		     </tr>  
+	     
+         	<tr>
+	   	   <td width="50" > 
+              <div align="center">&nbsp;</div>
+            </td>
+	      <td height="20">
+	        用&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;户:&nbsp;<span id="combobox" style="display:inline-block"></span>  
+	      </td>  
+  	     </tr>
+            
+            
+             
+          <tr> 
+              <td width="50" height="20"> 
+                <div align="center">&nbsp;</div>
+              </td>
+              <td  height="20"> 
+                <div align="left"> 
+                 名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称:
+                 <input type="text" class=inputf0  name="reportname" id="reportname" size="20" maxlength="32" value=""  >
+                </div>
+              </td>
+           </tr> 
+
+		    <tr> 
+              <td width="50" height="20"> 
+                <div align="center">&nbsp;</div>
+              </td>
+              <td  height="20"> 
+                
+                <div align="left"> 
+                 邮件地址:
+                <input type="text"  class=inputf0 name="email" id="email" size="20" maxlength="32" value=""  >  
+				(填写邮件地址后生成的报告可自动发送到您的邮箱中！)
+                </div>
+              </td>
+              </tr> 
+          </div>
+        </table>       
+    </td>
+  </tr>
+</table>
+</div>
+
+<div id="north2" style="display:none">
+<p>第二步：部门流量排序</p>
+</div>
+
+
+<div id="north3" style="display:none">
+<p>第三步：人员流量排序</p>
+</div>
+
+<div id="north4" style="display:none">
+<p>第四步：网站流量排序</p>
+</div>
+
+<div id="north5" style="display:none">
+<p>第五步：目的地址流量排序</p>
+<input type="hidden" id="gid" value="-1">
+<input type="hidden" id="uid" value="-1">
+</div>
+
+
+</div>
+</body>
+</html>

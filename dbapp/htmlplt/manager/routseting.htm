@@ -1,0 +1,518 @@
+<html>
+<head>
+<title>LINK</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<META HTTP-EQUIV="Expires" CONTENT="0">
+<META HTTP-EQUIV="Cache-Control" CONTENT="no-cache, must-revalidate">
+<META content=no-cache http-equiv=Pragma>
+<link rel="stylesheet" href="/msa/publiccss/pubcss.css" type="text/css">
+
+<style type="text/css">
+<!--
+.cccv {  border-style: inset; border-top-width: 2px; border-right-width: 2px; border-bottom-width: 2px; border-left-width: 2px}
+.xan3 {  width: 100px; font-size: 12px; font-weight: normal; font-family: "宋体"}
+-->
+</style>
+
+<script language = "Javascript" src = "/msa/publicjs/selecttime.js"></script>
+<script language="JavaScript">
+  function funClear(){
+   var txts=document.getElementsByTagName("input"); 
+   for(var i=0;i <txts.length;i++) 
+   { 
+    if(txts[i].type=="text") 
+    { 
+     txts[i].value =""; 
+    } 
+   }
+  }
+  
+  var regIP=/^(25[0-5]|2[0-4][0-9]|[0-1]{1}[0-9]{2}|[1-9]{1}[0-9]{1}|[1-9])\.(25[0-5]|2[0-4][0-9]|[0-1]{1}[0-9]{2}|[1-9]{1}[0-9]{1}|[1-9]|0)\.(25[0-5]|2[0-4][0-9]|[0-1]{1}[0-9]{2}|[1-9]{1}[0-9]{1}|[1-9]|0)\.(25[0-5]|2[0-4][0-9]|[0-1]{1}[0-9]{2}|[1-9]{1}[0-9]{1}|[0-9])$/;
+  var IP_flag=false;
+
+  function gotoFun(){
+  	if(form1.dns.value=="" || form1.bakdns.value==""){
+  		alert("DNS不能为空!");
+  		return false;
+  	}
+  	
+  	var i=1;
+  	var mydip="";
+  	var mysubask="";
+  	var	mygetway="";
+  	var	mystart="";
+  	
+  	for(i=1;i<21;i++){
+  		 mydip="dip"+i;
+  		 mysubask="subask"+i;
+  		 mygetway="getway"+i;
+  		 mystart="start"+i;
+  		 if(document.getElementById(mydip).value!=""){
+  		 	 if(regIP.test(document.getElementById(mydip).value)){
+						IP_flag = true;
+				 }else{
+						IP_flag = false;
+				 }
+				
+				 if (!IP_flag){
+					  alert("对不起，ID为"+i+"的目的IP地址格式错误!");
+						document.getElementById(mydip).focus();
+						document.getElementById(mydip).select();
+					  return false;
+				 }
+				 
+				 if(document.getElementById(mysubask)==""){
+				 	 alert("对不起，ID为"+i+"的子网掩码不能为空");
+				 	 return false;
+				 }else{
+				 	 if(regIP.test(document.getElementById(mysubask).value)){
+							IP_flag = true;
+					 }else{
+							IP_flag = false;
+					 }
+					
+					 if (!IP_flag){
+						  alert("对不起，ID为"+i+"的子网掩码格式错误!");
+							document.getElementById(mysubask).focus();
+							document.getElementById(mysubask).select();
+						  return false;
+					 }
+					 
+					 
+					 if(document.getElementById(mygetway).value==""){
+					 		alert("对不起，ID为"+i+"的网关不能为空");
+				 	 		return false;
+					 }else{
+					 		 if(regIP.test(document.getElementById(mygetway).value)){
+									IP_flag = true;
+							 }else{
+									IP_flag = false;
+							 }
+							
+							 if (!IP_flag){
+								  alert("对不起，ID为"+i+"的网关格式错误!");
+									document.getElementById(mygetway).focus();
+									document.getElementById(mygetway).select();
+								  return false;
+							 }
+					 }	 
+				 
+				 }			 
+  		 
+  		 } 	
+  		 
+  		 if(document.getElementById(mystart).checked){
+  		 	 document.getElementById(mystart).value="yes";
+  		 }	  		 
+  	
+  	}
+  	
+   form1.submit();
+  }
+
+</script>
+</head>
+
+<body>
+<form name="form1" method="post" action="/msa/main.xp" >
+<input type="hidden" name="Fun" value="msaroutseting">
+  <table width="90%" border="0" cellspacing="0" align="center" height="26%">
+    <tr> 
+      <td colspan="7" height="20">
+        <div align="left">DNS及默认网关设置:</div>
+      </td>
+    </tr>
+    
+   <tr> 
+      <td colspan="7" height="5">
+        <div align="center"><font size="+1" color="#000000"></font></div>
+      </td>
+    </tr>
+    
+   <tr align="center" height="15"> 
+      <td width="91"  align="left">主DNS</td>
+      <td width="193"> 
+      	<input type="text"  class=input name="dns"  size="16" value="" maxlength="20" >      </td>
+     
+      <td width="81" align="left">备用DNS </td>
+      <td width="140" align="left"><input type="text"  class=input name="bakdns"  size="16" value="" maxlength="20" ></td>
+      <td align="left">&nbsp;</td>
+      <td colspan="2">&nbsp;</td>
+    </tr>
+    
+    <tr align="center" height="15">       
+      <td width="91" align="left" >默认网关</td>
+      <td align="center"><input type="text"  class=input name="dfgetway"  size="16" value="192.168.0.1" maxlength="20" ></td>
+      <td colspan="4" align="center">&nbsp;</td>
+      <td width="2" align="left">&nbsp;</td>
+    </tr>
+    
+    <tr> 
+      <td colspan="7" height="10">
+        <div align="center"><font size="+1" color="#000000"></font></div>
+      </td>
+    </tr>
+    
+    <tr> 
+      <td colspan="7" height="20">
+        <div align="left">静态路由表设置:</div>
+      </td>
+    </tr>
+    
+    <tr> 
+      <td colspan="7" height="5">
+        <div align="center"><font size="+1" color="#000000"></font></div>
+      </td>
+    </tr>
+    
+    <tr align="center" height="15"> 
+      <td width="91" align="left" >ID:</td>
+      <td width="193" >&nbsp;&nbsp;&nbsp;目的IP地址</td>
+      <td colspan="2" >&nbsp;&nbsp;子网掩码</td>
+      <td width="167" >&nbsp;网关</td>
+      <td width="174" >启用</td>
+    </tr>
+
+		<tr> 
+      <td colspan="7" height="5">
+        <div align="center"><font size="+1" color="#000000"></font></div>
+      </td>
+    </tr>
+    
+   <!--1-->
+    <tr  align="center" height="15"> 
+      <td width="91" align="left">1</td>
+      <td width="193" >
+      	<input type="text"  class=input name="dip1"  id="dip1" size="16" value="" maxlength="20" >      </td>
+      
+      <td colspan="2" >
+      	<input type="text"  class=input name="subask1" id="subask1" size="16" value="" maxlength="20" >      </td>
+      
+      <td width="167" >
+      	<input type="text"  class=input name="getway1" id="getway1" size="16" value="" maxlength="20" >      </td>
+      
+      <td width="174" >
+      	<input type="checkbox" name="start1" id="start1" value="no">      </td>
+    </tr>
+    
+     <!--2-->
+    <tr  align="center" height="15"> 
+      <td width="91" align="left" >2</td>
+      <td width="193" >
+      	<input type="text"  class=input name="dip2" id="dip2" size="16" value="" maxlength="20" >      </td>
+      
+      <td colspan="2" >
+      	<input type="text"  class=input name="subask2" id="subask2" size="16" value="" maxlength="20" >      </td>
+      
+      <td width="167" >
+      	<input type="text"  class=input name="getway2" id="getway2" size="16" value="" maxlength="20" >      </td>
+      
+      <td width="174" >
+      	<input type="checkbox" name="start2" id="start2" value="no">      </td>
+    </tr>
+    
+       <!--3-->
+    <tr  align="center" height="15"> 
+      <td width="91" align="left" >3</td>
+      <td width="193" >
+      	<input type="text"  class=input name="dip3" id="dip3" size="16" value="" maxlength="20" >      </td>
+      
+      <td colspan="2" >
+      	<input type="text"  class=input name="subask3" id="subask3" size="16" value="" maxlength="20" >      </td>
+      
+      <td width="167" >
+      	<input type="text"  class=input name="getway3" id="getway3"  size="16" value="" maxlength="20" >      </td>
+      
+      <td width="174" >
+      	<input type="checkbox" name="start3" id="start3" value="no">      </td>
+    </tr>
+    
+          <!--4-->
+    <tr  align="center" height="15"> 
+      <td width="91" align="left" >4</td>
+      <td width="193" >
+      	<input type="text"  class=input name="dip4" id="dip4" size="16" value="" maxlength="20" >      </td>
+      
+      <td colspan="2" >
+      	<input type="text"  class=input name="subask4" id="subask4" size="16" value="" maxlength="20" >      </td>
+      
+      <td width="167" >
+      	<input type="text"  class=input name="getway4" id="getway4" size="16" value="" maxlength="20" >      </td>
+      
+      <td width="174" >
+      	<input type="checkbox" name="start4" id="start4" value="no">      </td>
+    </tr>
+    
+    
+          <!--5-->
+    <tr  align="center" height="15"> 
+      <td width="91" align="left" >5</td>
+      <td width="193" >
+      	<input type="text"  class=input name="dip5" id="dip5" size="16" value="" maxlength="20" >      </td>
+      
+      <td colspan="2" >
+      	<input type="text"  class=input name="subask5" id="subask5" size="16" value="" maxlength="20" >      </td>
+      
+      <td width="167" >
+      	<input type="text"  class=input name="getway5" id="getway5" size="16" value="" maxlength="20" >      </td>
+      
+      <td width="174" >
+      	<input type="checkbox" name="start5" id="start5" value="no">      </td>
+    </tr>
+    
+     <!--6-->
+     <tr  align="center" height="15"> 
+      <td width="91" align="left" >6</td>
+      <td width="193" >
+      	<input type="text"  class=input name="dip6" id="dip6" size="16" value="" maxlength="20" >      </td>
+      
+      <td colspan="2" >
+      	<input type="text"  class=input name="subask6" id="subask6"  size="16" value="" maxlength="20" >      </td>
+      
+      <td width="167" >
+      	<input type="text"  class=input name="getway6" id="getway6"  size="16" value="" maxlength="20" >      </td>
+      
+      <td width="174" >
+      	<input type="checkbox" name="start6" id="start6" value="no">      </td>
+    </tr>
+    
+    
+     <!--7-->
+     <tr  align="center" height="15"> 
+      <td width="91" align="left" >7</td>
+      <td width="193" >
+      	<input type="text"  class=input name="dip7" id="dip7" size="16" value="" maxlength="20" >      </td>
+      
+      <td colspan="2" >
+      	<input type="text"  class=input name="subask7" id="subask7"  size="16" value="" maxlength="20" >      </td>
+      
+      <td width="167" >
+      	<input type="text"  class=input name="getway7" id="getway7" size="16" value="" maxlength="20" >      </td>
+      
+      <td width="174" >
+      	<input type="checkbox" name="start7" id="start7" value="no">      </td>
+    </tr>
+    
+     <!--8-->
+     <tr  align="center" height="15"> 
+      <td width="91" align="left" >8</td>
+      <td width="193" >
+      	<input type="text"  class=input name="dip8" id="dip8" size="16" value="" maxlength="20" >      </td>
+      
+      <td colspan="2" >
+      	<input type="text"  class=input name="subask8" id="subask8" size="16" value="" maxlength="20" >      </td>
+      
+      <td width="167" >
+      	<input type="text"  class=input name="getway8" id="getway8" size="16" value="" maxlength="20" >      </td>
+      
+      <td width="174" >
+      	<input type="checkbox" name="start8" id="start8" value="no">      </td>
+    </tr>
+    
+     <!--9-->
+     <tr  align="center" height="15"> 
+      <td width="91" align="left" >9</td>
+      <td width="193" >
+      	<input type="text"  class=input name="dip9" id="dip9" size="16" value="" maxlength="20" >      </td>
+      
+      <td colspan="2" >
+      	<input type="text"  class=input name="subask9" id="subask9" size="16" value="" maxlength="20" >      </td>
+      
+      <td width="167" >
+      	<input type="text"  class=input name="getway9" id="getway9" size="16" value="" maxlength="20" >      </td>
+      
+      <td width="174" >
+      	<input type="checkbox" name="start9" id="start9" value="no">      </td>
+    </tr>
+    
+     <!--10-->
+     <tr  align="center" height="15"> 
+      <td width="91" align="left" >10</td>
+      <td width="193" >
+      	<input type="text"  class=input name="dip10" id="dip10"  size="16" value="" maxlength="20" >      </td>
+      
+      <td colspan="2" >
+      	<input type="text"  class=input name="subask10" id="subask10" size="16" value="" maxlength="20" >      </td>
+      
+      <td width="167" >
+      	<input type="text"  class=input name="getway10" id="getway10" size="16" value="" maxlength="20" >      </td>
+      
+      <td width="174" >
+      	<input type="checkbox" name="start10" id="start10" value="no">      </td>
+    </tr>
+    
+      <!--11-->
+    <tr  align="center" height="15"> 
+      <td width="91" align="left" >11</td>
+      <td width="193" >
+      	<input type="text"  class=input name="dip11" id="dip11" size="16" value="" maxlength="20" >      </td>
+      
+      <td colspan="2" >
+      	<input type="text"  class=input name="subask11" id="subask11" size="16" value="" maxlength="20" >      </td>
+      
+      <td width="167" >
+      	<input type="text"  class=input name="getway11" id="getway11" size="16" value="" maxlength="20" >      </td>
+      
+      <td width="174" >
+      	<input type="checkbox" name="start11" id="start11" value="no">      </td>
+    </tr>
+    
+     <!--12-->
+    <tr  align="center" height="15"> 
+      <td width="91" align="left" >12</td>
+      <td width="193" >
+      	<input type="text"  class=input name="dip12" id="dip12" size="16" value="" maxlength="20" >      </td>
+      
+      <td colspan="2" >
+      	<input type="text"  class=input name="subask12" id="subask12" size="16" value="" maxlength="20" >      </td>
+      
+      <td width="167" >
+      	<input type="text"  class=input name="getway12" id="getway12" size="16" value="" maxlength="20" >      </td>
+      
+      <td width="174" >
+      	<input type="checkbox" name="start12" id="start12" value="no">      </td>
+    </tr>
+    
+       <!--13-->
+    <tr  align="center" height="15"> 
+      <td width="91" align="left" >13</td>
+      <td width="193" >
+      	<input type="text"  class=input name="dip13" id="dip13" size="16" value="" maxlength="20" >      </td>
+      
+      <td colspan="2" >
+      	<input type="text"  class=input name="subask13" id="subask13" size="16" value="" maxlength="20" >      </td>
+      
+      <td width="167" >
+      	<input type="text"  class=input name="getway13" id="getway13" size="16" value="" maxlength="20" >      </td>
+      
+      <td width="174" >
+      	<input type="checkbox" name="start13" id="start13" value="no">      </td>
+    </tr>
+    
+          <!--14-->
+    <tr  align="center" height="15"> 
+      <td width="91" align="left" >14</td>
+      <td width="193" >
+      	<input type="text"  class=input name="dip14" id="dip14" size="16" value="" maxlength="20" >      </td>
+      
+      <td colspan="2" >
+      	<input type="text"  class=input name="subask14" id="subask14" size="16" value="" maxlength="20" >      </td>
+      
+      <td width="167" >
+      	<input type="text"  class=input name="getway14" id="getway14"  size="16" value="" maxlength="20" >      </td>
+      
+      <td width="174" >
+      	<input type="checkbox" name="start14"  id="start14"  value="no">      </td>
+    </tr>
+    
+    
+          <!--15-->
+    <tr  align="center" height="15"> 
+      <td width="91" align="left" >15</td>
+      <td width="193" >
+      	<input type="text"  class=input name="dip15" id="dip15" size="16" value="" maxlength="20" >      </td>
+      
+      <td colspan="2" >
+      	<input type="text"  class=input name="subask15" id="subask15" size="16" value="" maxlength="20" >      </td>
+      
+      <td width="167" >
+      	<input type="text"  class=input name="getway15" id="getway15" size="16" value="" maxlength="20" >      </td>
+      
+      <td width="174" >
+      	<input type="checkbox" name="start15" id="start15" value="no">      </td>
+    </tr>
+    
+     <!--16-->
+     <tr  align="center" height="15"> 
+      <td width="91" align="left" >16</td>
+      <td width="193" >
+      	<input type="text"  class=input name="dip16" id="dip16" size="16" value="" maxlength="20" >      </td>
+      
+      <td colspan="2" >
+      	<input type="text"  class=input name="subask16" id="subask16"  size="16" value="" maxlength="20" >      </td>
+      
+      <td width="167" >
+      	<input type="text"  class=input name="getway16" id="getway16" size="16" value="" maxlength="20" >      </td>
+      
+      <td width="174" >
+      	<input type="checkbox" name="start16" id="start16" value="no">      </td>
+    </tr>
+    
+    
+     <!--17-->
+     <tr  align="center" height="15"> 
+      <td width="91" align="left" >17</td>
+      <td width="193" >
+      	<input type="text"  class=input name="dip17" id="dip17"  size="16" value="" maxlength="20" >      </td>
+      
+      <td colspan="2" >
+      	<input type="text"  class=input name="subask17" id="subask17" size="16" value="" maxlength="20" >      </td>
+      
+      <td width="167" >
+      	<input type="text"  class=input name="getway17" id="getway17" size="16" value="" maxlength="20" >      </td>
+      
+      <td width="174" >
+      	<input type="checkbox" name="start17" id="start17" value="no">      </td>
+    </tr>
+    
+     <!--18-->
+     <tr  align="center" height="15"> 
+      <td width="91" align="left" >18</td>
+      <td width="193" >
+      	<input type="text"  class=input name="dip18" id="dip18" size="16" value="" maxlength="20" >      </td>
+      
+      <td colspan="2" >
+      	<input type="text"  class=input name="subask18" id="subask18" size="16" value="" maxlength="20" >      </td>
+      
+      <td width="167" >
+      	<input type="text"  class=input name="getway18" id="getway18" size="16" value="" maxlength="20" >      </td>
+      
+      <td width="174" >
+      	<input type="checkbox" name="start18" id="start18" value="no">      </td>
+    </tr>
+    
+     <!--19-->
+     <tr  align="center" height="15"> 
+      <td width="91" align="left" >19</td>
+      <td width="193" >
+      	<input type="text"  class=input name="dip19" id="dip19"  size="16" value="" maxlength="20" >      </td>
+      
+      <td colspan="2" >
+      	<input type="text"  class=input name="subask19" id="subask19"   size="16" value="" maxlength="20" >      </td>
+      
+      <td width="167" >
+      	<input type="text"  class=input name="getway19" id="getway19"  size="16" value="" maxlength="20" >      </td>
+      
+      <td width="174" >
+      	<input type="checkbox" name="start19" id="start19" value="no">      </td>
+    </tr>
+    
+     <!--20-->
+     <tr  align="center" height="15"> 
+      <td width="91" align="left" >20</td>
+      <td width="193" >
+      	<input type="text"  class=input name="dip20" id="dip20"  size="16" value="" maxlength="20" >      </td>
+      
+      <td colspan="2" >
+      	<input type="text"  class=input name="subask20" id="subask20"   size="16" value="" maxlength="20" >      </td>
+      
+      <td width="167" >
+      	<input type="text"  class=input name="getway20" id="getway20"  size="16" value="" maxlength="20" >      </td>
+      
+      <td width="174" >
+      	<input type="checkbox" name="start20" id="start20" value="no">      </td>
+    </tr>
+    
+
+    <tr> 
+    	<td colspan="7" height="31"> 
+          <input type="button" class=input  name="clear" value="清空"  onclick="funClear();" style="CURSOR: hand">
+          &nbsp;&nbsp;
+          <input type="button" class=input  name="save"  value="保存"  onclick="gotoFun();"  style="CURSOR: hand">
+      </td>
+    </tr>
+  </table>
+</form>
+</body>
+</html>
+

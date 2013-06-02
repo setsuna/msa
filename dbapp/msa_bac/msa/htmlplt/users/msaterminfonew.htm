@@ -1,0 +1,614 @@
+<HTML><HEAD><TITLE>网络7层管理和过滤的领导者</TITLE>
+<META content="text/html; charset=utf-8" http-equiv=Content-Type>
+<LINK rel=stylesheet type=text/css href="/msa/publiccss/pubcss.css">
+<LINK rel=stylesheet type=text/css href="/msa/extjs/resources/css/ext-all.css">
+<link rel="stylesheet" type="text/css" href="/msa/extjs/resources/css/feed-viewer.css" />
+<LINK rel=stylesheet type=text/css href="/msa/extjs/resources/css/xtheme-default.css" id="xthemecss" >
+<script type="text/javascript" src="/msa/extjs/adapter/ext/ext-base.js"></script>
+<SCRIPT type=text/javascript  src="/msa/extjs/ext-all.js"></SCRIPT>
+<script type=text/javascript  src="/msa/publicjs/select_time_st_1.js"></script>
+<script type="text/javascript">
+ function addlistfun() {
+	if(listform.username.value==""){
+		alert("账号不能为空!");
+		listform.username.focus();
+		listform.username.select();
+		return;
+	}
+	if(listform.password.value==""){
+		alert("密码不能为空!");
+		listform.password.focus();
+		listform.password.select();
+		return;
+	}
+	var mypass=listform.password.value;
+	for(var i=0;i<mypass.length;i++)
+     {
+       var myChar= mypass.toLowerCase().charAt(i);
+       var myLenth=mypass.replace(/[^\x00-\xff]/g,'**').length;	
+       if((!(myChar>='0' && myChar<='9')) && (!(myChar>='a' && myChar<='z')))
+       { 
+			  alert("对不起，密码不安全！");
+				listform.password.focus();
+				listform.password.select();
+      	return;
+       }
+       else if((myLenth>=0)&&(myLenth<8))
+       { 
+			  alert("对不起，密码不安全！");
+				listform.password.focus();
+				listform.password.select();
+      	return;
+       }
+     }
+	var Pass_flag=false;
+	var reg=/^(?=.*[0-9].*)(?=.*[a-zA-Z].*).{8,}$/;//必须包含数字和字母
+	if(reg.test(mypass)){
+		Pass_flag = true;
+		}else{
+		Pass_flag = false;
+		}
+		if (!Pass_flag){
+		  alert("对不起，密码不安全！");
+			listform.password.focus();
+			listform.password.select();
+		  return false;
+		}
+	if(listform.password.value!=listform.repassword.value){
+		alert("密码不一致!");
+		listform.password.value=="";
+		listform.repassword.value=="";
+		return;
+	}
+	var mydispname=listform.dispname.value;
+	if(listform.dispname.value==""){
+		alert("显示名称不能为空!");
+			listform.dispname.focus();
+			listform.dispname.select();
+		return;
+	}
+	var myCertificate_code=listform.Certificate_code.value;	
+	if(!(myCertificate_code=="")){
+		for(var i=0;i<myCertificate_code.length;i++)
+		 {
+		   var myChar= myCertificate_code.toLowerCase().charAt(i);
+		   var myLenth=myCertificate_code.replace(/[^\x00-\xff]/g,'**').length;	
+		    if((myLenth<5))
+		   { 
+				  alert("对不起，证件号码必须大于五位！");
+					listform.Certificate_code.focus();
+					listform.Certificate_code.select();
+					return;
+		   }
+		   else if(!(myChar>='0' && myChar<='9'))
+		   { 
+				  alert("对不起,证件号码必须为数字！");
+					listform.Certificate_code.focus();
+					listform.Certificate_code.select();
+					return;
+		   }
+		 }
+	}
+	var myip=listform.ip.value;
+	if(!(myip=="")){
+	  var regIP=/^(25[0-5]|2[0-4][0-9]|[0-1]{1}[0-9]{2}|[1-9]{1}[0-9]{1}|[1-9])\.(25[0-5]|2[0-4][0-9]|[0-1]{1}[0-9]{2}|[1-9]{1}[0-9]{1}|[1-9]|0)\.(25[0-5]|2[0-4][0-9]|[0-1]{1}[0-9]{2}|[1-9]{1}[0-9]{1}|[1-9]|0)\.(25[0-5]|2[0-4][0-9]|[0-1]{1}[0-9]{2}|[1-9]{1}[0-9]{1}|[0-9])$/;
+	  var IP_flag=false;
+	  if(regIP.test(myip)){
+		IP_flag = true;
+		}else{
+		IP_flag = false;
+		}
+		if (!IP_flag){
+		  alert("对不起，ip地址格式错误！");
+			listform.ip.focus();
+			listform.ip.select();
+		  return false;
+		}
+	}
+	
+	if(!(listform.mac.value=="")){
+		var mymac=listform.mac.value;
+	  var regmac=/^([0-9a-fA-F]{2})(([/\s:-][0-9a-fA-F]{2}){5})$/;
+	  var MAC_flag=false;
+	  if(regmac.test(mymac)){
+		MAC_flag = true;
+		}else{
+		MAC_flag = false;
+		}
+		if (!MAC_flag){
+		  alert("对不起，mac地址格式错误！");
+			listform.mac.focus();
+			listform.mac.select();
+		  return false;
+		}
+	}if(!(listform.email.value=="")){
+		 var regEmail=/^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/i;
+		var myEmail=listform.email.value;
+	  var Email_flag=false;
+	  if(regEmail.test(myEmail)){
+		Email_flag = true;
+		}else{
+		Email_flag = false;
+		}
+		if (!Email_flag){
+		  alert("对不起，邮箱地址格式错误！");
+			listform.email.focus();
+			listform.email.select();
+		  return false;
+		}
+	}if(!(listform.money.value=="")){
+		var myMoney=listform.money.value;
+			for(var i=0;i<myMoney.length;i++)
+			 {
+			   var myChar= myMoney.toLowerCase().charAt(i);
+			   if(!(myChar>='0' && myChar<='9'))
+			   { 
+					  alert("对不起,金额必须为数字！");
+						listform.money.focus();
+						listform.money.select();
+						return;
+			   }
+			 }
+	}
+
+	listform.submit();
+} 
+</SCRIPT>
+<SCRIPT type=text/javascript>
+ 
+Ext.BLANK_IMAGE_URL = '/msa/extjs/resources/images/default/s.gif'; 
+Ext.onReady(function(){
+	var Servicewin;
+	var wing1;
+	var wing2;
+	var wing3;
+	var wing4;
+	new Ext.Panel({
+		renderTo:Ext.getBody(),
+		layout:'fit',
+		height:screen.height-210,
+		title:"用户添加",
+		contentEl:'mainviewdiv'
+		});
+	//设置附件属性
+	var root=new Ext.tree.TreeNode({
+	id:"root",
+	text:"树的根"
+	});
+	var c1=new Ext.tree.TreeNode({
+	id:'0',
+	text:"拒绝FTP上传文件",
+	leaf:true,
+	checked:false
+	});
+	var c2=new Ext.tree.AsyncTreeNode({
+	id:'1',
+	text:"拒绝表单上传文件",
+	leaf:true,
+	checked:false
+	});
+	var c3=new Ext.tree.TreeNode({
+	id:'2',
+	text:"拒绝MSN上传文件",
+	leaf:true,
+	checked:false
+	});
+	var c4=new Ext.tree.AsyncTreeNode({
+	id:'3',
+	text:"拒绝MSN接受文件",
+	leaf:true,
+	checked:false
+	});
+	root.appendChild(c1);
+	root.appendChild(c2);
+	root.appendChild(c3);
+	root.appendChild(c4);
+	//服务
+	var Servicetree=new Ext.tree.TreePanel({
+	  renderTo:Ext.getBody(),
+		height:300,
+		split: true,
+		useArrows:true,
+		autoScroll: true,
+		rootVisible: false,
+		lines: false,
+		useArrows: true,
+		root: new Ext.tree.AsyncTreeNode(),
+		loader: new Ext.tree.TreeLoader({
+			dataUrl:'/msa/main.xp?Fun=msaServiceTree',
+			baseParams:{Fun:'msaServiceTree'} 
+		})	
+	 });
+	//设置附件属性
+	var treepan_3=new Ext.tree.TreePanel({
+		renderTo:Ext.getBody(),
+		height:300,
+		split: true,
+		useArrows:true,
+		autoScroll: true,
+		rootVisible: false,
+		lines: false,
+		useArrows: true,
+		root:root	
+	 });
+	//设置所属部门
+	var treepan=new Ext.tree.TreePanel({
+		renderTo:Ext.getBody(),
+		height:300,
+		split: true,
+		useArrows:true,
+		autoScroll: true,
+		rootVisible: false,
+		lines: false,
+		useArrows: true,
+		root: new Ext.tree.AsyncTreeNode(),
+		loader: new Ext.tree.TreeLoader({
+			dataUrl:'/msa/main.xp?Fun=msaGroupTree',
+			baseParams:{Fun:'msaGroupTree'} 
+		}),
+		listeners: {
+					    click: function(node, e) {
+							document.getElementById('groupid').value=node.id;
+					    wing1.hide();
+					   }
+					   }
+	 });
+	//策略树
+
+	var treepan_2=new Ext.tree.TreePanel({
+		renderTo:Ext.getBody(),
+		height:300,
+		split: true,
+		useArrows:true,
+		autoScroll: true,
+		rootVisible: false,
+		lines: false,
+		useArrows: true,
+		root: new Ext.tree.AsyncTreeNode() ,
+		loader: new Ext.tree.TreeLoader({
+			dataUrl:'/msa/main.xp?Fun=msaPolicyTree',
+			baseParams:{Fun:'msaPolicyTree'} 
+		})
+	 });
+	var button_1 = Ext.get('Service_1');
+	button_1.on('click', function(){
+		if(!wing1){
+		wing1 = new Ext.Window({
+				title: '选择所属部门',
+				closeAction: 'hide',
+				width: 500,
+				height:300,
+				plain:true,
+				items:treepan,
+				bodyStyle:'padding:5px;'
+			});
+		}
+		wing1.show();		
+	});
+	
+	var button_2 = Ext.get('Service_2');
+	button_2.on('click', function(){
+		if(!wing2){
+		wing2 = new Ext.Window({
+				title: '选择所属策略',
+				closeAction: 'hide',
+				width: 500,
+				height:300,
+				plain:true,
+				items:treepan_2,
+				bodyStyle:'padding:5px;',
+				buttons:[{
+		                text     : '保存选择的策略',
+		                handler  : function(){
+		                seled="00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000";
+		                var selNodes = treepan_2.getChecked();
+				                Ext.each(selNodes, function(node){
+				                    if(node.id=='0'){
+				                      seled = '1' + seled.substring(node.id);
+				                    }else if(node.id=='127'){
+				                      seled = seled.substring(0,node.id) +  '1';
+				                    }else{
+				                      seled = seled.substring(0,node.id) +  '1' + seled.substring(node.id,127);
+				                    }
+				                });
+												document.getElementById('policy').value=seled;
+					    					wing2.hide();
+                    }
+                },{
+                    text     : '选择全部',
+                    handler  : function(){
+                    var rootNodes = treepan_2.getRootNode();
+                		if (rootNodes.childNodes && rootNodes.childNodes.length>0)
+                        {
+												var child;
+												seled="00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000";
+                        for (var i=0;i<rootNodes.childNodes.length;i++){
+                            child = rootNodes.childNodes[i];
+                            if(i=='0'){
+				                      seled = '1' + seled.substring(i);
+				                    }else if(i=='127'){
+				                      seled = seled.substring(0,i) +  '1';
+				                    }else{
+				                      seled = seled.substring(0,i) +  '1' + seled.substring(i,127);
+				                    }
+                            child.getUI().toggleCheck(true);
+                        }}
+                        document.getElementById('policy').value=seled
+                        wing2.hide();
+                    }
+                }]
+			});
+		}
+		wing2.show();		
+	});	
+	//选择服务按钮
+	var Service= Ext.get('Service');
+	Service.on('click', function(){
+		if(!Servicewin){
+		Servicewin = new Ext.Window({
+				title: '选择附加属性',
+				closeAction: 'hide',
+				width: 500,
+				height:300,
+				plain:true,
+				items:Servicetree,
+				bodyStyle:'padding:5px;',
+				buttons: [{	
+		                text     : '保存选择的服务',
+		                handler  : function(){
+		                seled="00000000000000000000000000000000000";
+		                var selNodes = Servicetree.getChecked();
+				                Ext.each(selNodes, function(node){
+				                    if(node.id=='0'){
+				                      seled = '1' + seled.substring(node.id);
+				                    }else if(node.id=='34'){
+				                      seled = seled.substring(0,node.id) +  '1';
+				                    }else{
+				                      seled = seled.substring(0,node.id) +  '1' + seled.substring(node.id,34);
+				                    }
+				                    document.getElementById('qosid').value=seled
+				                });
+				                Servicewin.hide();
+                    }
+                },{
+                    text     : '选择全部服务',
+                    handler  : function(){
+                    var rootNodes = Servicetree.getRootNode();
+                		if (rootNodes.childNodes && rootNodes.childNodes.length>0)
+                        {
+												var child;
+												seled="00000000000000000000000000000000000";
+                        for (var i=0;i<rootNodes.childNodes.length;i++){
+                            child = rootNodes.childNodes[i];
+                            if(i=='0'){
+				                      seled = '1' + seled.substring(i);
+				                    }else if(i=='34'){
+				                      seled = seled.substring(0,i) +  '1';
+				                    }else{
+				                      seled = seled.substring(0,i) +  '1' + seled.substring(i,34);
+				                    }
+                            child.getUI().toggleCheck(true);
+                        }}
+                        document.getElementById('qosid').value=seled
+                        Servicewin.hide();
+                    }
+                }]
+			});
+		}
+		Servicewin.show();	
+	});
+	var button_3 = Ext.get('Service_3');
+	button_3.on('click', function(){
+		if(!wing3){
+		wing3 = new Ext.Window({
+				title: '选择附加属性',
+				closeAction: 'hide',
+				width: 500,
+				height:300,
+				plain:true,
+				items:treepan_3,
+				bodyStyle:'padding:5px;',
+				buttons: [{
+		                text     : '保存选择的属性',
+		                handler  : function(){
+		                seled="00000000000000000000000000000000";
+		                var selNodes = treepan_3.getChecked();
+				                Ext.each(selNodes, function(node){
+				                    if(node.id=='0'){
+				                      seled = '1' + seled.substring(node.id);
+				                    }else if(node.id=='31'){
+				                      seled = seled.substring(0,node.id) + '1';
+				                    }else{
+				                      seled = seled.substring(0,node.id) +  '1' + seled.substring(node.id,31);
+				                    }	                    
+				                });
+												document.getElementById('annex').value=seled;
+				                wing3.hide();
+                    }
+                },{
+                  text     : '选择全部',
+                  handler  : function(){
+                  var rootNodes = treepan_3.getRootNode();
+              		if (rootNodes.childNodes && rootNodes.childNodes.length>0)
+                      {
+											var child;
+											seled="00000000000000000000000000000000";
+                      for (var i=0;i<rootNodes.childNodes.length;i++){
+                          child = rootNodes.childNodes[i];
+                          if(i=='0'){
+			                      seled = '1' + seled.substring(i);
+			                    }else if(i=='31'){
+			                      seled = seled.substring(0,i) +  '1';
+			                    }else{
+			                      seled = seled.substring(0,i-1) +  '1' + seled.substring(i,32);
+			                    }
+                          child.getUI().toggleCheck(true);
+                      }}
+                      document.getElementById('annex').value=seled;
+                      wing3.hide();
+                  }
+                }]
+			});
+		}
+		wing3.show();	
+	});	
+});
+</SCRIPT>
+</head>
+<body bgcolor="#ffffff" text="#000000"  leftmargin="1" topmargin="0" >
+	<div id="mainviewdiv" valign="top" align="center" STYLE="position:absolute; top=30; left=30; z-index:1;">
+    <form name="listform" action="/msa/main.xp" method="POST">
+	<table width="974" align="center">
+	
+	<tr>
+		<td width="145">&nbsp;</td>
+		<td width="193">&nbsp;</td>
+		<td width="117">&nbsp;</td>
+	  <td width="499">&nbsp;</td>
+	</tr>
+		
+		<tr> 
+          <td colspan="5"><img src="./images/tu3.gif" width="40" height="40" align="absmiddle"> 
+            您可以修改登录名和密码,及所属分类</td>
+        </tr>
+		<tr>
+		  <td width="145">账号</td>
+		  <td width="193"><input type="text"  name="username" value="" class="inputf0"></td>
+		  <td>密码</td>
+		  <td><input type="password"  name="password" value="" class="inputf0" id="password" ></td>
+		</tr>
+		<tr>
+		  <td>显示名</td>
+		  <td><input type="text"  name="dispname" value="" class="inputf0" ></td>
+		  <td>确认密码</td>
+		  <td><input type="password"  name="repassword" value="" class="inputf0" id="repassword"></td>
+		</tr>
+		<tr>
+		  <td>性别</td>
+		  <td><select name="sex" class="inputself0">
+              <option value="0">女</option>
+              <option value="1">男</option>
+          </select></td>
+		  <td>身份类型</td>
+		  <td>
+			<select class=inputsel name="Certificate_type" id="Certificate_type">
+			<option value="111" selected >居民身份证</option>
+			<option value="112">临时居民身份证</option>
+			<option value="114">军官证</option>
+			<option value="116">暂住证</option>
+			<option value="133">学生证</option>
+			<option value="335">机动车驾驶证</option>
+			<option value="411">外交护照</option>
+			<option value="412">公务护照</option>
+			<option value="413">因公普通护照</option>
+			<option value="415">旅行证</option>
+			<option value="416">入出境通行证</option>
+			<option value="418">外国人旅行证</option>
+			<option value="420">香港特别行政区护照</option>
+			<option value="511">澳门特别行政区护照</option>
+			<option value="513">台湾居民来往大陆通行证</option>
+			<option value="515">往来港澳通行证</option>
+			<option value="516">前往港澳通行证</option>
+			<option value="517">港澳同胞回乡证（通行卡）</option>
+			<option value="518">大陆居民往来台湾通行证</option>
+			<option value="554">因公往来香港澳门特别行政区通行证</option>
+			<option value="555">外国人临时居留证</option>
+			<option value="777">边境管理区通行证</option>
+			<option value="990">其他证件</option>
+          </select> </td>
+	  </tr>
+		<tr>
+		  <td>该用户有效期限至 </td>
+		  <td><input name="edate" type="text" class=inputf0 id="edate" onfocus=setday(edate) value="" size="20" maxlength="32" readonly></td>
+		  <td>证件号码</td>
+		  <td><input type="text"  name="Certificate_code" value="" class="inputf0" id="Certificate_code" ></td>
+	  </tr>
+		<tr>
+		  <td>&nbsp;</td>
+		  <td>&nbsp;</td>
+		  <td>&nbsp;</td>
+		  <td>&nbsp;</td>
+	  </tr>
+		<tr>
+		  <td>IP 地址 </td>
+		  <td><input type="text" name="ip" value="" class="inputf0" id="ip" ></td>
+		  <td>电话</td>
+		  <td><input type="text" name="tel" value="" class="inputf0" id="tel" ></td>
+	  </tr>
+		<tr>
+		  <td>MAC 地址 </td>
+		  <td><input type="text" name="mac" value="" class="inputf0" id="mac"></td>
+		  <td>Email</td>
+		  <td><input type="text" name="email" value="" class="inputf0" id="email" ></td>
+	  </tr>
+		<tr>
+		  <td>&nbsp;</td>
+		  <td>&nbsp;</td>
+		  <td>&nbsp;</td>
+		  <td>&nbsp;</td>
+	  </tr>
+		<tr>
+		  <td>计费类型</td>
+		  <td><select name="billing" class="inputself0" id="billing">
+            <option value="0">不计费</option>
+            <option value="1">包时计费</option>
+            <option value="2">后付流量计费</option>
+            <option value="3">后付时间计费</option>
+            <option value="4">预付流量计费</option>
+            <option value="5">预付时间计费</option>
+          </select></td>
+		  <td>预付金额</td>
+		  <td><input type="text" name="money" value="0" class="inputf0" id="money" ></td>
+	  </tr>
+		<tr>
+		  <td>用户状态</td>
+		  <td><select name="userflag" class="inputself0" id="userflag">
+            <option value="0" selected>正常</option>
+            <option value="9">免监控</option>
+            <option value="10">禁止访问</option>
+          </select></td>
+		  <td width="117">&nbsp;</td>
+    	  <td width="499">&nbsp;</td>
+	  </tr>
+		
+		<tr> 
+          <td colspan="5"><img src="./images/tu15.gif" width="40" height="40" align="absmiddle">帐号的一些附加属性</td>
+      </tr>
+		<tr>
+		  <td width="145"><input type="button" id="Service_1" class=inputf0 border="0" name="Service_1" value="设置所属部门"></td>
+		  <td width="193"><input type="button" id="Service_2" class=inputf0 border="0" name="Service_2" value="设置策略组"></td>
+		  <td width="117"><input type="button" id="Service_3" class=inputf0 border="0" name="Service_3" value="设置附加属性"></td>
+		  <td>&nbsp;</td>
+	  </tr>
+		
+		<tr>
+		  <td colspan="4"><img src="./images/tt1.gif" alt="" width="40" height="40" align="absmiddle"> 帐号通道属性
+		    <input type="hidden" name="Fun" value="msaTerminfoAdd">
+            <input type="hidden" name="groupid" id="groupid" value="[$id$]">
+            <input type="hidden" name="annex" id="annex" value="">
+            <input type="hidden" name="policy" id="policy" value="">
+            <input type="hidden" name="qosid" id="qosid" value=""></td>
+	  </tr>
+		<tr>
+		  <td width="145">带宽</td>
+		  <td width="193"><select name="ratelimit" class="inputself0" id="ratelimit">
+      <option value="0" selected>不启动人员qos</option>
+			[$begintable qoslist$]
+		  <option value="[$qosid$]">[$qosname$]</option>
+			[$endtable$]
+      </select></td>
+		  <td><select name="solo" class="inputself0">
+            <option value="0">独享一通道</option>
+            <option value="1">共享一通道</option>
+          </select></td>
+		  <td><input type="button" id="Service" class=inputf0 border="0" name="Service" value="选择应用于该通道的服务"></td>
+		</tr>
+		<hr/>
+	<tr><td colspan="4"><hr/></td></tr>
+		<tr><td>
+			<input type="button" onClick="addlistfun();"  value="添加用户"  class=inputf0 size=10>
+			<input type="hidden" name="actiontype" value="1" >
+	</table>
+</form>
+</body>
+</html>
